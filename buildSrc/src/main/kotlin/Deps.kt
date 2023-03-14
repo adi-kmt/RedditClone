@@ -17,10 +17,10 @@ object Deps {
 
   object Ktor {
     const val core = "io.ktor:ktor-server-core:${Versions.ktor}"
-    const val auth = "io.ktor:ktor-auth:${Versions.ktor}"
-    const val jwt = "io.ktor:ktor-auth-jwt:${Versions.ktor}"
+    const val auth = "io.ktor:ktor-auth:${Versions.ktorAuth}"
+    const val jwt = "io.ktor:ktor-auth-jwt:${Versions.ktorAuth}"
     const val session = "io.ktor:ktor-server-sessions:${Versions.ktor}"
-    const val locations = "io.ktor:ktor-locations:${Versions.ktor}"
+    const val locations = "io.ktor:ktor-locations:${Versions.ktorAuth}"
     const val hostCommon = "io.ktor:ktor-server-host-common:${Versions.ktor}"
     const val serialization = "io.ktor:ktor-serialization:${Versions.ktor}"
     const val serializationJson = "io.ktor:ktor-serialization-kotlinx-json:${Versions.ktor}"
@@ -48,7 +48,7 @@ object Deps {
   }
 
   object Testing {
-    const val coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.kotlin}"
+    const val coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.coroutines}"
     const val serverTest = "io.ktor:ktor-server-test-host:${Versions.ktor}"
     const val kotestJunit5 = "io.kotest:kotest-runner-junit5:${Versions.kotest}"
     const val kotestAssertionsCore = "io.kotest:kotest-assertions-core:${Versions.kotest}"

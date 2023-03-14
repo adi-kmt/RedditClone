@@ -2,7 +2,6 @@ plugins {
     kotlin("jvm") version Versions.kotlin
     id("io.ktor.plugin") version Versions.ktor
     kotlin("plugin.serialization") version Versions.kotlin
-//    id("org.jetbrains.kotlinx.plugin.serialization") version Versions.kotlin
     id("com.diffplug.spotless") version "5.16.0"
     id("org.unbroken-dome.test-sets") version "4.0.0"
 }
@@ -18,6 +17,7 @@ application {
 
 repositories {
     mavenCentral()
+//    mavenLocal()
 }
 
 dependencies {

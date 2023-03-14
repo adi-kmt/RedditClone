@@ -16,4 +16,5 @@ object Versions {
   const val scientist = "1.0.2"
   const val kotest = "5.5.5"
   const val h2 = "2.1.214"
+  const val ktorAuth = "1.6.8"
 }
