@@ -17,7 +17,7 @@ application {
 
 repositories {
     mavenCentral()
-//    mavenLocal()
+    mavenLocal()
 }
 
 dependencies {
@@ -40,6 +40,10 @@ dependencies {
     implementation(Deps.Ktor.session)
     implementation(Deps.Ktor.serialization)
     implementation(Deps.Ktor.serializationJson)
+    implementation(Deps.Ktor.statusPages)
+    implementation(Deps.Ktor.callLogging)
+    implementation(Deps.Ktor.defaultHeaders)
+    implementation(Deps.Ktor.cors)
     implementation(Deps.serializationJson)
     implementation(Deps.Ktor.contentNegotiation)
 

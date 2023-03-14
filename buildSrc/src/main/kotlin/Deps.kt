@@ -25,6 +25,10 @@ object Deps {
     const val serialization = "io.ktor:ktor-serialization:${Versions.ktor}"
     const val serializationJson = "io.ktor:ktor-serialization-kotlinx-json:${Versions.ktor}"
     const val netty = "io.ktor:ktor-server-netty:${Versions.ktor}"
+    const val statusPages = "io.ktor:ktor-server-status-pages:${Versions.ktor}"
+    const val callLogging = "io.ktor:ktor-server-call-logging:${Versions.ktor}"
+    const val defaultHeaders = "io.ktor:ktor-server-default-headers:${Versions.ktor}"
+    const val cors = "io.ktor:ktor-server-cors:${Versions.ktor}"
     const val contentNegotiation = "io.ktor:ktor-server-content-negotiation:${Versions.ktor}"
 
     object Client {

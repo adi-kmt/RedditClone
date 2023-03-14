@@ -1,9 +1,5 @@
-package com.adikmt.plugins
+package com.adikmt.utils.db
 
-import com.adikmt.utils.db.DataBaseFactory
-import com.adikmt.utils.db.DatabaseConfig
-import com.adikmt.utils.db.KotlinLoggingSqlLogger
-import com.adikmt.utils.db.SchemaCreation
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import org.jetbrains.exposed.sql.*
