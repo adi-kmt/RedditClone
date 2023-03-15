@@ -1,9 +1,6 @@
 package com.adikmt.utils.db
 
-import com.adikmt.orm.SubredditEntity
-import com.adikmt.orm.SubredditFollowerEntity
-import com.adikmt.orm.UserEntity
-import com.adikmt.orm.UserFollowersEntity
+import com.adikmt.orm.*
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -14,7 +11,9 @@ object SchemaCreation {
         UserEntity,
         UserFollowersEntity,
         SubredditEntity,
-        SubredditFollowerEntity
+        SubredditFollowerEntity,
+        PostEntity,
+        PostFavouriteEntity
     )
 
     fun createSchema() {
