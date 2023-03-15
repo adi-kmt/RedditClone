@@ -13,7 +13,9 @@ object SchemaCreation {
         SubredditEntity,
         SubredditFollowerEntity,
         PostEntity,
-        PostFavouriteEntity
+        PostFavouriteEntity,
+        CommentEntity,
+        CommentFavouriteEntity
     )
 
     fun createSchema() {
