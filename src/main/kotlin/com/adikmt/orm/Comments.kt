@@ -1,6 +1,5 @@
 package com.adikmt.orm
 
-import com.adikmt.orm.PostEntity.defaultExpression
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Table
@@ -15,6 +14,7 @@ object CommentEntity : UUIDTable(name = "comments") {
     val post = reference("comment_post", PostEntity)
     val author = reference("comment_author", UserEntity)
 //    val parentComment = reference("parent_comment", CommentEntity).nullable()
+
 }
 
 object CommentFavouriteEntity : Table(name = "comment_user_fav") {
