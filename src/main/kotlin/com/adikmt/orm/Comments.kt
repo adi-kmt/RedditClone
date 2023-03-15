@@ -1,5 +1,6 @@
 package com.adikmt.orm
 
+import com.adikmt.orm.PostEntity.defaultExpression
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Table
