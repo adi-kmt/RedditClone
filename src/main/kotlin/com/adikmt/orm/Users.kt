@@ -9,6 +9,7 @@ object UserEntity : UUIDTable(name = "users") {
     val username = varchar(name = "user_name", length = 30).uniqueIndex()
     val password = varchar(name = "user_password", length = 50)
     val bio = text(name = "user_bio").nullable()
+
 }
 
 object UserFollowersEntity : Table("users_follow") {
