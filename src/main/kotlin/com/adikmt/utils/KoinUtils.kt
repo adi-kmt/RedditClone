@@ -2,6 +2,8 @@ package com.adikmt.utils
 
 import com.adikmt.utils.db.DatabaseFactoryImpl
 import com.adikmt.utils.db.DataBaseFactory
+import com.adikmt.utils.db.DbTransaction
+import com.adikmt.utils.db.DbTransactionImpl
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.json.Json
@@ -27,6 +29,9 @@ private val coroutinesModule = module {
 private val mainModule = module {
     single<DataBaseFactory> { params ->
         DatabaseFactoryImpl(databaseConfig = params.get())
+    }
+    single<DbTransaction>{
+        DbTransactionImpl(get(named("IODispatcher")))
     }
     single {
         Json {

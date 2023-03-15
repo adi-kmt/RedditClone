@@ -5,6 +5,7 @@ import com.zaxxer.hikari.HikariDataSource
 import org.jetbrains.exposed.sql.*
 import io.ktor.server.application.*
 import mu.KotlinLogging
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -39,9 +40,6 @@ class DatabaseFactoryImpl(val databaseConfig: DatabaseConfig): DataBaseFactory {
         }.also { it.validate() }
         return HikariDataSource(config)
     }
-
-    override suspend fun <T> dbQuery(block: () -> T): T =
-        transaction { block() }
 
     override suspend fun dropAll() {
         TODO("Not yet implemented")
