@@ -14,8 +14,10 @@ object UserEntity : UUIDTable(name = "users") {
     val bio = text(name = "user_bio").default(defaultValue = "")
 }
 
-object FollowersEntity : Table("users_follow") {
-    val userId: Column<EntityID<UUID>> =
+object UserFollowersEntity : Table("users_follow") {
+    val userId =
         reference(name = "user_id", foreign = UserEntity, onDelete = ReferenceOption.CASCADE)
     val followeeId = reference(name = "followee_id", foreign = UserEntity, onDelete = ReferenceOption.CASCADE)
+
+    override val primaryKey: PrimaryKey = PrimaryKey(userId, followeeId)
 }
