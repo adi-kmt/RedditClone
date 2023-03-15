@@ -11,7 +11,7 @@ object UserEntity : UUIDTable(name = "users") {
     val email = varchar(name = "user_email", length = 100).uniqueIndex()
     val username = varchar(name = "user_name", length = 30).uniqueIndex()
     val password = varchar(name = "user_password", length = 50)
-    val bio = text(name = "user_bio").default(defaultValue = "")
+    val bio = text(name = "user_bio")
 }
 
 object UserFollowersEntity : Table("users_follow") {
