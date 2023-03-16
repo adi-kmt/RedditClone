@@ -1,9 +1,9 @@
 plugins {
-    kotlin("jvm") version Versions.kotlin
-    id("io.ktor.plugin") version Versions.ktor
-    kotlin("plugin.serialization") version Versions.kotlin
-    id("com.diffplug.spotless") version "5.16.0"
-    id("org.unbroken-dome.test-sets") version "4.0.0"
+    alias(libs.plugins.jvmPlugin)
+    alias(libs.plugins.ktorPlugin)
+    alias(libs.plugins.serializationPlugin)
+    alias(libs.plugins.spotlessPlugin)
+    alias(libs.plugins.domPlugin)
 }
 
 group = "com.adikmt"
@@ -21,66 +21,30 @@ repositories {
 }
 
 dependencies {
-    implementation(platform(Deps.Arrow.stack))
+    implementation(platform(libs.arrowstack))
 
-    implementation(Deps.Arrow.core)
+    implementation(libs.arrowcore)
 
-    implementation(Deps.coroutines)
-    implementation(Deps.coroutinesSlf4j)
+    implementation(libs.bundles.coroutines)
 
-    implementation(Deps.Koin.koin)
-    implementation(Deps.Koin.koinLogger)
+    implementation(libs.bundles.koin)
 
-    implementation(Deps.Ktor.auth)
-    implementation(Deps.Ktor.core)
-    implementation(Deps.Ktor.hostCommon)
-    implementation(Deps.Ktor.jwt)
-    implementation(Deps.Ktor.locations)
-    implementation(Deps.Ktor.netty)
-    implementation(Deps.Ktor.session)
-    implementation(Deps.Ktor.serialization)
-    implementation(Deps.Ktor.serializationJson)
-    implementation(Deps.Ktor.statusPages)
-    implementation(Deps.Ktor.callLogging)
-    implementation(Deps.Ktor.defaultHeaders)
-    implementation(Deps.Ktor.cors)
-    implementation(Deps.serializationJson)
-    implementation(Deps.Ktor.contentNegotiation)
+    implementation(libs.bundles.logging)
 
-    implementation(Deps.Ktor.Client.core)
-    implementation(Deps.Ktor.Client.cio)
-    implementation(Deps.Ktor.Client.serialization)
-    implementation(Deps.Ktor.Client.auth)
+    implementation(libs.bundles.ktor)
 
-    implementation(Deps.Exposed.core)
-    implementation(Deps.Exposed.dao)
-    implementation(Deps.Exposed.javaTime)
-    implementation(Deps.Exposed.jdbc)
+    implementation(libs.bundles.auth)
 
-    implementation(Deps.jbcrypt)
-    implementation(Deps.hikaricp)
-    implementation(Deps.logback)
-    implementation(Deps.kotlinLogging)
-    implementation(Deps.mysqlConnector)
+    implementation(libs.bundles.db)
 
-    implementation(Deps.scientist)
+    implementation(libs.scientist)
 
-    implementation("commons-validator:commons-validator:1.7")
-    implementation("com.auth0:java-jwt:3.18.2")
-
-    testImplementation(Deps.Testing.serverTest)
-    testImplementation(Deps.Testing.coroutinesTest)
-    testImplementation(Deps.Testing.kotestJunit5)
-    testImplementation(Deps.Testing.kotestAssertionsCore)
-    testImplementation(Deps.Testing.kotestAssertionsJson)
-    testImplementation(Deps.Testing.kotestAssertionsKtor)
-    testImplementation(Deps.Testing.kotestAssertionsArrow)
-    testImplementation(Deps.Testing.h2)
+    testImplementation(libs.bundles.testing)
 }
 
 spotless {
     kotlin {
-        ktlint(Versions.ktlint).userData(
+        ktlint(libs.versions.ktlint.get()).userData(
             mapOf(
                 "indent_size" to "2",
                 "indent_style" to "space",
@@ -108,6 +72,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
             "-Xopt-in=io.ktor.locations.KtorExperimentalLocationsAPI",
             "-Xopt-in=kotlin.time.ExperimentalTime",
             "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+            "-Xcontext-receivers"
         )
     }
 }

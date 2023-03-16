@@ -1,0 +1,131 @@
+[versions]
+ktor = "2.2.4"
+kotlin = "1.8.10"
+coroutines = "1.6.4"
+logback = "1.2.11"
+exposed = "0.41.1"
+mysqlConnector = "8.0.31"
+hikaricp = "5.0.0"
+jbcrypt = "0.4"
+koin = "3.3.1"
+spotless = "5.16.0"
+ktlint = "0.42.1"
+arrow = "1.1.5"
+serializationJson = "1.4.1"
+kotlinLogging = "2.1.21"
+scientist = "1.0.2"
+kotest = "5.5.5"
+h2 = "2.1.214"
+ktorAuth = "1.6.8"
+domTest = "4.0.0"
+validator = "1.7"
+jwt = "3.18.2"
+
+[libraries]
+logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+kotlinLogging = { module = "io.github.microutils:kotlin-logging-jvm", version.ref = "kotlinLogging" }
+mysqlConnector = { module = "mysql:mysql-connector-java", version.ref = "mysqlConnector" }
+hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "hikaricp" }
+jbcrypt = { module = "org.mindrot:jbcrypt", version.ref = "jbcrypt" }
+serializationJson = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serializationJson" }
+scientist = { module = "com.github.spoptchev:scientist", version.ref = "scientist" }
+
+coroutinesSlf4j = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-slf4j", version.ref = "coroutines" }
+coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+
+arrowstack = { module = "io.arrow-kt:arrow-stack", version.ref = "arrow" }
+arrowcore = { module = "io.arrow-kt:arrow-core" }
+
+ktorcore = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
+ktorauth = { module = "io.ktor:ktor-auth", version.ref = "ktorAuth" }
+ktorjwt = { module = "io.ktor:ktor-auth-jwt", version.ref = "ktorAuth" }
+ktorsession = { module = "io.ktor:ktor-server-sessions", version.ref = "ktor" }
+ktorlocations = { module = "io.ktor:ktor-locations", version.ref = "ktorAuth" }
+ktorhostCommon = { module = "io.ktor:ktor-server-host-common", version.ref = "ktor" }
+ktorserialization = { module = "io.ktor:ktor-serialization", version.ref = "ktor" }
+ktorserializationJsonKtor = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktornetty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
+ktorstatusPages = { module = "io.ktor:ktor-server-status-pages", version.ref = "ktor" }
+ktorcallLogging = { module = "io.ktor:ktor-server-call-logging", version.ref = "ktor" }
+ktordefaultHeaders = { module = "io.ktor:ktor-server-default-headers", version.ref = "ktor" }
+ktorcors = { module = "io.ktor:ktor-server-cors", version.ref = "ktor" }
+ktorcontentNegotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor" }
+ktorclientcore = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktorcio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
+ktorclientserialization = { module = "io.ktor:ktor-client-serialization", version.ref = "ktor" }
+ktorclientauth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
+
+exposedcore = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
+exposeddao = { module = "org.jetbrains.exposed:exposed-dao", version.ref = "exposed" }
+exposedjdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
+exposedjavaTime = { module = "org.jetbrains.exposed:exposed-java-time", version.ref = "exposed" }
+
+validator = { module = "commons-validator:commons-validator", version.ref = "validator" }
+jwt = { module = "com.auth0:java-jwt", version.ref = "jwt" }
+
+koin = { module = "io.insert-koin:koin-ktor", version.ref = "koin" }
+koinLogger = { module = "io.insert-koin:koin-logger-slf4j", version.ref = "koin" }
+
+coroutinesTest = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+serverTest = { module = "io.ktor:ktor-server-test-host", version.ref = "ktor" }
+kotestJunit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
+kotestAssertionsCore = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+kotestAssertionsJson = { module = "io.kotest:kotest-assertions-json", version.ref = "kotest" }
+kotestAssertionsKtor = "io.kotest.extensions:kotest-assertions-ktor:1.0.3"
+kotestAssertionsArrow = "io.kotest.extensions:kotest-assertions-arrow:1.2.1"
+
+h2 = { module = "com.h2database:h2", version.ref = "h2" }
+
+[plugins]
+jvmPlugin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+ktorPlugin = { id = "io.ktor.plugin", version.ref = "ktor" }
+serializationPlugin = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+spotlessPlugin = { id = "com.diffplug.spotless", version.ref = "spotless" }
+domPlugin = { id = "org.unbroken-dome.test-sets", version.ref = "domTest" }
+
+[bundles]
+coroutines = ["coroutinesSlf4j", "coroutines"]
+db = ["exposedcore",
+    "exposeddao",
+    "exposedjdbc",
+    "exposedjavaTime",
+    "mysqlConnector",
+    "hikaricp"
+]
+koin = ["koin",
+    "koinLogger"]
+ktor = ['ktorcore',
+    "ktorauth",
+    "ktorjwt",
+    "ktorsession",
+    "ktorlocations",
+    "ktorhostCommon",
+    "ktorserialization",
+    "ktorserializationJsonKtor",
+    "ktornetty",
+    "ktorstatusPages",
+    "ktorcallLogging",
+    "ktordefaultHeaders",
+    "ktorcors",
+    "ktorcontentNegotiation",
+    "ktorclientcore",
+    "ktorcio",
+    "ktorclientserialization",
+    "ktorclientauth",
+    "serializationJson"
+]
+logging = ["logback",
+    "kotlinLogging"
+]
+auth = ["validator",
+    "jwt",
+    "jbcrypt"
+]
+testing = ["coroutinesTest",
+    "serverTest",
+    "kotestJunit5",
+    "kotestAssertionsCore",
+    "kotestAssertionsJson",
+    "kotestAssertionsKtor",
+    "kotestAssertionsArrow"
+]
