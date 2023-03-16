@@ -44,7 +44,7 @@ dependencies {
 
 spotless {
     kotlin {
-        ktlint(Versions.ktlint).userData(
+        ktlint(libs.versions.ktlint.get()).userData(
             mapOf(
                 "indent_size" to "2",
                 "indent_style" to "space",
