@@ -30,3 +30,18 @@ data class PostResponseList(
     val postList: List<PostResponse>,
     val postNo: Int
 )
+
+@JvmInline
+@Serializable
+value class PostHeading(val value: String)
+
+@JvmInline
+@Serializable
+value class PostId(val value: Long) {
+
+    override fun toString(): String = value.toString()
+
+    companion object {
+        fun fromString(id: String): Long = id.toLong()
+    }
+}

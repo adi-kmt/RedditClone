@@ -1,33 +1,49 @@
 package com.adikmt.utils
 
+import com.adikmt.services.PostServices
+import com.adikmt.services.PostServicesImpl
 import com.adikmt.services.SubredditService
 import com.adikmt.services.SubredditServiceImpl
 import com.adikmt.services.UserService
 import com.adikmt.services.UserServiceImpl
+import com.adikmt.usecases.AddPostUsecase
 import com.adikmt.usecases.AddSubredditUsecase
 import com.adikmt.usecases.AddUserUseCase
+import com.adikmt.usecases.DownvotePostUsecase
 import com.adikmt.usecases.FollowSubredditUsecase
 import com.adikmt.usecases.FollowUserUseCase
 import com.adikmt.usecases.GetAllSubredditsFollowedUsecase
+import com.adikmt.usecases.GetPostBySubredditUsecase
+import com.adikmt.usecases.GetPostByUserUsecase
+import com.adikmt.usecases.GetPostUsecase
 import com.adikmt.usecases.GetSubredditByNameUsecase
 import com.adikmt.usecases.GetUserFollowingUseCase
 import com.adikmt.usecases.GetUserUseCase
+import com.adikmt.usecases.SearchPostByHeadingUsecase
 import com.adikmt.usecases.SearchSubredditByNameUsecase
 import com.adikmt.usecases.SearchUserUseCase
 import com.adikmt.usecases.UnFollowSubredditUsecase
 import com.adikmt.usecases.UnFollowUserUseCase
+import com.adikmt.usecases.UpvotePostUsecase
+import com.adikmt.usecases.addPostUsecase
 import com.adikmt.usecases.addSubredditUsecase
 import com.adikmt.usecases.addUserUseCase
+import com.adikmt.usecases.downvotePostUsecase
 import com.adikmt.usecases.followSubredditUsecase
 import com.adikmt.usecases.followUserUseCase
 import com.adikmt.usecases.getAllSubredditsFollowedUsecase
+import com.adikmt.usecases.getPostBySubredditUsecase
+import com.adikmt.usecases.getPostByUserUsecase
+import com.adikmt.usecases.getPostUsecase
 import com.adikmt.usecases.getSubredditByNameUsecase
 import com.adikmt.usecases.getUserFollowingUseCase
 import com.adikmt.usecases.getUserUseCase
+import com.adikmt.usecases.searchPostByHeadingUsecase
 import com.adikmt.usecases.searchSubredditByNameUsecase
 import com.adikmt.usecases.searchUserUseCase
 import com.adikmt.usecases.unFollowSubredditUsecase
 import com.adikmt.usecases.unFollowUserUseCase
+import com.adikmt.usecases.upvotePostUsecase
 import com.adikmt.utils.db.DataBaseFactory
 import com.adikmt.utils.db.DatabaseFactoryImpl
 import com.adikmt.utils.db.DbTransaction
@@ -56,6 +72,7 @@ private val coroutinesModule = module {
 private val services = module {
     single<UserService> { UserServiceImpl() }
     single<SubredditService> { SubredditServiceImpl() }
+    single<PostServices> { PostServicesImpl() }
 }
 
 private val usecases = module {
@@ -74,6 +91,15 @@ private val usecases = module {
     factory<FollowSubredditUsecase> { followSubredditUsecase(get(named("IODispatcher")), get()) }
     factory<UnFollowSubredditUsecase> { unFollowSubredditUsecase(get(named("IODispatcher")), get()) }
     factory<GetAllSubredditsFollowedUsecase> { getAllSubredditsFollowedUsecase(get(named("IODispatcher")), get()) }
+
+    //Post usecase functions
+    factory<AddPostUsecase> { addPostUsecase(get(named("IODispatcher")), get()) }
+    factory<GetPostUsecase> { getPostUsecase(get(named("IODispatcher")), get()) }
+    factory<SearchPostByHeadingUsecase> { searchPostByHeadingUsecase(get(named("IODispatcher")), get()) }
+    factory<GetPostBySubredditUsecase> { getPostBySubredditUsecase(get(named("IODispatcher")), get()) }
+    factory<GetPostByUserUsecase> { getPostByUserUsecase(get(named("IODispatcher")), get()) }
+    factory<UpvotePostUsecase> { upvotePostUsecase(get(named("IODispatcher")), get()) }
+    factory<DownvotePostUsecase> { downvotePostUsecase(get(named("IODispatcher")), get()) }
 }
 
 
