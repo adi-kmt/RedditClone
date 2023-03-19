@@ -18,7 +18,25 @@ data class UserResponse(
 )
 
 @Serializable
+data class UserFollowingData(
+    val userName: String,
+    val usersFollowing: List<UserResponse>,
+    val noUsersFollowing: Int,
+    val othersFollowingUser: List<UserResponse>,
+    val noOthersFollowingUser: Int
+)
+
+@Serializable
+data class FollowOrUnfollowUser(
+    val userName: UserName
+)
+
+@Serializable
 data class UserResponseList(
     val userList: List<UserResponse>,
     val userNo: Int
 )
+
+@JvmInline
+@Serializable
+value class UserName(val value: String)
