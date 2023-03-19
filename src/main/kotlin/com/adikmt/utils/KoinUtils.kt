@@ -1,18 +1,32 @@
 package com.adikmt.utils
 
+import com.adikmt.services.SubredditService
+import com.adikmt.services.SubredditServiceImpl
 import com.adikmt.services.UserService
 import com.adikmt.services.UserServiceImpl
+import com.adikmt.usecases.AddSubredditUsecase
 import com.adikmt.usecases.AddUserUseCase
+import com.adikmt.usecases.FollowSubredditUsecase
 import com.adikmt.usecases.FollowUserUseCase
+import com.adikmt.usecases.GetAllSubredditsFollowedUsecase
+import com.adikmt.usecases.GetSubredditByNameUsecase
 import com.adikmt.usecases.GetUserFollowingUseCase
 import com.adikmt.usecases.GetUserUseCase
+import com.adikmt.usecases.SearchSubredditByNameUsecase
 import com.adikmt.usecases.SearchUserUseCase
+import com.adikmt.usecases.UnFollowSubredditUsecase
 import com.adikmt.usecases.UnFollowUserUseCase
+import com.adikmt.usecases.addSubredditUsecase
 import com.adikmt.usecases.addUserUseCase
+import com.adikmt.usecases.followSubredditUsecase
 import com.adikmt.usecases.followUserUseCase
+import com.adikmt.usecases.getAllSubredditsFollowedUsecase
+import com.adikmt.usecases.getSubredditByNameUsecase
 import com.adikmt.usecases.getUserFollowingUseCase
 import com.adikmt.usecases.getUserUseCase
+import com.adikmt.usecases.searchSubredditByNameUsecase
 import com.adikmt.usecases.searchUserUseCase
+import com.adikmt.usecases.unFollowSubredditUsecase
 import com.adikmt.usecases.unFollowUserUseCase
 import com.adikmt.utils.db.DataBaseFactory
 import com.adikmt.utils.db.DatabaseFactoryImpl
@@ -41,6 +55,7 @@ private val coroutinesModule = module {
 
 private val services = module {
     single<UserService> { UserServiceImpl() }
+    single<SubredditService> { SubredditServiceImpl() }
 }
 
 private val usecases = module {
@@ -52,7 +67,13 @@ private val usecases = module {
     factory<FollowUserUseCase> { followUserUseCase(get(named("IODispatcher")), get()) }
     factory<UnFollowUserUseCase> { unFollowUserUseCase(get(named("IODispatcher")), get()) }
 
-
+    //Subreddit usecase functions
+    factory<AddSubredditUsecase> { addSubredditUsecase(get(named("IODispatcher")), get()) }
+    factory<GetSubredditByNameUsecase> { getSubredditByNameUsecase(get(named("IODispatcher")), get()) }
+    factory<SearchSubredditByNameUsecase> { searchSubredditByNameUsecase(get(named("IODispatcher")), get()) }
+    factory<FollowSubredditUsecase> { followSubredditUsecase(get(named("IODispatcher")), get()) }
+    factory<UnFollowSubredditUsecase> { unFollowSubredditUsecase(get(named("IODispatcher")), get()) }
+    factory<GetAllSubredditsFollowedUsecase> { getAllSubredditsFollowedUsecase(get(named("IODispatcher")), get()) }
 }
 
 

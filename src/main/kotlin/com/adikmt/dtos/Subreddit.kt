@@ -21,3 +21,7 @@ data class SubredditResponseList(
     val subredditList: List<SubredditResponse>,
     val subredditNo: Int
 )
+
+@JvmInline
+@Serializable
+value class SubredditName(val value: String)
