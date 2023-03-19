@@ -42,6 +42,6 @@ value class PostId(val value: Long) {
     override fun toString(): String = value.toString()
 
     companion object {
-        fun fromString(id: String): Long = id.toLong()
+        fun fromString(id: String): PostId = PostId(id.toLong())
     }
 }

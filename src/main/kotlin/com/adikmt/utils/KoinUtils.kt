@@ -1,18 +1,25 @@
 package com.adikmt.utils
 
+import com.adikmt.services.CommentService
+import com.adikmt.services.CommentServiceImpl
 import com.adikmt.services.PostServices
 import com.adikmt.services.PostServicesImpl
 import com.adikmt.services.SubredditService
 import com.adikmt.services.SubredditServiceImpl
 import com.adikmt.services.UserService
 import com.adikmt.services.UserServiceImpl
+import com.adikmt.usecases.AddCommentUsecase
 import com.adikmt.usecases.AddPostUsecase
 import com.adikmt.usecases.AddSubredditUsecase
 import com.adikmt.usecases.AddUserUseCase
+import com.adikmt.usecases.DownvoteCommentUsecase
 import com.adikmt.usecases.DownvotePostUsecase
 import com.adikmt.usecases.FollowSubredditUsecase
 import com.adikmt.usecases.FollowUserUseCase
+import com.adikmt.usecases.GetAllCommentByUserUsecase
+import com.adikmt.usecases.GetAllCommentsByPostUsecase
 import com.adikmt.usecases.GetAllSubredditsFollowedUsecase
+import com.adikmt.usecases.GetCommentUsecase
 import com.adikmt.usecases.GetPostBySubredditUsecase
 import com.adikmt.usecases.GetPostByUserUsecase
 import com.adikmt.usecases.GetPostUsecase
@@ -24,14 +31,20 @@ import com.adikmt.usecases.SearchSubredditByNameUsecase
 import com.adikmt.usecases.SearchUserUseCase
 import com.adikmt.usecases.UnFollowSubredditUsecase
 import com.adikmt.usecases.UnFollowUserUseCase
+import com.adikmt.usecases.UpvoteCommentUsecase
 import com.adikmt.usecases.UpvotePostUsecase
+import com.adikmt.usecases.addCommentUsecase
 import com.adikmt.usecases.addPostUsecase
 import com.adikmt.usecases.addSubredditUsecase
 import com.adikmt.usecases.addUserUseCase
+import com.adikmt.usecases.downvoteCommentUsecase
 import com.adikmt.usecases.downvotePostUsecase
 import com.adikmt.usecases.followSubredditUsecase
 import com.adikmt.usecases.followUserUseCase
+import com.adikmt.usecases.getAllCommentByUserUsecase
+import com.adikmt.usecases.getAllCommentsByPostUsecase
 import com.adikmt.usecases.getAllSubredditsFollowedUsecase
+import com.adikmt.usecases.getCommentUsecase
 import com.adikmt.usecases.getPostBySubredditUsecase
 import com.adikmt.usecases.getPostByUserUsecase
 import com.adikmt.usecases.getPostUsecase
@@ -43,6 +56,7 @@ import com.adikmt.usecases.searchSubredditByNameUsecase
 import com.adikmt.usecases.searchUserUseCase
 import com.adikmt.usecases.unFollowSubredditUsecase
 import com.adikmt.usecases.unFollowUserUseCase
+import com.adikmt.usecases.upvoteCommentUsecase
 import com.adikmt.usecases.upvotePostUsecase
 import com.adikmt.utils.db.DataBaseFactory
 import com.adikmt.utils.db.DatabaseFactoryImpl
@@ -73,6 +87,7 @@ private val services = module {
     single<UserService> { UserServiceImpl() }
     single<SubredditService> { SubredditServiceImpl() }
     single<PostServices> { PostServicesImpl() }
+    single<CommentService> { CommentServiceImpl() }
 }
 
 private val usecases = module {
@@ -100,6 +115,14 @@ private val usecases = module {
     factory<GetPostByUserUsecase> { getPostByUserUsecase(get(named("IODispatcher")), get()) }
     factory<UpvotePostUsecase> { upvotePostUsecase(get(named("IODispatcher")), get()) }
     factory<DownvotePostUsecase> { downvotePostUsecase(get(named("IODispatcher")), get()) }
+
+    //Comment usecase functions
+    factory<AddCommentUsecase> { addCommentUsecase(get(named("IODispatcher")), get()) }
+    factory<GetCommentUsecase> { getCommentUsecase(get(named("IODispatcher")), get()) }
+    factory<GetAllCommentsByPostUsecase> { getAllCommentsByPostUsecase(get(named("IODispatcher")), get()) }
+    factory<GetAllCommentByUserUsecase> { getAllCommentByUserUsecase(get(named("IODispatcher")), get()) }
+    factory<UpvoteCommentUsecase> { upvoteCommentUsecase(get(named("IODispatcher")), get()) }
+    factory<DownvoteCommentUsecase> { downvoteCommentUsecase(get(named("IODispatcher")), get()) }
 }
 
 

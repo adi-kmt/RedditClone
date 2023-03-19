@@ -27,3 +27,13 @@ data class CommentResponseList(
 data class CommentUpvoteOrDownvote(
     val commentId: String
 )
+
+@JvmInline
+@Serializable
+value class CommentId(val value: Long) {
+    override fun toString(): String = value.toString()
+
+    companion object {
+        fun fromString(string: String): CommentId = CommentId(string.toLong())
+    }
+}
