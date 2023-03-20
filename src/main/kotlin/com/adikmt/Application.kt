@@ -6,6 +6,7 @@ import com.adikmt.utils.cors
 import com.adikmt.utils.db.DataBaseFactory
 import com.adikmt.utils.db.dbConfig
 import com.adikmt.utils.koinModules
+import io.ktor.client.plugins.kotlinx.serializer.KotlinxSerializer
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.callloging.*
@@ -14,6 +15,7 @@ import io.ktor.server.plugins.cors.*
 import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.cors.routing.CORS
 import io.ktor.server.plugins.defaultheaders.*
+import io.ktor.server.plugins.doublereceive.DoubleReceive
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.request.*
 import kotlinx.serialization.json.Json
@@ -36,21 +38,26 @@ fun Application.module(koinModules:List<Module> = koinModules()) {
     val json by inject<Json>()
 
 
-    install(DefaultHeaders){
+    install(DefaultHeaders) {
         header("X-Engine", "Ktor")
     }
-    install(ContentNegotiation) { json(json) }
+    install(ContentNegotiation) {
+        KotlinxSerializer(json)
+        json(json)
+    }
 
     install(StatusPages) {
         configure()
     }
+
+    install(DoubleReceive)
 
     install(CallLogging) {
         level = Level.DEBUG
         filter { call -> call.request.path().startsWith("/") }
     }
 
-    install(CORS){
+    install(CORS) {
         cors()
     }
 

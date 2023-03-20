@@ -75,7 +75,7 @@ fun KoinApplication.configure(koinModules: List<Module>) {
     modules(koinModules)
 }
 
-fun koinModules() = listOf(mainModule, coroutinesModule)
+fun koinModules() = listOf(mainModule, coroutinesModule, services, usecases)
 
 private val coroutinesModule = module {
     single<CoroutineDispatcher>(named("IODispatcher")) { Dispatchers.IO }
@@ -92,8 +92,8 @@ private val services = module {
 
 private val usecases = module {
     //User usecase functions
-    factory<AddUserUseCase> { addUserUseCase(get(named("IODispatcher")), get()) }
-    factory<GetUserUseCase> { getUserUseCase(get(named("IODispatcher")), get()) }
+    factory<AddUserUseCase>(named("AddUserUseCase")) { addUserUseCase(get(named("IODispatcher")), get()) }
+    factory<GetUserUseCase>(named("GetUserUseCase")) { getUserUseCase(get(named("IODispatcher")), get()) }
     factory<SearchUserUseCase> { searchUserUseCase(get(named("IODispatcher")), get()) }
     factory<GetUserFollowingUseCase> { getUserFollowingUseCase(get(named("IODispatcher")), get()) }
     factory<FollowUserUseCase> { followUserUseCase(get(named("IODispatcher")), get()) }
