@@ -3,6 +3,7 @@ package com.adikmt
 import com.adikmt.plugins.configure
 import com.adikmt.plugins.configureRouting
 import com.adikmt.plugins.cors
+import com.adikmt.utils.configure
 import com.adikmt.utils.db.DataBaseFactory
 import com.adikmt.utils.db.dbConfig
 import com.adikmt.utils.koinModules
