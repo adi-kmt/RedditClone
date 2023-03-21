@@ -30,10 +30,9 @@ data class CommentUpvoteOrDownvote(
 
 @JvmInline
 @Serializable
-value class CommentId(val value: Long) {
-    override fun toString(): String = value.toString()
+value class CommentId(private val value: String) {
 
     companion object {
-        fun fromString(string: String): CommentId = CommentId(string.toLong())
+        fun toLong(commentId: CommentId): Long = commentId.value.toLong()
     }
 }

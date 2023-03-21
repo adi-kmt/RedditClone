@@ -186,12 +186,32 @@ private val usecases = module {
     }
 
     //Comment usecase functions
-    factory<AddCommentUsecase> { addCommentUsecase(get(named("IODispatcher")), get()) }
-    factory<GetCommentUsecase> { getCommentUsecase(get(named("IODispatcher")), get()) }
-    factory<GetAllCommentsByPostUsecase> { getAllCommentsByPostUsecase(get(named("IODispatcher")), get()) }
-    factory<GetAllCommentByUserUsecase> { getAllCommentByUserUsecase(get(named("IODispatcher")), get()) }
-    factory<UpvoteCommentUsecase> { upvoteCommentUsecase(get(named("IODispatcher")), get()) }
-    factory<DownvoteCommentUsecase> { downvoteCommentUsecase(get(named("IODispatcher")), get()) }
+    factory<AddCommentUsecase>(named("AddCommentUsecase")) { addCommentUsecase(get(named("IODispatcher")), get()) }
+    factory<GetCommentUsecase>(named("GetCommentUsecase")) { getCommentUsecase(get(named("IODispatcher")), get()) }
+    factory<GetAllCommentsByPostUsecase>(named("GetAllCommentsByPostUsecase")) {
+        getAllCommentsByPostUsecase(
+            get(named("IODispatcher")),
+            get()
+        )
+    }
+    factory<GetAllCommentByUserUsecase>(named("GetAllCommentByUserUsecase")) {
+        getAllCommentByUserUsecase(
+            get(named("IODispatcher")),
+            get()
+        )
+    }
+    factory<UpvoteCommentUsecase>(named("UpvoteCommentUsecase")) {
+        upvoteCommentUsecase(
+            get(named("IODispatcher")),
+            get()
+        )
+    }
+    factory<DownvoteCommentUsecase>(named("DownvoteCommentUsecase")) {
+        downvoteCommentUsecase(
+            get(named("IODispatcher")),
+            get()
+        )
+    }
 }
 
 
