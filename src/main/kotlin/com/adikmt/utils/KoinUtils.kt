@@ -22,6 +22,7 @@ import com.adikmt.usecases.GetAllSubredditsFollowedUsecase
 import com.adikmt.usecases.GetCommentUsecase
 import com.adikmt.usecases.GetPostBySubredditUsecase
 import com.adikmt.usecases.GetPostByUserUsecase
+import com.adikmt.usecases.GetPostFeedByUserUsecase
 import com.adikmt.usecases.GetPostUsecase
 import com.adikmt.usecases.GetSubredditByNameUsecase
 import com.adikmt.usecases.GetUserFollowingUseCase
@@ -47,6 +48,7 @@ import com.adikmt.usecases.getAllSubredditsFollowedUsecase
 import com.adikmt.usecases.getCommentUsecase
 import com.adikmt.usecases.getPostBySubredditUsecase
 import com.adikmt.usecases.getPostByUserUsecase
+import com.adikmt.usecases.getPostFeedUsecase
 import com.adikmt.usecases.getPostUsecase
 import com.adikmt.usecases.getSubredditByNameUsecase
 import com.adikmt.usecases.getUserFollowingUseCase
@@ -149,13 +151,39 @@ private val usecases = module {
     }
 
     //Post usecase functions
-    factory<AddPostUsecase> { addPostUsecase(get(named("IODispatcher")), get()) }
-    factory<GetPostUsecase> { getPostUsecase(get(named("IODispatcher")), get()) }
-    factory<SearchPostByHeadingUsecase> { searchPostByHeadingUsecase(get(named("IODispatcher")), get()) }
-    factory<GetPostBySubredditUsecase> { getPostBySubredditUsecase(get(named("IODispatcher")), get()) }
-    factory<GetPostByUserUsecase> { getPostByUserUsecase(get(named("IODispatcher")), get()) }
-    factory<UpvotePostUsecase> { upvotePostUsecase(get(named("IODispatcher")), get()) }
-    factory<DownvotePostUsecase> { downvotePostUsecase(get(named("IODispatcher")), get()) }
+    factory<AddPostUsecase>(named("AddPostUsecase")) { addPostUsecase(get(named("IODispatcher")), get()) }
+    factory<GetPostUsecase>(named("GetPostUsecase")) { getPostUsecase(get(named("IODispatcher")), get()) }
+    factory<GetPostFeedByUserUsecase>(named("GetPostFeedByUserUsecase")) {
+        getPostFeedUsecase(
+            get(named("IODispatcher")),
+            get()
+        )
+    }
+    factory<SearchPostByHeadingUsecase>(named("SearchPostByHeadingUsecase")) {
+        searchPostByHeadingUsecase(
+            get(named("IODispatcher")),
+            get()
+        )
+    }
+    factory<GetPostBySubredditUsecase>(named("GetPostBySubredditUsecase")) {
+        getPostBySubredditUsecase(
+            get(named("IODispatcher")),
+            get()
+        )
+    }
+    factory<GetPostByUserUsecase>(named("GetPostByUserUsecase")) {
+        getPostByUserUsecase(
+            get(named("IODispatcher")),
+            get()
+        )
+    }
+    factory<UpvotePostUsecase>(named("UpvotePostUsecase")) { upvotePostUsecase(get(named("IODispatcher")), get()) }
+    factory<DownvotePostUsecase>(named("DownvotePostUsecase")) {
+        downvotePostUsecase(
+            get(named("IODispatcher")),
+            get()
+        )
+    }
 
     //Comment usecase functions
     factory<AddCommentUsecase> { addCommentUsecase(get(named("IODispatcher")), get()) }

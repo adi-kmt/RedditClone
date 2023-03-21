@@ -19,6 +19,10 @@ fun interface GetPostUsecase {
     suspend fun get(postId: PostId): Result<PostResponse>
 }
 
+fun interface GetPostFeedByUserUsecase {
+    suspend fun get(userName: UserName): Result<PostResponseList>
+}
+
 fun interface SearchPostByHeadingUsecase {
     suspend fun search(postHeading: PostHeading): Result<PostResponseList>
 }
@@ -45,6 +49,15 @@ fun addPostUsecase(
 ) = AddPostUsecase { postRequest: PostRequest ->
     withContext(dispatcher) {
         postServices.addPost(postRequest)
+    }
+}
+
+fun getPostFeedUsecase(
+    dispatcher: CoroutineDispatcher,
+    postServices: PostServices
+) = GetPostFeedByUserUsecase { userName: UserName ->
+    withContext(dispatcher) {
+        postServices.getPostFeed(userName)
     }
 }
 

@@ -37,11 +37,8 @@ value class PostHeading(val value: String)
 
 @JvmInline
 @Serializable
-value class PostId(val value: Long) {
-
-    override fun toString(): String = value.toString()
-
+value class PostId(val value: String) {
     companion object {
-        fun fromString(id: String): PostId = PostId(id.toLong())
+        fun toLong(postId: PostId): Long = postId.value.toLong()
     }
 }

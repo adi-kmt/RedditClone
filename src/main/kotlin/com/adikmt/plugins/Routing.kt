@@ -1,5 +1,7 @@
 package com.adikmt.plugins
 
+import com.adikmt.routes.commentRoutes
+import com.adikmt.routes.postRoutes
 import com.adikmt.routes.subredditRoutes
 import com.adikmt.routes.userRoutes
 import io.ktor.server.application.Application
@@ -10,7 +12,7 @@ fun Application.configureRouting() {
 //        authRoutes()
         userRoutes()
         subredditRoutes()
-//        postRoutes()
-//        commentRoutes()
+        postRoutes()
+        commentRoutes()
     }
 }

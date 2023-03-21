@@ -13,6 +13,8 @@ interface PostServices {
 
     suspend fun getPost(postId: PostId): Result<PostResponse>
 
+    suspend fun getPostFeed(userName: UserName): Result<PostResponseList>
+
     suspend fun searchPostByHeading(postHeading: PostHeading): Result<PostResponseList>
 
     suspend fun getPostBySubreddit(subredditName: SubredditName): Result<PostResponseList>
@@ -30,6 +32,10 @@ class PostServicesImpl : PostServices {
     }
 
     override suspend fun getPost(postId: PostId): Result<PostResponse> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getPostFeed(userName: UserName): Result<PostResponseList> {
         TODO("Not yet implemented")
     }
 
