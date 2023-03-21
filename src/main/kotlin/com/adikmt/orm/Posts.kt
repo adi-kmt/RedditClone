@@ -9,7 +9,7 @@ import org.jetbrains.exposed.sql.javatime.datetime
 object PostEntity : LongIdTable(name = "posts") {
     val title = varchar(name = "post_title", length = 255)
     val desc = text(name = "post_desc").nullable()
-    val author = reference("post_author", UserEntity)
+    val author = reference("post_author_id", UserEntity)
     val subreddit = reference("parent_subreddit_id", SubredditEntity)
     val createdAt = datetime("post_datetime").defaultExpression(CurrentDateTime)
 }
