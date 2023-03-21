@@ -5,7 +5,7 @@ import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Table
 
 object SubredditEntity : LongIdTable(name = "subreddits") {
-    val title = varchar(name = "subreddit_name", length = 80)
+    val title = varchar(name = "subreddit_name", length = 80).uniqueIndex()
     val desc = text(name = "subreddit_desc").nullable()
 }
 

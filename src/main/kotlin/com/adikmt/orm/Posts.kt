@@ -10,7 +10,7 @@ object PostEntity : LongIdTable(name = "posts") {
     val title = varchar(name = "post_title", length = 255)
     val desc = text(name = "post_desc").nullable()
     val author = reference("post_author", UserEntity)
-    val subreddit = reference("post_subreddit", SubredditEntity)
+    val subreddit = reference("parent_subreddit_id", SubredditEntity)
     val createdAt = datetime("post_datetime").defaultExpression(CurrentDateTime)
 }
 
