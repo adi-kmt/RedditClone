@@ -1,11 +1,12 @@
 package com.adikmt.utils
 
-import io.ktor.http.*
-import io.ktor.server.plugins.statuspages.*
-import io.ktor.server.response.*
+import com.adikmt.dtos.SerializedException
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.plugins.statuspages.StatusPagesConfig
+import io.ktor.server.response.respond
 
 fun StatusPagesConfig.configure() {
-    exception<Throwable> {call, throwable ->
-        call.respond(HttpStatusCode.InternalServerError, Exception(throwable.message))
+    exception<Throwable> { call, throwable ->
+        call.respond(HttpStatusCode.InternalServerError, SerializedException(throwable.message))
     }
 }
