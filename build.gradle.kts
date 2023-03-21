@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.jvmPlugin)
     alias(libs.plugins.ktorPlugin)
     alias(libs.plugins.serializationPlugin)
-    alias(libs.plugins.spotlessPlugin)
     alias(libs.plugins.domPlugin)
 }
 
@@ -40,23 +39,6 @@ dependencies {
     implementation(libs.scientist)
 
     testImplementation(libs.bundles.testing)
-}
-
-spotless {
-    kotlin {
-        ktlint(libs.versions.ktlint.get()).userData(
-            mapOf(
-                "indent_size" to "2",
-                "indent_style" to "space",
-                "tab_width" to "2",
-                "max_line_length" to "120",
-                "disabled_rules" to "no-wildcard-imports",
-            )
-        )
-    }
-    kotlinGradle {
-        target("*.gradle.kts")
-    }
 }
 
 testSets {

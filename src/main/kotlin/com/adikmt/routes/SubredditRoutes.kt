@@ -1,6 +1,5 @@
 package com.adikmt.routes
 
-import com.adikmt.routes.locations.AddSubredditLocation
 import io.ktor.server.application.call
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.get
@@ -31,7 +30,6 @@ private fun Routing.getSubredditByName() {
 }
 
 private fun Routing.addSubreddit() {
-    post<AddSubredditLocation> { params ->
-        val subreddit = params.subredditDto
+    post("") {
     }
 }

@@ -94,10 +94,20 @@ private val usecases = module {
     //User usecase functions
     factory<AddUserUseCase>(named("AddUserUseCase")) { addUserUseCase(get(named("IODispatcher")), get()) }
     factory<GetUserUseCase>(named("GetUserUseCase")) { getUserUseCase(get(named("IODispatcher")), get()) }
-    factory<SearchUserUseCase> { searchUserUseCase(get(named("IODispatcher")), get()) }
-    factory<GetUserFollowingUseCase> { getUserFollowingUseCase(get(named("IODispatcher")), get()) }
-    factory<FollowUserUseCase> { followUserUseCase(get(named("IODispatcher")), get()) }
-    factory<UnFollowUserUseCase> { unFollowUserUseCase(get(named("IODispatcher")), get()) }
+    factory<SearchUserUseCase>(named("SearchUserUseCase")) { searchUserUseCase(get(named("IODispatcher")), get()) }
+    factory<GetUserFollowingUseCase>(named("GetUserFollowingUseCase")) {
+        getUserFollowingUseCase(
+            get(named("IODispatcher")),
+            get()
+        )
+    }
+    factory<FollowUserUseCase>(named("FollowUserUseCase")) { followUserUseCase(get(named("IODispatcher")), get()) }
+    factory<UnFollowUserUseCase>(named("UnFollowUserUseCase")) {
+        unFollowUserUseCase(
+            get(named("IODispatcher")),
+            get()
+        )
+    }
 
     //Subreddit usecase functions
     factory<AddSubredditUsecase> { addSubredditUsecase(get(named("IODispatcher")), get()) }
