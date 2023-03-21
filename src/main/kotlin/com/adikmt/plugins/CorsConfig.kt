@@ -1,4 +1,4 @@
-package com.adikmt.utils
+package com.adikmt.plugins
 
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod

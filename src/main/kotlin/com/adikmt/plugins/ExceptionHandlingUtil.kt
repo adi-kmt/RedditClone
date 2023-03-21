@@ -1,4 +1,4 @@
-package com.adikmt.utils
+package com.adikmt.plugins
 
 import com.adikmt.dtos.SerializedException
 import io.ktor.http.HttpStatusCode
