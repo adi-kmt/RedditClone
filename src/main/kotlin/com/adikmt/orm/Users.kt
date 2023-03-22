@@ -13,8 +13,9 @@ object UserEntity : LongIdTable(name = "users") {
 
 object UserFollowersEntity : Table("users_follow") {
     val userId =
-        reference(name = "user_id", foreign = UserEntity, onDelete = ReferenceOption.CASCADE)
-    val followeeId = reference(name = "followee_id", foreign = UserEntity, onDelete = ReferenceOption.CASCADE)
+        reference(name = "user_id", refColumn = UserEntity.username, onDelete = ReferenceOption.CASCADE)
+    val followeeId =
+        reference(name = "followee_id", refColumn = UserEntity.username, onDelete = ReferenceOption.CASCADE)
 
     override val primaryKey: PrimaryKey = PrimaryKey(userId, followeeId)
 }

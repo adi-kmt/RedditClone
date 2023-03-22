@@ -1,5 +1,7 @@
 package com.adikmt.utils
 
+import com.adikmt.repositories.UserRepoImpl
+import com.adikmt.repositories.UserRepository
 import com.adikmt.services.CommentService
 import com.adikmt.services.CommentServiceImpl
 import com.adikmt.services.PostServices
@@ -212,6 +214,10 @@ private val usecases = module {
             get()
         )
     }
+}
+
+private val repositories = module {
+    single<UserRepository> { UserRepoImpl(get()) }
 }
 
 
