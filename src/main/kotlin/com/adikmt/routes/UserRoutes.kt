@@ -7,6 +7,7 @@ import com.adikmt.usecases.GetUserFollowingUseCase
 import com.adikmt.usecases.GetUserUseCase
 import com.adikmt.usecases.SearchUserUseCase
 import com.adikmt.usecases.UnFollowUserUseCase
+import com.adikmt.utils.deconstructResult
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.response.respond
@@ -32,8 +33,8 @@ private fun Routing.searchUser() {
         try {
             val userName = call.parameters["username"]
             userName?.let {
-                searchUserUseCase.searchUser(UserName(it))
-                call.respond(HttpStatusCode.Created, UserName(it))
+                val users = searchUserUseCase.searchUser(UserName(it))
+                deconstructResult(this, users, HttpStatusCode.OK)
             }
             call.respond(HttpStatusCode.UnprocessableEntity)
         } catch (e: Exception) {
@@ -49,8 +50,8 @@ private fun Routing.getProfileFollowingData() {
         try {
             val userName = call.parameters["username"]
             userName?.let {
-                getUserFollowingUseCase.getUserFollowingData(UserName(it))
-                call.respond(HttpStatusCode.Created, UserName(it))
+                val data = getUserFollowingUseCase.getUserFollowingData(UserName(it))
+                deconstructResult(this, data, HttpStatusCode.OK)
             }
             call.respond(HttpStatusCode.UnprocessableEntity)
         } catch (e: Exception) {
@@ -66,8 +67,8 @@ private fun Routing.followUser() {
         try {
             val userName = call.parameters["username"]
             userName?.let {
-                followUserUsecase.followUser(UserName(it))
-                call.respond(HttpStatusCode.Created, UserName(it))
+                val followed = followUserUsecase.followUser(UserName(""), UserName(it))
+                deconstructResult(this, followed, HttpStatusCode.Created)
             }
             call.respond(HttpStatusCode.UnprocessableEntity)
         } catch (e: Exception) {
@@ -84,8 +85,8 @@ private fun Routing.unFollowUser() {
             val userName = call.parameters["username"]
 
             userName?.let {
-                unFollowUserUseCase.unFollowUser(UserName(it))
-                call.respond(HttpStatusCode.Gone)
+                val unfollowed = unFollowUserUseCase.unFollowUser(UserName(""), UserName(it))
+                deconstructResult(this, unfollowed, HttpStatusCode.Gone)
             }
             call.respond(HttpStatusCode.UnprocessableEntity)
         } catch (e: Exception) {
@@ -101,8 +102,8 @@ private fun Routing.getProfile() {
         try {
             val userName = call.parameters["username"]
             userName?.let {
-                getUserUseCase.getUser(UserName(it))
-                call.respond(HttpStatusCode.OK, UserName(it))
+                val profile = getUserUseCase.getUser(UserName(it))
+                deconstructResult(this, profile, HttpStatusCode.OK)
             }
         } catch (e: Exception) {
             call.respond(HttpStatusCode.InternalServerError, SerializedException(e.message))

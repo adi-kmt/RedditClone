@@ -4,6 +4,12 @@ package com.adikmt.utils
  * Got from [ProAndroidDev Article] {https://proandroiddev.com/resilient-use-cases-with-kotlin-result-coroutines-and-annotations-511df10e2e16}
  */
 
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.application.ApplicationCall
+import io.ktor.server.application.call
+import io.ktor.server.response.respond
+import io.ktor.util.pipeline.PipelineContext
+import io.ktor.util.reflect.typeInfo
 import kotlinx.coroutines.CancellationException
 
 /**
@@ -46,3 +52,18 @@ inline fun <R, T> Result<T>.mapResult(transform: (value: T) -> R): Result<R> {
         else -> Result.failure(exceptionOrNull() ?: error("Unreachable state"))
     }
 }
+
+/**
+ * Helps in deconstructing result
+ */
+
+suspend inline fun <reified T> deconstructResult(
+    pipeline: PipelineContext<Unit, ApplicationCall>,
+    result: Result<T>,
+    httpStatusCode: HttpStatusCode
+) {
+    result.mapResult { value: T ->
+        pipeline.call.respond(httpStatusCode, value, typeInfo<T>())
+    }
+}
+

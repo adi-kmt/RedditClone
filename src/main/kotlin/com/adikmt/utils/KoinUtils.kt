@@ -79,7 +79,7 @@ fun KoinApplication.configure(koinModules: List<Module>) {
     modules(koinModules)
 }
 
-fun koinModules() = listOf(mainModule, coroutinesModule, services, usecases)
+fun koinModules() = listOf(mainModule, coroutinesModule, services, usecases, repositories)
 
 private val coroutinesModule = module {
     single<CoroutineDispatcher>(named("IODispatcher")) { Dispatchers.IO }
@@ -88,7 +88,7 @@ private val coroutinesModule = module {
 }
 
 private val services = module {
-    single<UserService> { UserServiceImpl() }
+    single<UserService> { UserServiceImpl(get()) }
     single<SubredditService> { SubredditServiceImpl() }
     single<PostServices> { PostServicesImpl() }
     single<CommentService> { CommentServiceImpl() }

@@ -1,5 +1,6 @@
 package com.adikmt.usecases
 
+import com.adikmt.dtos.FollowOrUnfollowUser
 import com.adikmt.dtos.UserFollowingData
 import com.adikmt.dtos.UserName
 import com.adikmt.dtos.UserRequest
@@ -14,7 +15,7 @@ fun interface AddUserUseCase {
 }
 
 fun interface GetUserUseCase {
-    suspend fun getUser(userName: UserName): Result<UserResponse>
+    suspend fun getUser(userName: UserName): Result<UserResponse?>
 }
 
 fun interface SearchUserUseCase {
@@ -26,11 +27,11 @@ fun interface GetUserFollowingUseCase {
 }
 
 fun interface FollowUserUseCase {
-    suspend fun followUser(userName: UserName): Result<UserFollowingData>
+    suspend fun followUser(userName: UserName, userToFollow: UserName): Result<FollowOrUnfollowUser>
 }
 
 fun interface UnFollowUserUseCase {
-    suspend fun unFollowUser(userName: UserName): Result<UserFollowingData>
+    suspend fun unFollowUser(userName: UserName, userToUnFollow: UserName): Result<FollowOrUnfollowUser>
 }
 
 
@@ -73,18 +74,18 @@ fun getUserFollowingUseCase(
 fun followUserUseCase(
     dispatcher: CoroutineDispatcher,
     userService: UserService
-) = FollowUserUseCase { userName: UserName ->
+) = FollowUserUseCase { userName: UserName, userToFollow: UserName ->
     withContext(dispatcher) {
-        userService.followUser(userName)
+        userService.followUser(userName, userToFollow)
     }
 }
 
 fun unFollowUserUseCase(
     dispatcher: CoroutineDispatcher,
     userService: UserService
-) = UnFollowUserUseCase { userName: UserName ->
+) = UnFollowUserUseCase { userName: UserName, userToUnFollow: UserName ->
     withContext(dispatcher) {
-        userService.unfollowUser(userName)
+        userService.unfollowUser(userName, userToUnFollow)
     }
 }
 

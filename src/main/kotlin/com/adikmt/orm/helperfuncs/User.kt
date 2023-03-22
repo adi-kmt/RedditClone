@@ -3,6 +3,7 @@ package com.adikmt.orm.helperfuncs
 import com.adikmt.dtos.UserFollowingData
 import com.adikmt.dtos.UserName
 import com.adikmt.dtos.UserResponse
+import com.adikmt.dtos.UserResponseList
 import com.adikmt.orm.UserEntity
 import org.jetbrains.exposed.sql.ResultRow
 
@@ -24,4 +25,10 @@ fun toFollowerData(
     noUsersFollowing = usersFollowing.size,
     noOthersFollowingUser = othersFollowing.size,
     othersFollowingUser = othersFollowing
+)
+
+
+fun List<UserResponse>.toUserRepsponseList() = UserResponseList(
+    userList = this,
+    userNo = this.size
 )

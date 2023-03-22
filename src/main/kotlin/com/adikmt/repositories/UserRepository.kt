@@ -5,10 +5,12 @@ import com.adikmt.dtos.UserFollowingData
 import com.adikmt.dtos.UserName
 import com.adikmt.dtos.UserRequest
 import com.adikmt.dtos.UserResponse
+import com.adikmt.dtos.UserResponseList
 import com.adikmt.orm.UserEntity
 import com.adikmt.orm.UserFollowersEntity
 import com.adikmt.orm.helperfuncs.fromResultRow
 import com.adikmt.orm.helperfuncs.toFollowerData
+import com.adikmt.orm.helperfuncs.toUserRepsponseList
 import com.adikmt.utils.db.DbTransaction
 import com.adikmt.utils.resultOf
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
@@ -23,7 +25,7 @@ interface UserRepository {
 
     suspend fun getUser(userName: UserName): Result<UserResponse?>
 
-    suspend fun searchUserWithName(userName: UserName): Result<List<UserResponse>>
+    suspend fun searchUserWithName(userName: UserName): Result<UserResponseList>
 
     suspend fun followUser(userName: UserName, userToFollow: UserName): Result<FollowOrUnfollowUser>
 
@@ -66,14 +68,14 @@ class UserRepoImpl(private val dbTransaction: DbTransaction) : UserRepository {
         }
     }
 
-    override suspend fun searchUserWithName(userName: UserName): Result<List<UserResponse>> {
+    override suspend fun searchUserWithName(userName: UserName): Result<UserResponseList> {
         return dbTransaction.dbQuery {
             resultOf {
                 UserEntity.select {
                     UserEntity.username like userName.value
                 }.map {
                     it.fromResultRow()
-                }.distinct()
+                }.distinct().toUserRepsponseList()
             }
         }
     }
