@@ -10,11 +10,11 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 fun interface AddSubredditUsecase {
-    suspend fun add(subredditRequest: SubredditRequest): Result<SubredditResponse>
+    suspend fun add(userName: UserName, subredditRequest: SubredditRequest): Result<SubredditResponse>
 }
 
 fun interface GetSubredditByNameUsecase {
-    suspend fun get(subredditName: SubredditName): Result<SubredditResponse>
+    suspend fun get(subredditName: SubredditName): Result<SubredditResponse?>
 }
 
 fun interface SearchSubredditByNameUsecase {
@@ -22,11 +22,11 @@ fun interface SearchSubredditByNameUsecase {
 }
 
 fun interface FollowSubredditUsecase {
-    suspend fun follow(userName: UserName, subredditName: SubredditName): Result<SubredditResponseList>
+    suspend fun follow(userName: UserName, subredditName: SubredditName): Result<SubredditName>
 }
 
 fun interface UnFollowSubredditUsecase {
-    suspend fun unFollow(userName: UserName, subredditName: SubredditName): Result<SubredditResponseList>
+    suspend fun unFollow(userName: UserName, subredditName: SubredditName): Result<SubredditName>
 }
 
 fun interface GetAllSubredditsFollowedUsecase {
@@ -36,9 +36,9 @@ fun interface GetAllSubredditsFollowedUsecase {
 fun addSubredditUsecase(
     dispatcher: CoroutineDispatcher,
     subredditService: SubredditService
-) = AddSubredditUsecase { subredditRequest: SubredditRequest ->
+) = AddSubredditUsecase { userName: UserName, subredditRequest: SubredditRequest ->
     withContext(dispatcher) {
-        subredditService.addSubreddit(subredditRequest)
+        subredditService.addSubreddit(userName, subredditRequest)
     }
 }
 

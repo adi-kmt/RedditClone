@@ -8,7 +8,7 @@ import com.adikmt.dtos.UserResponse
 import com.adikmt.dtos.UserResponseList
 import com.adikmt.orm.UserEntity
 import com.adikmt.orm.UserFollowersEntity
-import com.adikmt.orm.helperfuncs.fromResultRow
+import com.adikmt.orm.helperfuncs.fromResultRowUser
 import com.adikmt.orm.helperfuncs.toFollowerData
 import com.adikmt.orm.helperfuncs.toUserRepsponseList
 import com.adikmt.utils.db.DbTransaction
@@ -62,7 +62,7 @@ class UserRepoImpl(private val dbTransaction: DbTransaction) : UserRepository {
                 UserEntity.select {
                     UserEntity.username eq userName.value
                 }.map {
-                    it.fromResultRow()
+                    it.fromResultRowUser()
                 }.firstOrNull()
             }
         }
@@ -74,7 +74,7 @@ class UserRepoImpl(private val dbTransaction: DbTransaction) : UserRepository {
                 UserEntity.select {
                     UserEntity.username like userName.value
                 }.map {
-                    it.fromResultRow()
+                    it.fromResultRowUser()
                 }.distinct().toUserRepsponseList()
             }
         }
@@ -118,10 +118,10 @@ class UserRepoImpl(private val dbTransaction: DbTransaction) : UserRepository {
             resultOf {
                 val otherFollowingUserData = UserFollowersEntity.select {
                     UserFollowersEntity.userId eq userName.value
-                }.distinct().map { it.fromResultRow() }
+                }.distinct().map { it.fromResultRowUser() }
                 val usersFollowingData = UserFollowersEntity.select {
                     UserFollowersEntity.followeeId eq userName.value
-                }.distinct().map { it.fromResultRow() }
+                }.distinct().map { it.fromResultRowUser() }
 
                 toFollowerData(
                     userName = userName,

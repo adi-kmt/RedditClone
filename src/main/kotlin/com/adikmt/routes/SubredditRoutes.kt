@@ -3,7 +3,6 @@ package com.adikmt.routes
 import com.adikmt.dtos.SerializedException
 import com.adikmt.dtos.SubredditName
 import com.adikmt.dtos.SubredditRequest
-import com.adikmt.dtos.SubredditResponse
 import com.adikmt.dtos.UserName
 import com.adikmt.usecases.AddSubredditUsecase
 import com.adikmt.usecases.FollowSubredditUsecase
@@ -11,6 +10,7 @@ import com.adikmt.usecases.GetAllSubredditsFollowedUsecase
 import com.adikmt.usecases.GetSubredditByNameUsecase
 import com.adikmt.usecases.SearchSubredditByNameUsecase
 import com.adikmt.usecases.UnFollowSubredditUsecase
+import com.adikmt.utils.deconstructResult
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.request.receive
@@ -37,8 +37,8 @@ private fun Routing.unfollowSubreddit() {
         try {
             val name = call.parameters["name"]
             name?.let {
-                unFollowSubredditUsecase.unFollow(UserName(""), SubredditName(it))
-                call.respond(HttpStatusCode.OK, SubredditName(it))
+                val data = unFollowSubredditUsecase.unFollow(UserName(""), SubredditName(it))
+                deconstructResult(this, data, HttpStatusCode.Gone)
             }
             call.respond(HttpStatusCode.UnprocessableEntity)
         } catch (e: Exception) {
@@ -53,8 +53,8 @@ private fun Routing.followSubreddit() {
         try {
             val name = call.parameters["name"]
             name?.let {
-                followSubredditUsecase.follow(UserName(""), SubredditName(name))
-                call.respond(HttpStatusCode.OK, SubredditName(it))
+                val data = followSubredditUsecase.follow(UserName(""), SubredditName(name))
+                deconstructResult(this, data, HttpStatusCode.Created)
             }
             call.respond(HttpStatusCode.UnprocessableEntity)
         } catch (e: Exception) {
@@ -69,8 +69,8 @@ private fun Routing.searchSubredditByName() {
         try {
             val name = call.parameters["name"]
             name?.let {
-                searchSubredditByNameUsecase.get(SubredditName(it))
-                call.respond(HttpStatusCode.OK, SubredditName(it))
+                val subredditList = searchSubredditByNameUsecase.get(SubredditName(it))
+                deconstructResult(this, subredditList, HttpStatusCode.OK)
             }
             call.respond(HttpStatusCode.UnprocessableEntity)
         } catch (e: Exception) {
@@ -86,8 +86,8 @@ private fun Routing.getFollowedSubreddit() {
         try {
             val userId = call.parameters["userId"]
             userId?.let {
-                getAllSubredditsFollowedUsecase.get(UserName(it))
-                call.respond(HttpStatusCode.OK, UserName(it))
+                val subredditList = getAllSubredditsFollowedUsecase.get(UserName(it))
+                deconstructResult(this, subredditList, HttpStatusCode.OK)
             }
             call.respond(HttpStatusCode.UnprocessableEntity)
         } catch (e: Exception) {
@@ -102,8 +102,8 @@ private fun Routing.getSubredditByName() {
         try {
             val name = call.parameters["name"]
             name?.let {
-                getSubredditByNameUsecase.get(SubredditName(it))
-                call.respond(HttpStatusCode.OK, SubredditName(it))
+                val subreddit = getSubredditByNameUsecase.get(SubredditName(it))
+                deconstructResult(this, subreddit, HttpStatusCode.OK)
             }
             call.respond(HttpStatusCode.UnprocessableEntity)
         } catch (e: Exception) {
@@ -118,8 +118,8 @@ private fun Routing.addSubreddit() {
         try {
             val subreddit = call.receive<SubredditRequest>()
             subreddit?.let {
-                addSubredditUsecase.add(subreddit)
-                call.respond(HttpStatusCode.Created, SubredditResponse)
+                val subredditResponse = addSubredditUsecase.add(UserName(""), subreddit)
+                deconstructResult(this, subredditResponse, HttpStatusCode.Created)
             }
             call.respond(HttpStatusCode.UnprocessableEntity)
         } catch (e: Exception) {

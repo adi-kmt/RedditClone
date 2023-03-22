@@ -8,7 +8,7 @@ import com.adikmt.orm.UserEntity
 import org.jetbrains.exposed.sql.ResultRow
 
 
-fun ResultRow.fromResultRow(): UserResponse = UserResponse(
+fun ResultRow.fromResultRowUser(): UserResponse = UserResponse(
     userId = this[UserEntity.id].value,
     userName = this[UserEntity.username],
     userEmail = this[UserEntity.email],
