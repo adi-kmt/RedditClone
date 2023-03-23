@@ -2,7 +2,6 @@ package com.adikmt.routes
 
 import com.adikmt.dtos.CommentId
 import com.adikmt.dtos.CommentRequest
-import com.adikmt.dtos.CommentResponse
 import com.adikmt.dtos.PostId
 import com.adikmt.dtos.SerializedException
 import com.adikmt.dtos.UserName
@@ -12,6 +11,7 @@ import com.adikmt.usecases.GetAllCommentByUserUsecase
 import com.adikmt.usecases.GetAllCommentsByPostUsecase
 import com.adikmt.usecases.GetCommentUsecase
 import com.adikmt.usecases.UpvoteCommentUsecase
+import com.adikmt.utils.deconstructResult
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.request.receive
@@ -38,8 +38,8 @@ private fun Routing.downvoteComment() {
         try {
             val commentId = call.parameters["commentId"]
             commentId?.let {
-                downvoteCommentUsecase.downvote(UserName(""), CommentId(it))
-                call.respond(HttpStatusCode.Gone, CommentId(it))
+                val data = downvoteCommentUsecase.downvote(UserName(""), CommentId(it))
+                deconstructResult(this, data, HttpStatusCode.Gone)
             }
             call.respond(HttpStatusCode.UnprocessableEntity)
         } catch (e: Exception) {
@@ -54,8 +54,8 @@ private fun Routing.upvoteComment() {
         try {
             val commentId = call.parameters["commentId"]
             commentId?.let {
-                upvoteCommentUsecase.upvote(UserName(""), CommentId(it))
-                call.respond(HttpStatusCode.Gone, CommentId(it))
+                val data = upvoteCommentUsecase.upvote(UserName(""), CommentId(it))
+                deconstructResult(this, data, HttpStatusCode.Created)
             }
             call.respond(HttpStatusCode.UnprocessableEntity)
         } catch (e: Exception) {
@@ -70,8 +70,8 @@ private fun Routing.getCommentByUserId() {
         try {
             val userId = call.parameters["userId"]
             userId?.let {
-                getAllCommentByUserUsecase.get(UserName(it))
-                call.respond(HttpStatusCode.Gone, CommentId(it))
+                val data = getAllCommentByUserUsecase.get(UserName(it))
+                deconstructResult(this, data, HttpStatusCode.OK)
             }
             call.respond(HttpStatusCode.UnprocessableEntity)
         } catch (e: Exception) {
@@ -86,8 +86,8 @@ private fun Routing.getCommentById() {
         try {
             val commentId = call.parameters["commentId"]
             commentId?.let {
-                getCommentUsecase.get(CommentId(it))
-                call.respond(HttpStatusCode.Gone, CommentId(it))
+                val data = getCommentUsecase.get(CommentId(it))
+                deconstructResult(this, data, HttpStatusCode.OK)
             }
             call.respond(HttpStatusCode.UnprocessableEntity)
         } catch (e: Exception) {
@@ -102,8 +102,8 @@ private fun Routing.getCommentsByPost() {
         try {
             val postId = call.parameters["postId"]
             postId?.let {
-                getAllCommentsByPostUsecase.get(PostId(it))
-                call.respond(HttpStatusCode.Gone, CommentId(it))
+                val data = getAllCommentsByPostUsecase.get(PostId(it))
+                deconstructResult(this, data, HttpStatusCode.OK)
             }
             call.respond(HttpStatusCode.UnprocessableEntity)
         } catch (e: Exception) {
@@ -118,8 +118,8 @@ private fun Routing.addComment() {
         try {
             val comment = call.receive<CommentRequest>()
             comment?.let {
-                addCommentUsecase.add(it)
-                call.respond(HttpStatusCode.Gone, CommentResponse)
+                val commentResponse = addCommentUsecase.add(it)
+                deconstructResult(this, commentResponse, HttpStatusCode.Gone)
             }
             call.respond(HttpStatusCode.UnprocessableEntity)
         } catch (e: Exception) {

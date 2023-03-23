@@ -5,14 +5,16 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CommentRequest(
     val postId: String,
-    val commentBody: String
+    val commentBody: String,
+    val parentComment: Long
 )
 
 @Serializable
 data class CommentResponse(
-    val commentId: String,
+    val commentId: Long,
     val commentBody: String,
-    val commentAuthor: UserResponse,
+    val commentAuthor: UserName,
+    val parentComment: Long?,
     val createdAt: String,
     val upvoteNo: Int
 )
@@ -30,7 +32,7 @@ data class CommentUpvoteOrDownvote(
 
 @JvmInline
 @Serializable
-value class CommentId(private val value: String) {
+value class CommentId(val value: String) {
 
     companion object {
         fun toLong(commentId: CommentId): Long = commentId.value.toLong()
