@@ -120,8 +120,9 @@ private fun Routing.addSubreddit() {
             subreddit?.let {
                 val subredditResponse = addSubredditUsecase.add(UserName(""), subreddit)
                 deconstructResult(this, subredditResponse, HttpStatusCode.Created)
+            } ?: run {
+                call.respond(HttpStatusCode.UnprocessableEntity)
             }
-            call.respond(HttpStatusCode.UnprocessableEntity)
         } catch (e: Exception) {
             call.respond(HttpStatusCode.InternalServerError, SerializedException(e.message))
         }

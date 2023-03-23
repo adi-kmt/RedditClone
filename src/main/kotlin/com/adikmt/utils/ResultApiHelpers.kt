@@ -4,6 +4,7 @@ package com.adikmt.utils
  * Got from [ProAndroidDev Article] {https://proandroiddev.com/resilient-use-cases-with-kotlin-result-coroutines-and-annotations-511df10e2e16}
  */
 
+import com.adikmt.dtos.SerializedException
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.call
@@ -45,11 +46,12 @@ inline fun <T, R> T.resultOf(block: T.() -> R): Result<R> {
 /**
  * Like [mapCatching], but uses [resultOf] instead of [runCatching].
  */
-inline fun <R, T> Result<T>.mapResult(transform: (value: T) -> R): Result<R> {
+inline fun <R, T> Result<T>.mapResult(transform: (value: T) -> R, transformFail: (failure: Throwable) -> R): Result<R> {
     val successResult = getOrNull()
+    val failureResult = exceptionOrNull() ?: error("Unreachable state")
     return when {
         successResult != null -> resultOf { transform(successResult) }
-        else -> Result.failure(exceptionOrNull() ?: error("Unreachable state"))
+        else -> resultOf { transformFail(failureResult) }
     }
 }
 
@@ -62,8 +64,10 @@ suspend inline fun <reified T> deconstructResult(
     result: Result<T>,
     httpStatusCode: HttpStatusCode
 ) {
-    result.mapResult { value: T ->
+    result.mapResult({ value: T ->
         pipeline.call.respond(httpStatusCode, value, typeInfo<T>())
-    }
+    }, {
+        pipeline.call.respond(HttpStatusCode.BadRequest, SerializedException(it.message))
+    })
 }
 
