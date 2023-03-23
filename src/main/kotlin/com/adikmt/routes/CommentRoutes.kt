@@ -118,7 +118,7 @@ private fun Routing.addComment() {
         try {
             val comment = call.receive<CommentRequest>()
             comment?.let {
-                val commentResponse = addCommentUsecase.add(it)
+                val commentResponse = addCommentUsecase.add(UserName(""), it)
                 deconstructResult(this, commentResponse, HttpStatusCode.Gone)
             }
             call.respond(HttpStatusCode.UnprocessableEntity)

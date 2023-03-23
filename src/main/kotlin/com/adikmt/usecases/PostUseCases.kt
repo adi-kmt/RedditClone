@@ -12,11 +12,11 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 fun interface AddPostUsecase {
-    suspend fun add(postRequest: PostRequest): Result<PostResponse>
+    suspend fun add(userName: UserName, postRequest: PostRequest): Result<PostResponse>
 }
 
 fun interface GetPostUsecase {
-    suspend fun get(postId: PostId): Result<PostResponse>
+    suspend fun get(postId: PostId): Result<PostResponse?>
 }
 
 fun interface GetPostFeedByUserUsecase {
@@ -36,19 +36,19 @@ fun interface GetPostByUserUsecase {
 }
 
 fun interface UpvotePostUsecase {
-    suspend fun upvote(userName: UserName, postId: PostId): Result<PostResponse>
+    suspend fun upvote(userName: UserName, postId: PostId): Result<PostId>
 }
 
 fun interface DownvotePostUsecase {
-    suspend fun downvote(userName: UserName, postId: PostId): Result<PostResponse>
+    suspend fun downvote(userName: UserName, postId: PostId): Result<PostId>
 }
 
 fun addPostUsecase(
     dispatcher: CoroutineDispatcher,
     postServices: PostServices
-) = AddPostUsecase { postRequest: PostRequest ->
+) = AddPostUsecase { userName: UserName, postRequest: PostRequest ->
     withContext(dispatcher) {
-        postServices.addPost(postRequest)
+        postServices.addPost(userName, postRequest)
     }
 }
 

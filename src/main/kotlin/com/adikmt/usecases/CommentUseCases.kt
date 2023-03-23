@@ -11,11 +11,11 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 fun interface AddCommentUsecase {
-    suspend fun add(commentRequest: CommentRequest): Result<CommentResponse>
+    suspend fun add(userName: UserName, commentRequest: CommentRequest): Result<CommentResponse>
 }
 
 fun interface GetCommentUsecase {
-    suspend fun get(commentId: CommentId): Result<CommentResponse>
+    suspend fun get(commentId: CommentId): Result<CommentResponse?>
 }
 
 fun interface GetAllCommentsByPostUsecase {
@@ -27,19 +27,19 @@ fun interface GetAllCommentByUserUsecase {
 }
 
 fun interface UpvoteCommentUsecase {
-    suspend fun upvote(userName: UserName, commentId: CommentId): Result<CommentResponse>
+    suspend fun upvote(userName: UserName, commentId: CommentId): Result<CommentId>
 }
 
 fun interface DownvoteCommentUsecase {
-    suspend fun downvote(userName: UserName, commentId: CommentId): Result<CommentResponse>
+    suspend fun downvote(userName: UserName, commentId: CommentId): Result<CommentId>
 }
 
 fun addCommentUsecase(
     dispatcher: CoroutineDispatcher,
     commentService: CommentService
-) = AddCommentUsecase { commentRequest: CommentRequest ->
+) = AddCommentUsecase { userName: UserName, commentRequest: CommentRequest ->
     withContext(dispatcher) {
-        commentService.addComment(commentRequest)
+        commentService.addComment(userName, commentRequest)
     }
 }
 

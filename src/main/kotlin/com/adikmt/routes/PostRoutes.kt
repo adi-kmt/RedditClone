@@ -14,6 +14,7 @@ import com.adikmt.usecases.GetPostFeedByUserUsecase
 import com.adikmt.usecases.GetPostUsecase
 import com.adikmt.usecases.SearchPostByHeadingUsecase
 import com.adikmt.usecases.UpvotePostUsecase
+import com.adikmt.utils.deconstructResult
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.request.receive
@@ -55,8 +56,8 @@ private fun Routing.downvotePostById() {
         try {
             val postId = call.parameters["postId"]
             postId?.let {
-                downvotePostUsecase.downvote(UserName(""), PostId(it))
-                call.respond(HttpStatusCode.Gone, PostId(it))
+                val data = downvotePostUsecase.downvote(UserName(""), PostId(it))
+                deconstructResult(this, data, HttpStatusCode.Gone)
             }
             call.respond(HttpStatusCode.UnprocessableEntity)
         } catch (e: Exception) {
@@ -71,8 +72,8 @@ private fun Routing.upvotePostById() {
         try {
             val postId = call.parameters["postId"]
             postId?.let {
-                upvotePostUsecase.upvote(UserName(""), PostId(it))
-                call.respond(HttpStatusCode.Created, PostId(it))
+                val data = upvotePostUsecase.upvote(UserName(""), PostId(it))
+                deconstructResult(this, data, HttpStatusCode.Created)
             }
             call.respond(HttpStatusCode.UnprocessableEntity)
         } catch (e: Exception) {
@@ -87,8 +88,8 @@ private fun Routing.getPostListByUserId() {
         try {
             val userId = call.parameters["userId"]
             userId?.let {
-                getPostByUserUsecase.get(UserName(it))
-                call.respond(HttpStatusCode.Gone, PostId(it))
+                val data = getPostByUserUsecase.get(UserName(it))
+                deconstructResult(this, data, HttpStatusCode.OK)
             }
             call.respond(HttpStatusCode.UnprocessableEntity)
         } catch (e: Exception) {
@@ -103,8 +104,8 @@ private fun Routing.getPostListBySubredditName() {
         try {
             val subredditName = call.parameters["subredditName"]
             subredditName?.let {
-                getPostBySubredditUsecase.get(SubredditName(it))
-                call.respond(HttpStatusCode.Gone, PostId(it))
+                val data = getPostBySubredditUsecase.get(SubredditName(it))
+                deconstructResult(this, data, HttpStatusCode.OK)
             }
             call.respond(HttpStatusCode.UnprocessableEntity)
         } catch (e: Exception) {
@@ -119,8 +120,8 @@ private fun Routing.getPostListByHeading() {
         try {
             val heading = call.parameters["heading"]
             heading?.let {
-                searchPostByHeadingUsecase.search(PostHeading(it))
-                call.respond(HttpStatusCode.Gone, PostId(it))
+                val data = searchPostByHeadingUsecase.search(PostHeading(it))
+                deconstructResult(this, data, HttpStatusCode.OK)
             }
             call.respond(HttpStatusCode.UnprocessableEntity)
         } catch (e: Exception) {
@@ -135,8 +136,8 @@ private fun Routing.getPostById() {
         try {
             val postId = call.parameters["postId"]
             postId?.let {
-                getPostUseCase.get(PostId(it))
-                call.respond(HttpStatusCode.OK, PostId(it))
+                val data = getPostUseCase.get(PostId(it))
+                deconstructResult(this, data, HttpStatusCode.OK)
             }
             call.respond(HttpStatusCode.UnprocessableEntity)
         } catch (e: Exception) {
@@ -151,8 +152,8 @@ private fun Routing.addPost() {
         try {
             val post = call.receive<PostRequest>()
             post?.let {
-                addPostUsecase.add(post)
-                call.respond(HttpStatusCode.Created)
+                val data = addPostUsecase.add(UserName(""), post)
+                deconstructResult(this, data, HttpStatusCode.Created)
             }
             call.respond(HttpStatusCode.UnprocessableEntity)
         } catch (e: Exception) {

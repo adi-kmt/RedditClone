@@ -11,11 +11,11 @@ data class PostRequest(
 
 @Serializable
 data class PostResponse(
-    val postId: String,
+    val postId: Long,
     val subredditName: String,
     val postHeading: String,
     val postBody: String,
-    val postAuthor: UserResponse,
+    val postAuthor: UserName,
     val postCreatedAt: String,
     val noOfUpvotes: Int
 )
