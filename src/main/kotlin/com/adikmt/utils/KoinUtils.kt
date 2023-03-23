@@ -2,6 +2,8 @@ package com.adikmt.utils
 
 import com.adikmt.repositories.CommentRepository
 import com.adikmt.repositories.CommentRepositoryImpl
+import com.adikmt.repositories.PostRepoImpl
+import com.adikmt.repositories.PostRepository
 import com.adikmt.repositories.SubredditRepoImpl
 import com.adikmt.repositories.SubredditRepository
 import com.adikmt.repositories.UserRepoImpl
@@ -94,7 +96,7 @@ private val coroutinesModule = module {
 private val services = module {
     single<UserService> { UserServiceImpl(get()) }
     single<SubredditService> { SubredditServiceImpl(get()) }
-    single<PostServices> { PostServicesImpl() }
+    single<PostServices> { PostServicesImpl(get()) }
     single<CommentService> { CommentServiceImpl(get()) }
 }
 
@@ -223,6 +225,7 @@ private val usecases = module {
 private val repositories = module {
     single<UserRepository> { UserRepoImpl(get()) }
     single<SubredditRepository> { SubredditRepoImpl(get()) }
+    single<PostRepository> { PostRepoImpl(get()) }
     single<CommentRepository> { CommentRepositoryImpl(get()) }
 }
 

@@ -8,7 +8,6 @@ mysqlConnector = "8.0.31"
 hikaricp = "5.0.0"
 jbcrypt = "0.4"
 koin = "3.3.1"
-arrow = "1.1.5"
 serializationJson = "1.4.1"
 kotlinLogging = "2.1.21"
 scientist = "1.0.2"
@@ -30,9 +29,6 @@ scientist = { module = "com.github.spoptchev:scientist", version.ref = "scientis
 
 coroutinesSlf4j = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-slf4j", version.ref = "coroutines" }
 coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
-
-arrowstack = { module = "io.arrow-kt:arrow-stack", version.ref = "arrow" }
-arrowcore = { module = "io.arrow-kt:arrow-core" }
 
 ktorcore = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
 ktorauth = { module = "io.ktor:ktor-auth", version.ref = "ktorAuth" }
