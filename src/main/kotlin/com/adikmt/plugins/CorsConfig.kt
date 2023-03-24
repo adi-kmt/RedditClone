@@ -1,7 +1,9 @@
-package com.adikmt.utils
+package com.adikmt.plugins
 
-import io.ktor.http.*
-import io.ktor.server.plugins.cors.*
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
+import io.ktor.server.plugins.cors.CORSConfig
+import io.ktor.server.plugins.cors.maxAgeDuration
 import kotlin.time.Duration.Companion.days
 
 fun CORSConfig.cors() {
@@ -13,6 +15,7 @@ fun CORSConfig.cors() {
     allowHeader(HttpHeaders.AccessControlAllowHeaders)
     allowHeader(HttpHeaders.AccessControlAllowOrigin)
     allowHeader(HttpHeaders.Authorization)
+    allowHeader(HttpHeaders.ContentType)
     allowCredentials = true
     allowSameOrigin = true
     anyHost()

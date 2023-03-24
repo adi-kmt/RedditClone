@@ -20,10 +20,6 @@ repositories {
 }
 
 dependencies {
-    implementation(platform(libs.arrowstack))
-
-    implementation(libs.arrowcore)
-
     implementation(libs.bundles.coroutines)
 
     implementation(libs.bundles.koin)

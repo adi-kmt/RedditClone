@@ -8,9 +8,6 @@ mysqlConnector = "8.0.31"
 hikaricp = "5.0.0"
 jbcrypt = "0.4"
 koin = "3.3.1"
-spotless = "5.16.0"
-ktlint = "0.42.1"
-arrow = "1.1.5"
 serializationJson = "1.4.1"
 kotlinLogging = "2.1.21"
 scientist = "1.0.2"
@@ -33,11 +30,10 @@ scientist = { module = "com.github.spoptchev:scientist", version.ref = "scientis
 coroutinesSlf4j = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-slf4j", version.ref = "coroutines" }
 coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 
-arrowstack = { module = "io.arrow-kt:arrow-stack", version.ref = "arrow" }
-arrowcore = { module = "io.arrow-kt:arrow-core" }
-
 ktorcore = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
 ktorauth = { module = "io.ktor:ktor-auth", version.ref = "ktorAuth" }
+ktorServerAuth = { module = "io.ktor:ktor-server-auth", version.ref = "ktor" }
+ktorServerAuthJWT = { module = "io.ktor:ktor-server-auth-jwt", version.ref = "ktor" }
 ktorjwt = { module = "io.ktor:ktor-auth-jwt", version.ref = "ktorAuth" }
 ktorsession = { module = "io.ktor:ktor-server-sessions", version.ref = "ktor" }
 ktorlocations = { module = "io.ktor:ktor-locations", version.ref = "ktorAuth" }
@@ -54,6 +50,7 @@ ktorclientcore = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktorcio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
 ktorclientserialization = { module = "io.ktor:ktor-client-serialization", version.ref = "ktor" }
 ktorclientauth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
+doubleRecieve = { module = "io.ktor:ktor-server-double-receive", version.ref = "ktor" }
 
 exposedcore = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
 exposeddao = { module = "org.jetbrains.exposed:exposed-dao", version.ref = "exposed" }
@@ -80,7 +77,6 @@ h2 = { module = "com.h2database:h2", version.ref = "h2" }
 jvmPlugin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 ktorPlugin = { id = "io.ktor.plugin", version.ref = "ktor" }
 serializationPlugin = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-spotlessPlugin = { id = "com.diffplug.spotless", version.ref = "spotless" }
 domPlugin = { id = "org.unbroken-dome.test-sets", version.ref = "domTest" }
 
 [bundles]
@@ -112,7 +108,10 @@ ktor = ['ktorcore',
     "ktorcio",
     "ktorclientserialization",
     "ktorclientauth",
-    "serializationJson"
+    "serializationJson",
+    "doubleRecieve",
+    "ktorServerAuth",
+    "ktorServerAuthJWT"
 ]
 logging = ["logback",
     "kotlinLogging"

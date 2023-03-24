@@ -11,7 +11,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 
 private val logger = KotlinLogging.logger {}
-class DatabaseFactoryImpl(val databaseConfig: DatabaseConfig): DataBaseFactory {
+class DatabaseFactoryImpl(private val databaseConfig: DatabaseConfig): DataBaseFactory {
     override fun connect() {
         logger.info { "Initializing DB connection" }
         Database.connect(hikari(), databaseConfig = config())

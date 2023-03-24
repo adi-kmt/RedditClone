@@ -1,0 +1,26 @@
+package com.adikmt.orm.helperfuncs
+
+import com.adikmt.dtos.CommentId
+import com.adikmt.dtos.CommentResponse
+import com.adikmt.dtos.CommentResponseList
+import com.adikmt.dtos.UserName
+import com.adikmt.orm.CommentEntity
+import org.jetbrains.exposed.sql.ResultRow
+
+fun ResultRow.FromResultRowComment(upvoteNo: Long) = CommentResponse(
+    commentId = this[CommentEntity.id].value,
+    commentBody = this[CommentEntity.text],
+    commentAuthor = UserName(this[CommentEntity.author]),
+    parentComment = this[CommentEntity.parentComment]?.value,
+    createdAt = this[CommentEntity.createdAt].toString(),
+    upvoteNo = upvoteNo.toInt(),
+)
+
+fun ResultRow.toCommentIds() = CommentId(
+    value = this[CommentEntity.id].value.toString()
+)
+
+fun List<CommentResponse>.toCommentResponseList() = CommentResponseList(
+    commentList = this,
+    commentNo = this.size
+)
