@@ -11,7 +11,7 @@ data class PostRequest(
 
 @Serializable
 data class PostResponse(
-    val postId: Long,
+    val postId: Long?,
     val subredditName: String,
     val postHeading: String,
     val postBody: String,

@@ -17,9 +17,9 @@ import com.adikmt.utils.db.DbTransaction
 import com.adikmt.utils.resultOf
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.insertAndGetId
+import org.jetbrains.exposed.sql.deleteIgnoreWhere
+import org.jetbrains.exposed.sql.insertIgnore
+import org.jetbrains.exposed.sql.insertIgnoreAndGetId
 import org.jetbrains.exposed.sql.select
 
 interface UserRepository {
@@ -43,14 +43,14 @@ class UserRepoImpl(private val dbTransaction: DbTransaction) : UserRepository {
     override suspend fun createUser(userRequest: UserRequest): Result<UserResponse> {
         return dbTransaction.dbQuery {
             resultOf {
-                val id = UserEntity.insertAndGetId {
+                val id = UserEntity.insertIgnoreAndGetId {
                     it[UserEntity.username] = userRequest.userName
                     it[UserEntity.email] = userRequest.userEmail
                     it[UserEntity.password] = userRequest.userPassword
                     it[UserEntity.bio] = userRequest.userBio.orEmpty()
                 }
                 UserResponse(
-                    userId = id.value,
+                    userId = id?.value,
                     userEmail = userRequest.userEmail,
                     userName = userRequest.userName,
                     userBio = userRequest.userPassword
@@ -98,7 +98,7 @@ class UserRepoImpl(private val dbTransaction: DbTransaction) : UserRepository {
     override suspend fun followUser(userName: UserName, userToFollow: UserName): Result<FollowOrUnfollowUser> {
         return dbTransaction.dbQuery {
             resultOf {
-                UserFollowersEntity.insert {
+                UserFollowersEntity.insertIgnore {
                     it[UserFollowersEntity.userId] = userToFollow.value
                     it[UserFollowersEntity.followeeId] = userName.value
                 }
@@ -120,7 +120,7 @@ class UserRepoImpl(private val dbTransaction: DbTransaction) : UserRepository {
     override suspend fun unFollowUser(userName: UserName, userToUnFollow: UserName): Result<FollowOrUnfollowUser> {
         return dbTransaction.dbQuery {
             resultOf {
-                UserFollowersEntity.deleteWhere {
+                UserFollowersEntity.deleteIgnoreWhere {
                     UserFollowersEntity.userId eq userToUnFollow.value and (UserFollowersEntity.followeeId eq userName.value)
                 }
                 FollowOrUnfollowUser(userToUnFollow)
@@ -133,10 +133,10 @@ class UserRepoImpl(private val dbTransaction: DbTransaction) : UserRepository {
             resultOf {
                 val otherFollowingUserData = UserFollowersEntity.select {
                     UserFollowersEntity.userId eq userName.value
-                }.distinct().map { it.fromResultRowUser() }
+                }.map { it.fromResultRowUser() }
                 val usersFollowingData = UserFollowersEntity.select {
                     UserFollowersEntity.followeeId eq userName.value
-                }.distinct().map { it.fromResultRowUser() }
+                }.map { it.fromResultRowUser() }
 
                 toFollowerData(
                     userName = userName,

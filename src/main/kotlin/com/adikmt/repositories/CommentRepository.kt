@@ -12,14 +12,11 @@ import com.adikmt.orm.helperfuncs.FromResultRowComment
 import com.adikmt.orm.helperfuncs.toCommentResponseList
 import com.adikmt.utils.db.DbTransaction
 import com.adikmt.utils.resultOf
-import org.jetbrains.exposed.sql.Count
-import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.alias
 import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.insertAndGetId
+import org.jetbrains.exposed.sql.deleteIgnoreWhere
+import org.jetbrains.exposed.sql.insertIgnore
+import org.jetbrains.exposed.sql.insertIgnoreAndGetId
 import org.jetbrains.exposed.sql.javatime.CurrentDateTime
 import org.jetbrains.exposed.sql.select
 
@@ -41,7 +38,7 @@ class CommentRepositoryImpl(private val dbTransaction: DbTransaction) : CommentR
     override suspend fun addComment(userName: UserName, commentRequest: CommentRequest): Result<CommentResponse> {
         return dbTransaction.dbQuery {
             resultOf {
-                val id = CommentEntity.insertAndGetId {
+                val id = CommentEntity.insertIgnoreAndGetId {
                     it[CommentEntity.post] = commentRequest.postId.toLong()
                     it[CommentEntity.author] = userName.value
                     it[CommentEntity.text] = commentRequest.commentBody
@@ -49,7 +46,7 @@ class CommentRepositoryImpl(private val dbTransaction: DbTransaction) : CommentR
                 }
 
                 CommentResponse(
-                    commentId = id.value,
+                    commentId = id?.value,
                     commentBody = commentRequest.commentBody,
                     commentAuthor = userName,
                     parentComment = commentRequest.parentComment,
@@ -68,7 +65,7 @@ class CommentRepositoryImpl(private val dbTransaction: DbTransaction) : CommentR
                 }.count()
                 CommentEntity.select {
                     CommentEntity.id eq commentId.value.toLong()
-                }.distinct().map {
+                }.map {
                     it.FromResultRowComment(upvotes)
                 }.firstOrNull()
             }
@@ -79,34 +76,21 @@ class CommentRepositoryImpl(private val dbTransaction: DbTransaction) : CommentR
         return dbTransaction.dbQuery {
             resultOf {
                 //TODO figure out each comment's likes and push
-//                val upvotes = CommentFavouriteEntity
-//                    .innerJoin(
-//                        CommentEntity,
-//                        { CommentFavouriteEntity.commentId },
-//                        { CommentEntity.id },
-//                        { CommentEntity.post eq postId.value.toLong() }).selectAll().distinct().count()
 
-//                CommentEntity.leftJoin(
-//                    CommentFavouriteEntity,
-//                    { CommentEntity.id },
-//                    { CommentFavouriteEntity.commentId },
-//                    { CommentEntity.post. eq(postId.value.toLong()) }
-//                ).slice(Count())
-
-                val data = (CommentEntity.leftJoin(
-                    CommentFavouriteEntity
-                ))
-                    .slice(
-                        CommentEntity.id, CommentEntity.text,
-                        Count(CommentFavouriteEntity.commentId).alias("likes")
-                    )
-                    .select { CommentEntity.post eq postId.value.toLong() }
-                    .groupBy(CommentEntity.id)
-                    .orderBy(CommentFavouriteEntity.commentId, SortOrder.DESC)
+//                val data = (CommentEntity.leftJoin(
+//                    CommentFavouriteEntity
+//                ))
+//                    .slice(
+//                        CommentEntity.id, CommentEntity.text,
+//                        Count(CommentFavouriteEntity.commentId).alias("likes")
+//                    )
+//                    .select { CommentEntity.post eq postId.value.toLong() }
+//                    .groupBy(CommentEntity.id)
+//                    .orderBy(CommentFavouriteEntity.commentId, SortOrder.DESC)
 
                 CommentEntity.select {
                     CommentEntity.post eq postId.value.toLong()
-                }.distinct().map {
+                }.map {
                     it.FromResultRowComment(0) //Temporary
                 }.toCommentResponseList()
             }
@@ -118,7 +102,7 @@ class CommentRepositoryImpl(private val dbTransaction: DbTransaction) : CommentR
             resultOf {
                 CommentEntity.select {
                     CommentEntity.author eq userName.value
-                }.distinct().map {
+                }.map {
                     it.FromResultRowComment(0) //Temporary
                 }.toCommentResponseList()
             }
@@ -128,7 +112,7 @@ class CommentRepositoryImpl(private val dbTransaction: DbTransaction) : CommentR
     override suspend fun upvoteComment(commentId: CommentId, userName: UserName): Result<CommentId> {
         return dbTransaction.dbQuery {
             resultOf {
-                CommentFavouriteEntity.insert {
+                CommentFavouriteEntity.insertIgnore {
                     it[CommentFavouriteEntity.commentId] = commentId.value.toLong()
                     it[CommentFavouriteEntity.userId] = userName.value
                 }
@@ -141,7 +125,7 @@ class CommentRepositoryImpl(private val dbTransaction: DbTransaction) : CommentR
     override suspend fun downvoteComment(commentId: CommentId, userName: UserName): Result<CommentId> {
         return dbTransaction.dbQuery {
             resultOf {
-                CommentFavouriteEntity.deleteWhere {
+                CommentFavouriteEntity.deleteIgnoreWhere {
                     CommentFavouriteEntity.commentId eq commentId.value.toLong() and (CommentFavouriteEntity.userId eq userName.value)
                 }
 

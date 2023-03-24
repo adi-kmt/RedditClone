@@ -13,10 +13,10 @@ import com.adikmt.utils.db.DbTransaction
 import com.adikmt.utils.resultOf
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.deleteWhere
+import org.jetbrains.exposed.sql.deleteIgnoreWhere
 import org.jetbrains.exposed.sql.innerJoin
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.insertAndGetId
+import org.jetbrains.exposed.sql.insertIgnore
+import org.jetbrains.exposed.sql.insertIgnoreAndGetId
 import org.jetbrains.exposed.sql.select
 
 interface SubredditRepository {
@@ -42,13 +42,13 @@ class SubredditRepoImpl(private val dbTransaction: DbTransaction) : SubredditRep
     ): Result<SubredditResponse> {
         return dbTransaction.dbQuery {
             resultOf {
-                val id = SubredditEntity.insertAndGetId {
+                val id = SubredditEntity.insertIgnoreAndGetId {
                     it[SubredditEntity.title] = subredditRequest.subredditName
                     it[SubredditEntity.desc] = subredditRequest.subredditDesc
                     it[SubredditEntity.createdByUser] = userName.value
                 }
                 SubredditResponse(
-                    id = id.value,
+                    id = id?.value,
                     subredditName = subredditRequest.subredditName,
                     subredditDesc = subredditRequest.subredditDesc,
                     createdByUser = userName
@@ -76,7 +76,7 @@ class SubredditRepoImpl(private val dbTransaction: DbTransaction) : SubredditRep
                     SubredditEntity.title like subredditName.value
                 }.map {
                     it.fromResultRowSubreddit()
-                }.distinct().toSubredditResponseList()
+                }.toSubredditResponseList()
             }
         }
     }
@@ -84,7 +84,7 @@ class SubredditRepoImpl(private val dbTransaction: DbTransaction) : SubredditRep
     override suspend fun followSubreddit(userName: UserName, subredditName: SubredditName): Result<SubredditName> {
         return dbTransaction.dbQuery {
             resultOf {
-                SubredditFollowerEntity.insert {
+                SubredditFollowerEntity.insertIgnore {
                     it[SubredditFollowerEntity.subredditId] = subredditName.value
                     it[SubredditFollowerEntity.userId] = userName.value
                 }
@@ -96,7 +96,7 @@ class SubredditRepoImpl(private val dbTransaction: DbTransaction) : SubredditRep
     override suspend fun unfollowSubreddit(userName: UserName, subredditName: SubredditName): Result<SubredditName> {
         return dbTransaction.dbQuery {
             resultOf {
-                SubredditFollowerEntity.deleteWhere {
+                SubredditFollowerEntity.deleteIgnoreWhere {
                     SubredditFollowerEntity.userId eq userName.value and (SubredditFollowerEntity.subredditId eq subredditName.value)
                 }
                 subredditName
@@ -122,7 +122,7 @@ class SubredditRepoImpl(private val dbTransaction: DbTransaction) : SubredditRep
                     .slice(listOf(SubredditFollowerEntity.userId) + SubredditEntity.columns)
                     .select {
                         SubredditFollowerEntity.userId eq userName.value
-                    }.distinct().map {
+                    }.map {
                         it.fromResultRowSubreddit()
                     }.toSubredditResponseList()
             }

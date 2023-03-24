@@ -10,7 +10,7 @@ data class SubredditRequest(
 
 @Serializable
 data class SubredditResponse(
-    val id: Long,
+    val id: Long?,
     val subredditName: String,
     val subredditDesc: String?,
     val createdByUser: UserName

@@ -15,9 +15,9 @@ import com.adikmt.utils.db.DbTransaction
 import com.adikmt.utils.resultOf
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.insertAndGetId
+import org.jetbrains.exposed.sql.deleteIgnoreWhere
+import org.jetbrains.exposed.sql.insertIgnore
+import org.jetbrains.exposed.sql.insertIgnoreAndGetId
 import org.jetbrains.exposed.sql.javatime.CurrentDateTime
 import org.jetbrains.exposed.sql.select
 
@@ -43,7 +43,7 @@ class PostRepoImpl(private val dbTransaction: DbTransaction) : PostRepository {
     override suspend fun addPost(userName: UserName, postRequest: PostRequest): Result<PostResponse> {
         return dbTransaction.dbQuery {
             resultOf {
-                val id = PostEntity.insertAndGetId {
+                val id = PostEntity.insertIgnoreAndGetId {
                     it[PostEntity.author] = userName.value
                     it[PostEntity.title] = postRequest.postHeading
                     it[PostEntity.desc] = postRequest.postBody
@@ -51,7 +51,7 @@ class PostRepoImpl(private val dbTransaction: DbTransaction) : PostRepository {
                 }
 
                 PostResponse(
-                    postId = id.value,
+                    postId = id?.value,
                     subredditName = postRequest.subredditName,
                     postHeading = postRequest.postHeading,
                     postBody = postRequest.postBody,
@@ -118,7 +118,7 @@ class PostRepoImpl(private val dbTransaction: DbTransaction) : PostRepository {
     override suspend fun upvotePost(userName: UserName, postId: PostId): Result<PostId> {
         return dbTransaction.dbQuery {
             resultOf {
-                PostFavouriteEntity.insert {
+                PostFavouriteEntity.insertIgnore {
                     it[PostFavouriteEntity.postId] = postId.value.toLong()
                     it[PostFavouriteEntity.userId] = userName.value
                 }
@@ -131,7 +131,7 @@ class PostRepoImpl(private val dbTransaction: DbTransaction) : PostRepository {
     override suspend fun downvotePost(userName: UserName, postId: PostId): Result<PostId> {
         return dbTransaction.dbQuery {
             resultOf {
-                PostFavouriteEntity.deleteWhere {
+                PostFavouriteEntity.deleteIgnoreWhere {
                     PostFavouriteEntity.postId eq postId.value.toLong() and (PostFavouriteEntity.userId eq userName.value)
                 }
 

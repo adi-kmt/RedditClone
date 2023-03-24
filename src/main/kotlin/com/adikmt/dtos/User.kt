@@ -13,9 +13,18 @@ data class UserRequest(
 
 @Serializable
 data class UserResponse(
+    val userId: Long?,
+    val userName: String,
+    val userEmail: String,
+    val userBio: String?
+)
+
+@Serializable
+data class LoginUserResponse(
     val userId: Long,
     val userName: String,
     val userEmail: String,
+    val userPassword: String,
     val userBio: String?
 )
 
