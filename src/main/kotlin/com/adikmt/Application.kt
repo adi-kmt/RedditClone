@@ -71,9 +71,7 @@ fun Application.module(koinModules: List<Module> = koinModules()) {
     }
 
     authentication {
-        configure(jwtService) { authCurrentUser ->
-            currentUserUsecase.getCurrentUser(authCurrentUser.userName)
-        }
+        configure(jwtService)
     }
 
     configureRouting()

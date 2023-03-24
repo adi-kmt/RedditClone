@@ -30,7 +30,7 @@ fun Routing.authRoutes() {
 }
 
 private fun Routing.getCurrentUser() {
-    authenticate(configurations = arrayOf("auth-jwt")) {
+    authenticate {
         get("/users") {
             try {
                 val user = call.principal<AuthCurrentUser>()?.userName
