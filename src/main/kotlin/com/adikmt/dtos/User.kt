@@ -1,5 +1,6 @@
 package com.adikmt.dtos
 
+import io.ktor.server.auth.Principal
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -37,6 +38,12 @@ data class UserResponseList(
     val userList: List<UserResponse>,
     val userNo: Int
 )
+
+@Serializable
+data class AuthCurrentUser(val userName: String?) : Principal
+
+@Serializable
+data class AuthUserResponse(val userResponse: UserResponse, val token: String)
 
 @JvmInline
 @Serializable

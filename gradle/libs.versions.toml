@@ -32,6 +32,8 @@ coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version
 
 ktorcore = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
 ktorauth = { module = "io.ktor:ktor-auth", version.ref = "ktorAuth" }
+ktorServerAuth = { module = "io.ktor:ktor-server-auth", version.ref = "ktor" }
+ktorServerAuthJWT = { module = "io.ktor:ktor-server-auth-jwt", version.ref = "ktor" }
 ktorjwt = { module = "io.ktor:ktor-auth-jwt", version.ref = "ktorAuth" }
 ktorsession = { module = "io.ktor:ktor-server-sessions", version.ref = "ktor" }
 ktorlocations = { module = "io.ktor:ktor-locations", version.ref = "ktorAuth" }
@@ -107,7 +109,9 @@ ktor = ['ktorcore',
     "ktorclientserialization",
     "ktorclientauth",
     "serializationJson",
-    "doubleRecieve"
+    "doubleRecieve",
+    "ktorServerAuth",
+    "ktorServerAuthJWT"
 ]
 logging = ["logback",
     "kotlinLogging"

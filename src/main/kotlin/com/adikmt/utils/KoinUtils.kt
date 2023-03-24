@@ -8,6 +8,8 @@ import com.adikmt.repositories.SubredditRepoImpl
 import com.adikmt.repositories.SubredditRepository
 import com.adikmt.repositories.UserRepoImpl
 import com.adikmt.repositories.UserRepository
+import com.adikmt.services.AuthService
+import com.adikmt.services.AuthServiceImpl
 import com.adikmt.services.CommentService
 import com.adikmt.services.CommentServiceImpl
 import com.adikmt.services.PostServices
@@ -20,6 +22,7 @@ import com.adikmt.usecases.AddCommentUsecase
 import com.adikmt.usecases.AddPostUsecase
 import com.adikmt.usecases.AddSubredditUsecase
 import com.adikmt.usecases.AddUserUseCase
+import com.adikmt.usecases.CurrentUserUserUsecase
 import com.adikmt.usecases.DownvoteCommentUsecase
 import com.adikmt.usecases.DownvotePostUsecase
 import com.adikmt.usecases.FollowSubredditUsecase
@@ -35,6 +38,8 @@ import com.adikmt.usecases.GetPostUsecase
 import com.adikmt.usecases.GetSubredditByNameUsecase
 import com.adikmt.usecases.GetUserFollowingUseCase
 import com.adikmt.usecases.GetUserUseCase
+import com.adikmt.usecases.LoginUsecase
+import com.adikmt.usecases.RegisterUsecase
 import com.adikmt.usecases.SearchPostByHeadingUsecase
 import com.adikmt.usecases.SearchSubredditByNameUsecase
 import com.adikmt.usecases.SearchUserUseCase
@@ -46,6 +51,7 @@ import com.adikmt.usecases.addCommentUsecase
 import com.adikmt.usecases.addPostUsecase
 import com.adikmt.usecases.addSubredditUsecase
 import com.adikmt.usecases.addUserUseCase
+import com.adikmt.usecases.currentUserUserUsecase
 import com.adikmt.usecases.downvoteCommentUsecase
 import com.adikmt.usecases.downvotePostUsecase
 import com.adikmt.usecases.followSubredditUsecase
@@ -61,6 +67,8 @@ import com.adikmt.usecases.getPostUsecase
 import com.adikmt.usecases.getSubredditByNameUsecase
 import com.adikmt.usecases.getUserFollowingUseCase
 import com.adikmt.usecases.getUserUseCase
+import com.adikmt.usecases.loginUsecase
+import com.adikmt.usecases.registerUsecase
 import com.adikmt.usecases.searchPostByHeadingUsecase
 import com.adikmt.usecases.searchSubredditByNameUsecase
 import com.adikmt.usecases.searchUserUseCase
@@ -98,6 +106,7 @@ private val services = module {
     single<SubredditService> { SubredditServiceImpl(get()) }
     single<PostServices> { PostServicesImpl(get()) }
     single<CommentService> { CommentServiceImpl(get()) }
+    single<AuthService> { AuthServiceImpl(get()) }
 }
 
 private val usecases = module {
@@ -220,6 +229,19 @@ private val usecases = module {
             get()
         )
     }
+
+    //Auth Usecases
+    factory<RegisterUsecase>(named("RegisterUsecase")) {
+        registerUsecase(get(named("IODispatcher")), get())
+    }
+
+    factory<LoginUsecase>(named("LoginUsecase")) {
+        loginUsecase(get(named("IODispatcher")), get())
+    }
+
+    factory<CurrentUserUserUsecase>(named("CurrentUserUserUsecase")) {
+        currentUserUserUsecase(get(named("IODispatcher")), get())
+    }
 }
 
 private val repositories = module {
@@ -236,6 +258,9 @@ private val mainModule = module {
     }
     single<DbTransaction> {
         DbTransactionImpl(get(named("IODispatcher")))
+    }
+    single { params ->
+        JwtService(jwtConfig = params.get())
     }
     single {
         Json {
