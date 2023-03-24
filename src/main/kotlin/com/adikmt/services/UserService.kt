@@ -3,15 +3,11 @@ package com.adikmt.services
 import com.adikmt.dtos.FollowOrUnfollowUser
 import com.adikmt.dtos.UserFollowingData
 import com.adikmt.dtos.UserName
-import com.adikmt.dtos.UserRequest
 import com.adikmt.dtos.UserResponse
 import com.adikmt.dtos.UserResponseList
 import com.adikmt.repositories.UserRepository
 
 interface UserService {
-
-    suspend fun addUser(userRequest: UserRequest): Result<UserResponse>
-
     suspend fun getUserByUserName(userName: UserName): Result<UserResponse?>
 
     suspend fun searchByUserName(userName: UserName): Result<UserResponseList>
@@ -24,10 +20,6 @@ interface UserService {
 }
 
 class UserServiceImpl(private val userRepository: UserRepository) : UserService {
-    override suspend fun addUser(userRequest: UserRequest): Result<UserResponse> =
-        userRepository.createUser(userRequest)
-
-
     override suspend fun getUserByUserName(userName: UserName): Result<UserResponse?> =
         userRepository.getUser(userName)
 

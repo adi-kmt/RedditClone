@@ -21,7 +21,6 @@ import com.adikmt.services.UserServiceImpl
 import com.adikmt.usecases.AddCommentUsecase
 import com.adikmt.usecases.AddPostUsecase
 import com.adikmt.usecases.AddSubredditUsecase
-import com.adikmt.usecases.AddUserUseCase
 import com.adikmt.usecases.CurrentUserUserUsecase
 import com.adikmt.usecases.DownvoteCommentUsecase
 import com.adikmt.usecases.DownvotePostUsecase
@@ -50,7 +49,6 @@ import com.adikmt.usecases.UpvotePostUsecase
 import com.adikmt.usecases.addCommentUsecase
 import com.adikmt.usecases.addPostUsecase
 import com.adikmt.usecases.addSubredditUsecase
-import com.adikmt.usecases.addUserUseCase
 import com.adikmt.usecases.currentUserUserUsecase
 import com.adikmt.usecases.downvoteCommentUsecase
 import com.adikmt.usecases.downvotePostUsecase
@@ -111,7 +109,6 @@ private val services = module {
 
 private val usecases = module {
     //User usecase functions
-    factory<AddUserUseCase>(named("AddUserUseCase")) { addUserUseCase(get(named("IODispatcher")), get()) }
     factory<GetUserUseCase>(named("GetUserUseCase")) { getUserUseCase(get(named("IODispatcher")), get()) }
     factory<SearchUserUseCase>(named("SearchUserUseCase")) { searchUserUseCase(get(named("IODispatcher")), get()) }
     factory<GetUserFollowingUseCase>(named("GetUserFollowingUseCase")) {

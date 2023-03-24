@@ -1,5 +1,6 @@
 package com.adikmt.orm.helperfuncs
 
+import com.adikmt.dtos.LoginUserResponse
 import com.adikmt.dtos.UserFollowingData
 import com.adikmt.dtos.UserName
 import com.adikmt.dtos.UserResponse
@@ -13,6 +14,14 @@ fun ResultRow.fromResultRowUser(): UserResponse = UserResponse(
     userName = this[UserEntity.username],
     userEmail = this[UserEntity.email],
     userBio = this[UserEntity.bio]
+)
+
+fun ResultRow.fromResultRowUserLogin() = LoginUserResponse(
+    userId = this[UserEntity.id].value,
+    userName = this[UserEntity.username],
+    userEmail = this[UserEntity.email],
+    userBio = this[UserEntity.bio],
+    userPassword = this[UserEntity.password]
 )
 
 fun toFollowerData(

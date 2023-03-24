@@ -12,7 +12,10 @@ import com.adikmt.orm.helperfuncs.FromResultRowComment
 import com.adikmt.orm.helperfuncs.toCommentResponseList
 import com.adikmt.utils.db.DbTransaction
 import com.adikmt.utils.resultOf
+import org.jetbrains.exposed.sql.Count
+import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.alias
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
@@ -82,6 +85,24 @@ class CommentRepositoryImpl(private val dbTransaction: DbTransaction) : CommentR
 //                        { CommentFavouriteEntity.commentId },
 //                        { CommentEntity.id },
 //                        { CommentEntity.post eq postId.value.toLong() }).selectAll().distinct().count()
+
+//                CommentEntity.leftJoin(
+//                    CommentFavouriteEntity,
+//                    { CommentEntity.id },
+//                    { CommentFavouriteEntity.commentId },
+//                    { CommentEntity.post. eq(postId.value.toLong()) }
+//                ).slice(Count())
+
+                val data = (CommentEntity.leftJoin(
+                    CommentFavouriteEntity
+                ))
+                    .slice(
+                        CommentEntity.id, CommentEntity.text,
+                        Count(CommentFavouriteEntity.commentId).alias("likes")
+                    )
+                    .select { CommentEntity.post eq postId.value.toLong() }
+                    .groupBy(CommentEntity.id)
+                    .orderBy(CommentFavouriteEntity.commentId, SortOrder.DESC)
 
                 CommentEntity.select {
                     CommentEntity.post eq postId.value.toLong()

@@ -74,7 +74,7 @@ fun Application.module(koinModules: List<Module> = koinModules()) {
 
     authentication {
         configure(jwtService) { authCurrentUser ->
-            currentUserUserUsecase.getCurrentUser().getOrNull()
+            currentUserUserUsecase.getCurrentUser(authCurrentUser.userName)
         }
     }
 

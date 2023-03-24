@@ -1,6 +1,7 @@
 package com.adikmt.repositories
 
 import com.adikmt.dtos.FollowOrUnfollowUser
+import com.adikmt.dtos.LoginUserResponse
 import com.adikmt.dtos.UserFollowingData
 import com.adikmt.dtos.UserName
 import com.adikmt.dtos.UserRequest
@@ -9,6 +10,7 @@ import com.adikmt.dtos.UserResponseList
 import com.adikmt.orm.UserEntity
 import com.adikmt.orm.UserFollowersEntity
 import com.adikmt.orm.helperfuncs.fromResultRowUser
+import com.adikmt.orm.helperfuncs.fromResultRowUserLogin
 import com.adikmt.orm.helperfuncs.toFollowerData
 import com.adikmt.orm.helperfuncs.toUserRepsponseList
 import com.adikmt.utils.db.DbTransaction
@@ -24,6 +26,7 @@ interface UserRepository {
     suspend fun createUser(userRequest: UserRequest): Result<UserResponse>
 
     suspend fun getUser(userName: UserName): Result<UserResponse?>
+    suspend fun getUserLogin(userName: UserName): Result<LoginUserResponse?>
 
     suspend fun searchUserWithName(userName: UserName): Result<UserResponseList>
 
@@ -63,6 +66,18 @@ class UserRepoImpl(private val dbTransaction: DbTransaction) : UserRepository {
                     UserEntity.username eq userName.value
                 }.map {
                     it.fromResultRowUser()
+                }.firstOrNull()
+            }
+        }
+    }
+
+    override suspend fun getUserLogin(userName: UserName): Result<LoginUserResponse?> {
+        return dbTransaction.dbQuery {
+            resultOf {
+                UserEntity.select {
+                    UserEntity.username eq userName.value
+                }.map {
+                    it.fromResultRowUserLogin()
                 }.firstOrNull()
             }
         }

@@ -3,16 +3,11 @@ package com.adikmt.usecases
 import com.adikmt.dtos.FollowOrUnfollowUser
 import com.adikmt.dtos.UserFollowingData
 import com.adikmt.dtos.UserName
-import com.adikmt.dtos.UserRequest
 import com.adikmt.dtos.UserResponse
 import com.adikmt.dtos.UserResponseList
 import com.adikmt.services.UserService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-
-fun interface AddUserUseCase {
-    suspend fun add(userRequest: UserRequest): Result<UserResponse>
-}
 
 fun interface GetUserUseCase {
     suspend fun getUser(userName: UserName): Result<UserResponse?>
@@ -32,16 +27,6 @@ fun interface FollowUserUseCase {
 
 fun interface UnFollowUserUseCase {
     suspend fun unFollowUser(userName: UserName, userToUnFollow: UserName): Result<FollowOrUnfollowUser>
-}
-
-
-fun addUserUseCase(
-    dispatcher: CoroutineDispatcher,
-    userService: UserService
-) = AddUserUseCase { userRequest: UserRequest ->
-    withContext(dispatcher) {
-        userService.addUser(userRequest)
-    }
 }
 
 fun getUserUseCase(
