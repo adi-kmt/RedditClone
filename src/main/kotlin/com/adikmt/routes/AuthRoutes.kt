@@ -1,6 +1,7 @@
 package com.adikmt.routes
 
 import com.adikmt.dtos.AuthCurrentUser
+import com.adikmt.dtos.LoginUser
 import com.adikmt.dtos.SerializedException
 import com.adikmt.dtos.UserName
 import com.adikmt.dtos.UserRequest
@@ -49,7 +50,7 @@ private fun Routing.loginUser() {
     val jwtService by inject<JwtService> { parametersOf(application.environment.jwtConfig(JwtService.CONFIG_PATH)) }
     post("/login") {
         try {
-            val user = call.receive<UserRequest>()
+            val user = call.receive<LoginUser>()
             val userResponse = loginUsecase.login(user)
             userResponse.getOrNull()?.let { response ->
                 val token = jwtService.generateToken(response)

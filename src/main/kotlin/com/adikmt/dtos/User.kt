@@ -61,7 +61,7 @@ data class UserResponseList(
 data class AuthCurrentUser(val userName: String?) : Principal
 
 @Serializable
-data class AuthUserResponse(val userResponse: UserResponse, val token: String)
+data class LoginUser(val userName: String, val password: String)
 
 @JvmInline
 @Serializable

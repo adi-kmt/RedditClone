@@ -1,5 +1,6 @@
 package com.adikmt.services
 
+import com.adikmt.dtos.LoginUser
 import com.adikmt.dtos.UserName
 import com.adikmt.dtos.UserRequest
 import com.adikmt.dtos.UserResponse
@@ -10,7 +11,7 @@ import com.adikmt.utils.hash
 interface AuthService {
     suspend fun register(userRequest: UserRequest): Result<UserResponse>
 
-    suspend fun login(userRequest: UserRequest): Result<UserResponse>
+    suspend fun login(loginUser: LoginUser): Result<UserResponse>
 }
 
 class AuthServiceImpl(private val userRepository: UserRepository) : AuthService {
@@ -19,10 +20,10 @@ class AuthServiceImpl(private val userRepository: UserRepository) : AuthService 
         return userRepository.createUser(userRequest, hashedPassword)
     }
 
-    override suspend fun login(userRequest: UserRequest): Result<UserResponse> {
-        val response = userRepository.getUserLogin(UserName(userRequest.userName))
+    override suspend fun login(loginUser: LoginUser): Result<UserResponse> {
+        val response = userRepository.getUserLogin(UserName(loginUser.userName))
         response.getOrNull()?.let { user ->
-            if (checkPassword(hash(userRequest.userPassword), user.userPassword)) {
+            if (checkPassword(hash(loginUser.password), user.userPassword)) {
                 return Result.success(
                     UserResponse(
                         user.userId,

@@ -1,6 +1,7 @@
 package com.adikmt.usecases
 
 import com.adikmt.dtos.AuthCurrentUser
+import com.adikmt.dtos.LoginUser
 import com.adikmt.dtos.UserName
 import com.adikmt.dtos.UserRequest
 import com.adikmt.dtos.UserResponse
@@ -14,7 +15,7 @@ fun interface RegisterUsecase {
 }
 
 fun interface LoginUsecase {
-    suspend fun login(userRequest: UserRequest): Result<UserResponse>
+    suspend fun login(loginUser: LoginUser): Result<UserResponse>
 }
 
 fun interface CurrentUserUsecase {
@@ -33,9 +34,9 @@ fun registerUsecase(
 fun loginUsecase(
     dispatcher: CoroutineDispatcher,
     authService: AuthService
-) = LoginUsecase { userRequest: UserRequest ->
+) = LoginUsecase { loginUser: LoginUser ->
     withContext(dispatcher) {
-        authService.login(userRequest)
+        authService.login(loginUser)
     }
 }
 
