@@ -23,7 +23,7 @@ import org.jetbrains.exposed.sql.insertIgnoreAndGetId
 import org.jetbrains.exposed.sql.select
 
 interface UserRepository {
-    suspend fun createUser(userRequest: UserRequest): Result<UserResponse>
+    suspend fun createUser(userRequest: UserRequest, hashedPassword: String): Result<UserResponse>
 
     suspend fun getUser(userName: UserName): Result<UserResponse?>
 
@@ -41,13 +41,13 @@ interface UserRepository {
 }
 
 class UserRepoImpl(private val dbTransaction: DbTransaction) : UserRepository {
-    override suspend fun createUser(userRequest: UserRequest): Result<UserResponse> {
+    override suspend fun createUser(userRequest: UserRequest, hashedPassword: String): Result<UserResponse> {
         return dbTransaction.dbQuery {
             resultOf {
                 val id = UserEntity.insertIgnoreAndGetId {
                     it[UserEntity.username] = userRequest.userName
                     it[UserEntity.email] = userRequest.userEmail
-                    it[UserEntity.password] = userRequest.userPassword
+                    it[UserEntity.password] = hashedPassword
                     it[UserEntity.bio] = userRequest.userBio.orEmpty()
                 }
                 UserResponse(
