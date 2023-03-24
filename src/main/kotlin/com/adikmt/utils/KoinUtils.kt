@@ -21,7 +21,7 @@ import com.adikmt.services.UserServiceImpl
 import com.adikmt.usecases.AddCommentUsecase
 import com.adikmt.usecases.AddPostUsecase
 import com.adikmt.usecases.AddSubredditUsecase
-import com.adikmt.usecases.CurrentUserUserUsecase
+import com.adikmt.usecases.CurrentUserUsecase
 import com.adikmt.usecases.DownvoteCommentUsecase
 import com.adikmt.usecases.DownvotePostUsecase
 import com.adikmt.usecases.FollowSubredditUsecase
@@ -236,7 +236,7 @@ private val usecases = module {
         loginUsecase(get(named("IODispatcher")), get())
     }
 
-    factory<CurrentUserUserUsecase>(named("CurrentUserUserUsecase")) {
+    factory<CurrentUserUsecase>(named("CurrentUserUserUsecase")) {
         currentUserUserUsecase(get(named("IODispatcher")), get())
     }
 }

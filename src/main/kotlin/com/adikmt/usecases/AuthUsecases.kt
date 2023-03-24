@@ -17,7 +17,7 @@ fun interface LoginUsecase {
     suspend fun login(userRequest: UserRequest): Result<UserResponse>
 }
 
-fun interface CurrentUserUserUsecase {
+fun interface CurrentUserUsecase {
     suspend fun getCurrentUser(userName: String?): AuthCurrentUser?
 }
 
@@ -42,7 +42,7 @@ fun loginUsecase(
 fun currentUserUserUsecase(
     dispatcher: CoroutineDispatcher,
     userService: UserService
-) = CurrentUserUserUsecase { userName: String? ->
+) = CurrentUserUsecase { userName: String? ->
     withContext(dispatcher) {
         userName?.let { user ->
             userService.getUserByUserName(UserName(user)).getOrNull()?.let {

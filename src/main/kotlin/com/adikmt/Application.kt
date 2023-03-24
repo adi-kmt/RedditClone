@@ -3,7 +3,7 @@ package com.adikmt
 import com.adikmt.plugins.configure
 import com.adikmt.plugins.configureRouting
 import com.adikmt.plugins.cors
-import com.adikmt.usecases.CurrentUserUserUsecase
+import com.adikmt.usecases.CurrentUserUsecase
 import com.adikmt.utils.JwtService
 import com.adikmt.utils.configure
 import com.adikmt.utils.db.DataBaseFactory
@@ -45,7 +45,7 @@ fun Application.module(koinModules: List<Module> = koinModules()) {
     val jwtService by inject<JwtService> {
         parametersOf(environment.jwtConfig(JwtService.CONFIG_PATH))
     }
-    val currentUserUserUsecase by inject<CurrentUserUserUsecase>(named("CurrentUserUserUsecase"))
+    val currentUserUsecase by inject<CurrentUserUsecase>(named("CurrentUserUserUsecase"))
 
     install(DefaultHeaders) {
         header("X-Engine", "Ktor")
@@ -70,13 +70,13 @@ fun Application.module(koinModules: List<Module> = koinModules()) {
         cors()
     }
 
-    configureRouting()
-
     authentication {
         configure(jwtService) { authCurrentUser ->
-            currentUserUserUsecase.getCurrentUser(authCurrentUser.userName)
+            currentUserUsecase.getCurrentUser(authCurrentUser.userName)
         }
     }
+
+    configureRouting()
 
     dbFactory.connect()
 }

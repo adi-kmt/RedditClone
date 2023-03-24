@@ -26,6 +26,7 @@ interface UserRepository {
     suspend fun createUser(userRequest: UserRequest): Result<UserResponse>
 
     suspend fun getUser(userName: UserName): Result<UserResponse?>
+
     suspend fun getUserLogin(userName: UserName): Result<LoginUserResponse?>
 
     suspend fun searchUserWithName(userName: UserName): Result<UserResponseList>

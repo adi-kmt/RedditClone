@@ -29,6 +29,15 @@ data class LoginUserResponse(
 )
 
 @Serializable
+data class UserResponseWithToken(
+    val userId: Long?,
+    val userName: String,
+    val userEmail: String,
+    val userBio: String?,
+    val token: String
+)
+
+@Serializable
 data class UserFollowingData(
     val userName: String,
     val usersFollowing: List<UserResponse>,
