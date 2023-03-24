@@ -47,32 +47,30 @@ private fun Routing.getCurrentUser() {
 private fun Routing.loginUser() {
     val loginUsecase by inject<LoginUsecase>(named("LoginUsecase"))
     val jwtService by inject<JwtService> { parametersOf(application.environment.jwtConfig(JwtService.CONFIG_PATH)) }
-//    authenticate(configurations = arrayOf("auth-jwt")) {
-        post("/login") {
-            try {
-                val user = call.receive<UserRequest>()
-                val userResponse = loginUsecase.login(user)
-                userResponse.getOrNull()?.let { response ->
-                    val token = jwtService.generateToken(response)
-                    call.respond(
-                        HttpStatusCode.Created, UserResponseWithToken(
-                            userId = response.userId,
-                            userName = response.userName,
-                            userEmail = response.userEmail,
-                            userBio = response.userBio,
-                            token = token
-                        )
+    post("/login") {
+        try {
+            val user = call.receive<UserRequest>()
+            val userResponse = loginUsecase.login(user)
+            userResponse.getOrNull()?.let { response ->
+                val token = jwtService.generateToken(response)
+                call.respond(
+                    HttpStatusCode.Created, UserResponseWithToken(
+                        userId = response.userId,
+                        userName = response.userName,
+                        userEmail = response.userEmail,
+                        userBio = response.userBio,
+                        token = token
                     )
-                } ?: call.respond(
-                    HttpStatusCode.InternalServerError,
-                    userResponse.exceptionOrNull() ?: SerializedException("Login Failed")
                 )
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.InternalServerError, SerializedException(e.message))
-            }
+            } ?: call.respond(
+                HttpStatusCode.InternalServerError,
+                userResponse.exceptionOrNull() ?: SerializedException("Login Failed")
+            )
+        } catch (e: Exception) {
+            call.respond(HttpStatusCode.InternalServerError, SerializedException(e.message))
         }
     }
-//}
+}
 
 private fun Routing.registerUser() {
     val jwtService by inject<JwtService> { parametersOf(application.environment.jwtConfig(JwtService.CONFIG_PATH)) }
@@ -97,7 +95,7 @@ private fun Routing.registerUser() {
                 )
             } ?: call.respond(
                 HttpStatusCode.InternalServerError,
-                userResponse.exceptionOrNull() ?: SerializedException("Login Failed")
+                SerializedException(userResponse.exceptionOrNull()?.message ?: "Registration Failed")
             )
         } catch (e: Exception) {
             call.respond(HttpStatusCode.InternalServerError, SerializedException(e.message))

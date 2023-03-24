@@ -22,7 +22,7 @@ class AuthServiceImpl(private val userRepository: UserRepository) : AuthService 
     override suspend fun login(userRequest: UserRequest): Result<UserResponse> {
         val response = userRepository.getUserLogin(UserName(userRequest.userName))
         response.getOrNull()?.let { user ->
-            if (checkPassword(userRequest.userPassword, user.userPassword)) {
+            if (checkPassword(hash(userRequest.userPassword), user.userPassword)) {
                 return Result.success(
                     UserResponse(
                         user.userId,
