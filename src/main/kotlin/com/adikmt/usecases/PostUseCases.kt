@@ -46,103 +46,71 @@ fun interface DownvotePostUsecase {
 fun addPostUsecase(
     dispatcher: CoroutineDispatcher,
     postServices: PostServices
-) = try {
-    AddPostUsecase { userName: UserName, postRequest: PostRequest ->
-        withContext(dispatcher) {
-            postServices.addPost(userName, postRequest)
-        }
+) = AddPostUsecase { userName: UserName, postRequest: PostRequest ->
+    withContext(dispatcher) {
+        postServices.addPost(userName, postRequest)
     }
-} catch (e: Exception) {
-    Result.failure<PostResponse>(e)
 }
 
 fun getPostFeedUsecase(
     dispatcher: CoroutineDispatcher,
     postServices: PostServices
-) = try {
-    GetPostFeedByUserUsecase { userName: UserName ->
-        withContext(dispatcher) {
-            postServices.getPostFeed(userName)
-        }
+) = GetPostFeedByUserUsecase { userName: UserName ->
+    withContext(dispatcher) {
+        postServices.getPostFeed(userName)
     }
-} catch (e: Exception) {
-    Result.failure<PostResponseList>(e)
 }
 
 fun getPostUsecase(
     dispatcher: CoroutineDispatcher,
     postServices: PostServices
-) = try {
-    GetPostUsecase { postId: PostId ->
-        withContext(dispatcher) {
-            postServices.getPost(postId)
-        }
+) = GetPostUsecase { postId: PostId ->
+    withContext(dispatcher) {
+        postServices.getPost(postId)
     }
-} catch (e: Exception) {
-    Result.failure<PostResponse>(e)
 }
 
 fun searchPostByHeadingUsecase(
     dispatcher: CoroutineDispatcher,
     postServices: PostServices
-) = try {
-    SearchPostByHeadingUsecase { postHeading: PostHeading ->
-        withContext(dispatcher) {
-            postServices.searchPostByHeading(postHeading)
-        }
+) = SearchPostByHeadingUsecase { postHeading: PostHeading ->
+    withContext(dispatcher) {
+        postServices.searchPostByHeading(postHeading)
     }
-} catch (e: Exception) {
-    Result.failure<PostResponseList>(e)
 }
 
 fun getPostBySubredditUsecase(
     dispatcher: CoroutineDispatcher,
     postServices: PostServices
-) = try {
-    GetPostBySubredditUsecase { subredditName: SubredditName ->
-        withContext(dispatcher) {
-            postServices.getPostBySubreddit(subredditName)
-        }
+) = GetPostBySubredditUsecase { subredditName: SubredditName ->
+    withContext(dispatcher) {
+        postServices.getPostBySubreddit(subredditName)
     }
-} catch (e: Exception) {
-    Result.failure<PostResponseList>(e)
 }
 
 fun getPostByUserUsecase(
     dispatcher: CoroutineDispatcher,
     postServices: PostServices
-) = try {
-    GetPostByUserUsecase { userName: UserName ->
-        withContext(dispatcher) {
-            postServices.getPostByUser(userName)
-        }
+) = GetPostByUserUsecase { userName: UserName ->
+    withContext(dispatcher) {
+        postServices.getPostByUser(userName)
     }
-} catch (e: Exception) {
-    Result.failure<PostResponseList>(e)
 }
 
 fun upvotePostUsecase(
     dispatcher: CoroutineDispatcher,
     postServices: PostServices
-) = try {
-    UpvotePostUsecase { userName: UserName, postId: PostId ->
-        withContext(dispatcher) {
-            postServices.upvotePost(postId, userName)
-        }
+) = UpvotePostUsecase { userName: UserName, postId: PostId ->
+    withContext(dispatcher) {
+        postServices.upvotePost(postId, userName)
     }
-} catch (e: Exception) {
-    Result.failure<PostId>(e)
 }
 
 fun downvotePostUsecase(
     dispatcher: CoroutineDispatcher,
     postServices: PostServices
-) = try {
-    DownvotePostUsecase { userName: UserName, postId: PostId ->
-        withContext(dispatcher) {
-            postServices.downvotePost(postId, userName)
-        }
+) = DownvotePostUsecase { userName: UserName, postId: PostId ->
+    withContext(dispatcher) {
+        postServices.downvotePost(postId, userName)
     }
-} catch (e: Exception) {
-    Result.failure<PostId>(e)
 }

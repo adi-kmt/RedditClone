@@ -55,7 +55,7 @@ private fun Routing.loginUser() {
             userResponse.getOrNull()?.let { response ->
                 val token = jwtService.generateToken(response)
                 call.respond(
-                    HttpStatusCode.Created, UserResponseWithToken(
+                    HttpStatusCode.OK, UserResponseWithToken(
                         userId = response.userId,
                         userName = response.userName,
                         userEmail = response.userEmail,
@@ -65,7 +65,7 @@ private fun Routing.loginUser() {
                 )
             } ?: call.respond(
                 HttpStatusCode.InternalServerError,
-                userResponse.exceptionOrNull() ?: SerializedException("Login Failed")
+                SerializedException(userResponse.exceptionOrNull()?.message ?: "Login Failed")
             )
         } catch (e: Exception) {
             call.respond(HttpStatusCode.InternalServerError, SerializedException(e.message))

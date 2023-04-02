@@ -25,42 +25,30 @@ fun interface CurrentUserUsecase {
 fun registerUsecase(
     dispatcher: CoroutineDispatcher,
     authService: AuthService
-) = try {
-    RegisterUsecase { userRequest: UserRequest ->
-        withContext(dispatcher) {
-            authService.register(userRequest)
-        }
+) = RegisterUsecase { userRequest: UserRequest ->
+    withContext(dispatcher) {
+        authService.register(userRequest)
     }
-} catch (e: Exception) {
-    Result.failure<UserResponse>(e)
 }
 
 fun loginUsecase(
     dispatcher: CoroutineDispatcher,
     authService: AuthService
-) = try {
-    LoginUsecase { loginUser: LoginUser ->
-        withContext(dispatcher) {
-            authService.login(loginUser)
-        }
+) = LoginUsecase { loginUser: LoginUser ->
+    withContext(dispatcher) {
+        authService.login(loginUser)
     }
-} catch (e: Exception) {
-    Result.failure<UserResponse>(e)
 }
 
 fun currentUserUserUsecase(
     dispatcher: CoroutineDispatcher,
     userService: UserService
-) = try {
-    CurrentUserUsecase { userName: String? ->
-        withContext(dispatcher) {
-            userName?.let { user ->
-                userService.getUserByUserName(UserName(user)).getOrNull()?.let {
-                    return@let AuthCurrentUser(it.userName)
-                }
+) = CurrentUserUsecase { userName: String? ->
+    withContext(dispatcher) {
+        userName?.let { user ->
+            userService.getUserByUserName(UserName(user)).getOrNull()?.let {
+                return@let AuthCurrentUser(it.userName)
             }
         }
     }
-} catch (e: Exception) {
-    Result.failure<AuthCurrentUser>(e)
 }

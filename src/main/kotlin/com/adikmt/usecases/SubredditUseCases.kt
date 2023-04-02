@@ -36,77 +36,53 @@ fun interface GetAllSubredditsFollowedUsecase {
 fun addSubredditUsecase(
     dispatcher: CoroutineDispatcher,
     subredditService: SubredditService
-) = try {
-    AddSubredditUsecase { userName: UserName, subredditRequest: SubredditRequest ->
-        withContext(dispatcher) {
-            subredditService.addSubreddit(userName, subredditRequest)
-        }
+) = AddSubredditUsecase { userName: UserName, subredditRequest: SubredditRequest ->
+    withContext(dispatcher) {
+        subredditService.addSubreddit(userName, subredditRequest)
     }
-} catch (e: Exception) {
-    Result.failure<SubredditResponse>(e)
 }
 
 fun getSubredditByNameUsecase(
     dispatcher: CoroutineDispatcher,
     subredditService: SubredditService
-) = try {
-    GetSubredditByNameUsecase { subredditName: SubredditName ->
-        withContext(dispatcher) {
-            subredditService.getSubredditByName(subredditName)
-        }
+) = GetSubredditByNameUsecase { subredditName: SubredditName ->
+    withContext(dispatcher) {
+        subredditService.getSubredditByName(subredditName)
     }
-} catch (e: Exception) {
-    Result.failure<SubredditResponse>(e)
 }
 
 fun searchSubredditByNameUsecase(
     dispatcher: CoroutineDispatcher,
     subredditService: SubredditService
-) = try {
-    SearchSubredditByNameUsecase { subredditName: SubredditName ->
-        withContext(dispatcher) {
-            subredditService.searchSubredditByName(subredditName)
-        }
+) = SearchSubredditByNameUsecase { subredditName: SubredditName ->
+    withContext(dispatcher) {
+        subredditService.searchSubredditByName(subredditName)
     }
-} catch (e: Exception) {
-    Result.failure<SubredditResponseList>(e)
 }
 
 fun followSubredditUsecase(
     dispatcher: CoroutineDispatcher,
     subredditService: SubredditService
-) = try {
-    FollowSubredditUsecase { userName: UserName, subredditName: SubredditName ->
-        withContext(dispatcher) {
-            subredditService.followSubreddit(userName, subredditName)
-        }
+) = FollowSubredditUsecase { userName: UserName, subredditName: SubredditName ->
+    withContext(dispatcher) {
+        subredditService.followSubreddit(userName, subredditName)
     }
-} catch (e: Exception) {
-    Result.failure<SubredditName>(e)
 }
 
 fun unFollowSubredditUsecase(
     dispatcher: CoroutineDispatcher,
     subredditService: SubredditService
-) = try {
-    UnFollowSubredditUsecase { userName: UserName, subredditName: SubredditName ->
-        withContext(dispatcher) {
-            subredditService.unFollowSubreddit(userName, subredditName)
-        }
+) = UnFollowSubredditUsecase { userName: UserName, subredditName: SubredditName ->
+    withContext(dispatcher) {
+        subredditService.unFollowSubreddit(userName, subredditName)
     }
-} catch (e: Exception) {
-    Result.failure<SubredditName>(e)
 }
 
 fun getAllSubredditsFollowedUsecase(
     dispatcher: CoroutineDispatcher,
     subredditService: SubredditService
-) = try {
-    GetAllSubredditsFollowedUsecase { userName: UserName ->
-        withContext(dispatcher) {
-            subredditService.getAllSubredditsFollowed(userName)
-        }
+) = GetAllSubredditsFollowedUsecase { userName: UserName ->
+    withContext(dispatcher) {
+        subredditService.getAllSubredditsFollowed(userName)
     }
-} catch (e: Exception) {
-    Result.failure<SubredditResponseList>(e)
 }
