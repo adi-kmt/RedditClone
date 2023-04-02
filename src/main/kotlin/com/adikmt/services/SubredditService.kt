@@ -8,7 +8,7 @@ import com.adikmt.dtos.UserName
 import com.adikmt.repositories.SubredditRepository
 
 interface SubredditService {
-    suspend fun addSubreddit(userName: UserName, subredditRequest: SubredditRequest): Result<SubredditResponse>
+    suspend fun addSubreddit(userName: UserName, subredditRequest: SubredditRequest): Result<SubredditResponse?>
 
     suspend fun getSubredditByName(subredditName: SubredditName): Result<SubredditResponse?>
 
@@ -25,7 +25,7 @@ class SubredditServiceImpl(private val subredditRepository: SubredditRepository)
     override suspend fun addSubreddit(
         userName: UserName,
         subredditRequest: SubredditRequest
-    ): Result<SubredditResponse> =
+    ): Result<SubredditResponse?> =
         subredditRepository.addSubreddit(userName, subredditRequest)
 
     override suspend fun getSubredditByName(subredditName: SubredditName): Result<SubredditResponse?> =

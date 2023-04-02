@@ -20,7 +20,7 @@ import org.jetbrains.exposed.sql.insertIgnoreAndGetId
 import org.jetbrains.exposed.sql.select
 
 interface SubredditRepository {
-    suspend fun addSubreddit(userName: UserName, subredditRequest: SubredditRequest): Result<SubredditResponse>
+    suspend fun addSubreddit(userName: UserName, subredditRequest: SubredditRequest): Result<SubredditResponse?>
 
     suspend fun getSubredditByName(subredditName: SubredditName): Result<SubredditResponse?>
 
@@ -39,7 +39,7 @@ class SubredditRepoImpl(private val dbTransaction: DbTransaction) : SubredditRep
     override suspend fun addSubreddit(
         userName: UserName,
         subredditRequest: SubredditRequest
-    ): Result<SubredditResponse> {
+    ): Result<SubredditResponse?> {
         return dbTransaction.dbQuery {
             resultOf {
                 val id = SubredditEntity.insertIgnoreAndGetId {
@@ -47,12 +47,14 @@ class SubredditRepoImpl(private val dbTransaction: DbTransaction) : SubredditRep
                     it[SubredditEntity.desc] = subredditRequest.subredditDesc
                     it[SubredditEntity.createdByUser] = userName.value
                 }
-                SubredditResponse(
-                    id = id?.value,
-                    subredditName = subredditRequest.subredditName,
-                    subredditDesc = subredditRequest.subredditDesc,
-                    createdByUser = userName
-                )
+                id?.let {
+                    SubredditResponse(
+                        id = it.value,
+                        subredditName = subredditRequest.subredditName,
+                        subredditDesc = subredditRequest.subredditDesc,
+                        createdByUser = userName
+                    )
+                }
             }
         }
     }

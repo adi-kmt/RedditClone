@@ -21,7 +21,7 @@ import org.jetbrains.exposed.sql.javatime.CurrentDateTime
 import org.jetbrains.exposed.sql.select
 
 interface CommentRepository {
-    suspend fun addComment(userName: UserName, commentRequest: CommentRequest): Result<CommentResponse>
+    suspend fun addComment(userName: UserName, commentRequest: CommentRequest): Result<CommentResponse?>
 
     suspend fun getCommentById(commentId: CommentId): Result<CommentResponse?>
 
@@ -35,7 +35,7 @@ interface CommentRepository {
 }
 
 class CommentRepositoryImpl(private val dbTransaction: DbTransaction) : CommentRepository {
-    override suspend fun addComment(userName: UserName, commentRequest: CommentRequest): Result<CommentResponse> {
+    override suspend fun addComment(userName: UserName, commentRequest: CommentRequest): Result<CommentResponse?> {
         return dbTransaction.dbQuery {
             resultOf {
                 val id = CommentEntity.insertIgnoreAndGetId {
@@ -45,14 +45,16 @@ class CommentRepositoryImpl(private val dbTransaction: DbTransaction) : CommentR
                     it[CommentEntity.parentComment] = commentRequest.parentComment
                 }
 
-                CommentResponse(
-                    commentId = id?.value,
-                    commentBody = commentRequest.commentBody,
-                    commentAuthor = userName,
-                    parentComment = commentRequest.parentComment,
-                    createdAt = CurrentDateTime.toString(),
-                    upvoteNo = 0
-                )
+                id?.let {
+                    CommentResponse(
+                        commentId = it.value,
+                        commentBody = commentRequest.commentBody,
+                        commentAuthor = userName,
+                        parentComment = commentRequest.parentComment,
+                        createdAt = CurrentDateTime.toString(),
+                        upvoteNo = 0
+                    )
+                }
             }
         }
     }

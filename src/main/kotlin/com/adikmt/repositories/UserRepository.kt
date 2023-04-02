@@ -23,7 +23,7 @@ import org.jetbrains.exposed.sql.insertIgnoreAndGetId
 import org.jetbrains.exposed.sql.select
 
 interface UserRepository {
-    suspend fun createUser(userRequest: UserRequest, hashedPassword: String): Result<UserResponse>
+    suspend fun createUser(userRequest: UserRequest, hashedPassword: String): Result<UserResponse?>
 
     suspend fun getUser(userName: UserName): Result<UserResponse?>
 
@@ -41,7 +41,7 @@ interface UserRepository {
 }
 
 class UserRepoImpl(private val dbTransaction: DbTransaction) : UserRepository {
-    override suspend fun createUser(userRequest: UserRequest, hashedPassword: String): Result<UserResponse> {
+    override suspend fun createUser(userRequest: UserRequest, hashedPassword: String): Result<UserResponse?> {
         return dbTransaction.dbQuery {
             resultOf {
                 val id = UserEntity.insertIgnoreAndGetId {
@@ -50,12 +50,14 @@ class UserRepoImpl(private val dbTransaction: DbTransaction) : UserRepository {
                     it[UserEntity.password] = hashedPassword
                     it[UserEntity.bio] = userRequest.userBio.orEmpty()
                 }
-                UserResponse(
-                    userId = id?.value,
-                    userEmail = userRequest.userEmail,
-                    userName = userRequest.userName,
-                    userBio = userRequest.userPassword
-                )
+                id?.let {
+                    UserResponse(
+                        userId = it.value,
+                        userEmail = userRequest.userEmail,
+                        userName = userRequest.userName,
+                        userBio = userRequest.userPassword
+                    )
+                }
             }
         }
     }
@@ -91,7 +93,7 @@ class UserRepoImpl(private val dbTransaction: DbTransaction) : UserRepository {
                     UserEntity.username like userName.value
                 }.map {
                     it.fromResultRowUser()
-                }.distinct().toUserRepsponseList()
+                }.toUserRepsponseList()
             }
         }
     }

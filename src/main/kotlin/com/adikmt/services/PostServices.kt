@@ -10,7 +10,7 @@ import com.adikmt.dtos.UserName
 import com.adikmt.repositories.PostRepository
 
 interface PostServices {
-    suspend fun addPost(userName: UserName, postRequest: PostRequest): Result<PostResponse>
+    suspend fun addPost(userName: UserName, postRequest: PostRequest): Result<PostResponse?>
 
     suspend fun getPost(postId: PostId): Result<PostResponse?>
 
@@ -28,7 +28,7 @@ interface PostServices {
 }
 
 class PostServicesImpl(private val postRepository: PostRepository) : PostServices {
-    override suspend fun addPost(userName: UserName, postRequest: PostRequest): Result<PostResponse> =
+    override suspend fun addPost(userName: UserName, postRequest: PostRequest): Result<PostResponse?> =
         postRepository.addPost(userName, postRequest)
 
     override suspend fun getPost(postId: PostId): Result<PostResponse?> =

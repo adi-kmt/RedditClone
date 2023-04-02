@@ -9,13 +9,13 @@ import com.adikmt.utils.checkPassword
 import com.adikmt.utils.hash
 
 interface AuthService {
-    suspend fun register(userRequest: UserRequest): Result<UserResponse>
+    suspend fun register(userRequest: UserRequest): Result<UserResponse?>
 
     suspend fun login(loginUser: LoginUser): Result<UserResponse>
 }
 
 class AuthServiceImpl(private val userRepository: UserRepository) : AuthService {
-    override suspend fun register(userRequest: UserRequest): Result<UserResponse> {
+    override suspend fun register(userRequest: UserRequest): Result<UserResponse?> {
         val hashedPassword = hash(userRequest.userPassword)
         return userRepository.createUser(userRequest, hashedPassword)
     }

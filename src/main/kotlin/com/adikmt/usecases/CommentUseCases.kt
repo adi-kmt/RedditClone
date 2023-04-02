@@ -11,7 +11,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 fun interface AddCommentUsecase {
-    suspend fun add(userName: UserName, commentRequest: CommentRequest): Result<CommentResponse>
+    suspend fun add(userName: UserName, commentRequest: CommentRequest): Result<CommentResponse?>
 }
 
 fun interface GetCommentUsecase {
@@ -37,53 +37,77 @@ fun interface DownvoteCommentUsecase {
 fun addCommentUsecase(
     dispatcher: CoroutineDispatcher,
     commentService: CommentService
-) = AddCommentUsecase { userName: UserName, commentRequest: CommentRequest ->
-    withContext(dispatcher) {
-        commentService.addComment(userName, commentRequest)
+) = try {
+    AddCommentUsecase { userName: UserName, commentRequest: CommentRequest ->
+        withContext(dispatcher) {
+            commentService.addComment(userName, commentRequest)
+        }
     }
+} catch (e: Exception) {
+    Result.failure<CommentResponse>(e)
 }
 
 fun getCommentUsecase(
     dispatcher: CoroutineDispatcher,
     commentService: CommentService
-) = GetCommentUsecase { commentId: CommentId ->
-    withContext(dispatcher) {
-        commentService.getComment(commentId)
+) = try {
+    GetCommentUsecase { commentId: CommentId ->
+        withContext(dispatcher) {
+            commentService.getComment(commentId)
+        }
     }
+} catch (e: Exception) {
+    Result.failure<CommentResponse>(e)
 }
 
 fun getAllCommentsByPostUsecase(
     dispatcher: CoroutineDispatcher,
     commentService: CommentService
-) = GetAllCommentsByPostUsecase { postId: PostId ->
-    withContext(dispatcher) {
-        commentService.getAllCommentsByPost(postId)
+) = try {
+    GetAllCommentsByPostUsecase { postId: PostId ->
+        withContext(dispatcher) {
+            commentService.getAllCommentsByPost(postId)
+        }
     }
+} catch (e: Exception) {
+    Result.failure<CommentResponseList>(e)
 }
 
 fun getAllCommentByUserUsecase(
     dispatcher: CoroutineDispatcher,
     commentService: CommentService
-) = GetAllCommentByUserUsecase { userName: UserName ->
-    withContext(dispatcher) {
-        commentService.getAllCommentByUser(userName)
+) = try {
+    GetAllCommentByUserUsecase { userName: UserName ->
+        withContext(dispatcher) {
+            commentService.getAllCommentByUser(userName)
+        }
     }
+} catch (e: Exception) {
+    Result.failure<CommentResponseList>(e)
 }
 
 fun upvoteCommentUsecase(
     dispatcher: CoroutineDispatcher,
     commentService: CommentService
-) = UpvoteCommentUsecase { userName: UserName, commentId: CommentId ->
-    withContext(dispatcher) {
-        commentService.upvoteComment(userName, commentId)
+) = try {
+    UpvoteCommentUsecase { userName: UserName, commentId: CommentId ->
+        withContext(dispatcher) {
+            commentService.upvoteComment(userName, commentId)
+        }
     }
+} catch (e: Exception) {
+    Result.failure<CommentId>(e)
 }
 
 fun downvoteCommentUsecase(
     dispatcher: CoroutineDispatcher,
     commentService: CommentService
-) = DownvoteCommentUsecase { userName: UserName, commentId: CommentId ->
-    withContext(dispatcher) {
-        commentService.downvoteComment(userName, commentId)
+) = try {
+    DownvoteCommentUsecase { userName: UserName, commentId: CommentId ->
+        withContext(dispatcher) {
+            commentService.downvoteComment(userName, commentId)
+        }
     }
+} catch (e: Exception) {
+    Result.failure<CommentId>(e)
 }

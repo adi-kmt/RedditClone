@@ -22,7 +22,7 @@ import org.jetbrains.exposed.sql.javatime.CurrentDateTime
 import org.jetbrains.exposed.sql.select
 
 interface PostRepository {
-    suspend fun addPost(userName: UserName, postRequest: PostRequest): Result<PostResponse>
+    suspend fun addPost(userName: UserName, postRequest: PostRequest): Result<PostResponse?>
 
     suspend fun getPostById(postId: PostId): Result<PostResponse?>
 
@@ -40,7 +40,7 @@ interface PostRepository {
 }
 
 class PostRepoImpl(private val dbTransaction: DbTransaction) : PostRepository {
-    override suspend fun addPost(userName: UserName, postRequest: PostRequest): Result<PostResponse> {
+    override suspend fun addPost(userName: UserName, postRequest: PostRequest): Result<PostResponse?> {
         return dbTransaction.dbQuery {
             resultOf {
                 val id = PostEntity.insertIgnoreAndGetId {
@@ -50,15 +50,17 @@ class PostRepoImpl(private val dbTransaction: DbTransaction) : PostRepository {
                     it[PostEntity.subreddit] = postRequest.subredditName
                 }
 
-                PostResponse(
-                    postId = id?.value,
-                    subredditName = postRequest.subredditName,
-                    postHeading = postRequest.postHeading,
-                    postBody = postRequest.postBody,
-                    postAuthor = userName,
-                    postCreatedAt = CurrentDateTime.toString(),
-                    noOfUpvotes = 0
-                )
+                id?.let {
+                    PostResponse(
+                        postId = it.value,
+                        subredditName = postRequest.subredditName,
+                        postHeading = postRequest.postHeading,
+                        postBody = postRequest.postBody,
+                        postAuthor = userName,
+                        postCreatedAt = CurrentDateTime.toString(),
+                        noOfUpvotes = 0
+                    )
+                }
             }
         }
     }

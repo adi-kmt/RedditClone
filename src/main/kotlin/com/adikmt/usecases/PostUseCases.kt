@@ -12,7 +12,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 fun interface AddPostUsecase {
-    suspend fun add(userName: UserName, postRequest: PostRequest): Result<PostResponse>
+    suspend fun add(userName: UserName, postRequest: PostRequest): Result<PostResponse?>
 }
 
 fun interface GetPostUsecase {
@@ -46,71 +46,103 @@ fun interface DownvotePostUsecase {
 fun addPostUsecase(
     dispatcher: CoroutineDispatcher,
     postServices: PostServices
-) = AddPostUsecase { userName: UserName, postRequest: PostRequest ->
-    withContext(dispatcher) {
-        postServices.addPost(userName, postRequest)
+) = try {
+    AddPostUsecase { userName: UserName, postRequest: PostRequest ->
+        withContext(dispatcher) {
+            postServices.addPost(userName, postRequest)
+        }
     }
+} catch (e: Exception) {
+    Result.failure<PostResponse>(e)
 }
 
 fun getPostFeedUsecase(
     dispatcher: CoroutineDispatcher,
     postServices: PostServices
-) = GetPostFeedByUserUsecase { userName: UserName ->
-    withContext(dispatcher) {
-        postServices.getPostFeed(userName)
+) = try {
+    GetPostFeedByUserUsecase { userName: UserName ->
+        withContext(dispatcher) {
+            postServices.getPostFeed(userName)
+        }
     }
+} catch (e: Exception) {
+    Result.failure<PostResponseList>(e)
 }
 
 fun getPostUsecase(
     dispatcher: CoroutineDispatcher,
     postServices: PostServices
-) = GetPostUsecase { postId: PostId ->
-    withContext(dispatcher) {
-        postServices.getPost(postId)
+) = try {
+    GetPostUsecase { postId: PostId ->
+        withContext(dispatcher) {
+            postServices.getPost(postId)
+        }
     }
+} catch (e: Exception) {
+    Result.failure<PostResponse>(e)
 }
 
 fun searchPostByHeadingUsecase(
     dispatcher: CoroutineDispatcher,
     postServices: PostServices
-) = SearchPostByHeadingUsecase { postHeading: PostHeading ->
-    withContext(dispatcher) {
-        postServices.searchPostByHeading(postHeading)
+) = try {
+    SearchPostByHeadingUsecase { postHeading: PostHeading ->
+        withContext(dispatcher) {
+            postServices.searchPostByHeading(postHeading)
+        }
     }
+} catch (e: Exception) {
+    Result.failure<PostResponseList>(e)
 }
 
 fun getPostBySubredditUsecase(
     dispatcher: CoroutineDispatcher,
     postServices: PostServices
-) = GetPostBySubredditUsecase { subredditName: SubredditName ->
-    withContext(dispatcher) {
-        postServices.getPostBySubreddit(subredditName)
+) = try {
+    GetPostBySubredditUsecase { subredditName: SubredditName ->
+        withContext(dispatcher) {
+            postServices.getPostBySubreddit(subredditName)
+        }
     }
+} catch (e: Exception) {
+    Result.failure<PostResponseList>(e)
 }
 
 fun getPostByUserUsecase(
     dispatcher: CoroutineDispatcher,
     postServices: PostServices
-) = GetPostByUserUsecase { userName: UserName ->
-    withContext(dispatcher) {
-        postServices.getPostByUser(userName)
+) = try {
+    GetPostByUserUsecase { userName: UserName ->
+        withContext(dispatcher) {
+            postServices.getPostByUser(userName)
+        }
     }
+} catch (e: Exception) {
+    Result.failure<PostResponseList>(e)
 }
 
 fun upvotePostUsecase(
     dispatcher: CoroutineDispatcher,
     postServices: PostServices
-) = UpvotePostUsecase { userName: UserName, postId: PostId ->
-    withContext(dispatcher) {
-        postServices.upvotePost(postId, userName)
+) = try {
+    UpvotePostUsecase { userName: UserName, postId: PostId ->
+        withContext(dispatcher) {
+            postServices.upvotePost(postId, userName)
+        }
     }
+} catch (e: Exception) {
+    Result.failure<PostId>(e)
 }
 
 fun downvotePostUsecase(
     dispatcher: CoroutineDispatcher,
     postServices: PostServices
-) = DownvotePostUsecase { userName: UserName, postId: PostId ->
-    withContext(dispatcher) {
-        postServices.downvotePost(postId, userName)
+) = try {
+    DownvotePostUsecase { userName: UserName, postId: PostId ->
+        withContext(dispatcher) {
+            postServices.downvotePost(postId, userName)
+        }
     }
+} catch (e: Exception) {
+    Result.failure<PostId>(e)
 }

@@ -10,7 +10,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 fun interface AddSubredditUsecase {
-    suspend fun add(userName: UserName, subredditRequest: SubredditRequest): Result<SubredditResponse>
+    suspend fun add(userName: UserName, subredditRequest: SubredditRequest): Result<SubredditResponse?>
 }
 
 fun interface GetSubredditByNameUsecase {
@@ -36,53 +36,77 @@ fun interface GetAllSubredditsFollowedUsecase {
 fun addSubredditUsecase(
     dispatcher: CoroutineDispatcher,
     subredditService: SubredditService
-) = AddSubredditUsecase { userName: UserName, subredditRequest: SubredditRequest ->
-    withContext(dispatcher) {
-        subredditService.addSubreddit(userName, subredditRequest)
+) = try {
+    AddSubredditUsecase { userName: UserName, subredditRequest: SubredditRequest ->
+        withContext(dispatcher) {
+            subredditService.addSubreddit(userName, subredditRequest)
+        }
     }
+} catch (e: Exception) {
+    Result.failure<SubredditResponse>(e)
 }
 
 fun getSubredditByNameUsecase(
     dispatcher: CoroutineDispatcher,
     subredditService: SubredditService
-) = GetSubredditByNameUsecase { subredditName: SubredditName ->
-    withContext(dispatcher) {
-        subredditService.getSubredditByName(subredditName)
+) = try {
+    GetSubredditByNameUsecase { subredditName: SubredditName ->
+        withContext(dispatcher) {
+            subredditService.getSubredditByName(subredditName)
+        }
     }
+} catch (e: Exception) {
+    Result.failure<SubredditResponse>(e)
 }
 
 fun searchSubredditByNameUsecase(
     dispatcher: CoroutineDispatcher,
     subredditService: SubredditService
-) = SearchSubredditByNameUsecase { subredditName: SubredditName ->
-    withContext(dispatcher) {
-        subredditService.searchSubredditByName(subredditName)
+) = try {
+    SearchSubredditByNameUsecase { subredditName: SubredditName ->
+        withContext(dispatcher) {
+            subredditService.searchSubredditByName(subredditName)
+        }
     }
+} catch (e: Exception) {
+    Result.failure<SubredditResponseList>(e)
 }
 
 fun followSubredditUsecase(
     dispatcher: CoroutineDispatcher,
     subredditService: SubredditService
-) = FollowSubredditUsecase { userName: UserName, subredditName: SubredditName ->
-    withContext(dispatcher) {
-        subredditService.followSubreddit(userName, subredditName)
+) = try {
+    FollowSubredditUsecase { userName: UserName, subredditName: SubredditName ->
+        withContext(dispatcher) {
+            subredditService.followSubreddit(userName, subredditName)
+        }
     }
+} catch (e: Exception) {
+    Result.failure<SubredditName>(e)
 }
 
 fun unFollowSubredditUsecase(
     dispatcher: CoroutineDispatcher,
     subredditService: SubredditService
-) = UnFollowSubredditUsecase { userName: UserName, subredditName: SubredditName ->
-    withContext(dispatcher) {
-        subredditService.unFollowSubreddit(userName, subredditName)
+) = try {
+    UnFollowSubredditUsecase { userName: UserName, subredditName: SubredditName ->
+        withContext(dispatcher) {
+            subredditService.unFollowSubreddit(userName, subredditName)
+        }
     }
+} catch (e: Exception) {
+    Result.failure<SubredditName>(e)
 }
 
 fun getAllSubredditsFollowedUsecase(
     dispatcher: CoroutineDispatcher,
     subredditService: SubredditService
-) = GetAllSubredditsFollowedUsecase { userName: UserName ->
-    withContext(dispatcher) {
-        subredditService.getAllSubredditsFollowed(userName)
+) = try {
+    GetAllSubredditsFollowedUsecase { userName: UserName ->
+        withContext(dispatcher) {
+            subredditService.getAllSubredditsFollowed(userName)
+        }
     }
+} catch (e: Exception) {
+    Result.failure<SubredditResponseList>(e)
 }

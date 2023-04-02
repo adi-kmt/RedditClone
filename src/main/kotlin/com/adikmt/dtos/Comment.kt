@@ -11,7 +11,7 @@ data class CommentRequest(
 
 @Serializable
 data class CommentResponse(
-    val commentId: Long?,
+    val commentId: Long,
     val commentBody: String,
     val commentAuthor: UserName,
     val parentComment: Long?,

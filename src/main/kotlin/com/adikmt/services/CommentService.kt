@@ -9,7 +9,7 @@ import com.adikmt.dtos.UserName
 import com.adikmt.repositories.CommentRepository
 
 interface CommentService {
-    suspend fun addComment(userName: UserName, commentRequest: CommentRequest): Result<CommentResponse>
+    suspend fun addComment(userName: UserName, commentRequest: CommentRequest): Result<CommentResponse?>
 
     suspend fun getComment(commentId: CommentId): Result<CommentResponse?>
 
@@ -23,7 +23,7 @@ interface CommentService {
 }
 
 class CommentServiceImpl(private val commentRepository: CommentRepository) : CommentService {
-    override suspend fun addComment(userName: UserName, commentRequest: CommentRequest): Result<CommentResponse> =
+    override suspend fun addComment(userName: UserName, commentRequest: CommentRequest): Result<CommentResponse?> =
         commentRepository.addComment(userName, commentRequest)
 
     override suspend fun getComment(commentId: CommentId): Result<CommentResponse?> =

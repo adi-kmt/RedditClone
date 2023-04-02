@@ -13,7 +13,7 @@ data class UserRequest(
 
 @Serializable
 data class UserResponse(
-    val userId: Long?,
+    val userId: Long,
     val userName: String,
     val userEmail: String,
     val userBio: String?
@@ -30,7 +30,7 @@ data class LoginUserResponse(
 
 @Serializable
 data class UserResponseWithToken(
-    val userId: Long?,
+    val userId: Long,
     val userName: String,
     val userEmail: String,
     val userBio: String?,

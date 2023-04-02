@@ -11,7 +11,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 fun interface RegisterUsecase {
-    suspend fun register(userRequest: UserRequest): Result<UserResponse>
+    suspend fun register(userRequest: UserRequest): Result<UserResponse?>
 }
 
 fun interface LoginUsecase {
@@ -25,30 +25,42 @@ fun interface CurrentUserUsecase {
 fun registerUsecase(
     dispatcher: CoroutineDispatcher,
     authService: AuthService
-) = RegisterUsecase { userRequest: UserRequest ->
-    withContext(dispatcher) {
-        authService.register(userRequest)
+) = try {
+    RegisterUsecase { userRequest: UserRequest ->
+        withContext(dispatcher) {
+            authService.register(userRequest)
+        }
     }
+} catch (e: Exception) {
+    Result.failure<UserResponse>(e)
 }
 
 fun loginUsecase(
     dispatcher: CoroutineDispatcher,
     authService: AuthService
-) = LoginUsecase { loginUser: LoginUser ->
-    withContext(dispatcher) {
-        authService.login(loginUser)
+) = try {
+    LoginUsecase { loginUser: LoginUser ->
+        withContext(dispatcher) {
+            authService.login(loginUser)
+        }
     }
+} catch (e: Exception) {
+    Result.failure<UserResponse>(e)
 }
 
 fun currentUserUserUsecase(
     dispatcher: CoroutineDispatcher,
     userService: UserService
-) = CurrentUserUsecase { userName: String? ->
-    withContext(dispatcher) {
-        userName?.let { user ->
-            userService.getUserByUserName(UserName(user)).getOrNull()?.let {
-                return@let AuthCurrentUser(it.userName)
+) = try {
+    CurrentUserUsecase { userName: String? ->
+        withContext(dispatcher) {
+            userName?.let { user ->
+                userService.getUserByUserName(UserName(user)).getOrNull()?.let {
+                    return@let AuthCurrentUser(it.userName)
+                }
             }
         }
     }
+} catch (e: Exception) {
+    Result.failure<AuthCurrentUser>(e)
 }

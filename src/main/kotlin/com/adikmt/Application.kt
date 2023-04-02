@@ -3,7 +3,6 @@ package com.adikmt
 import com.adikmt.plugins.configure
 import com.adikmt.plugins.configureRouting
 import com.adikmt.plugins.cors
-import com.adikmt.usecases.CurrentUserUsecase
 import com.adikmt.utils.JwtService
 import com.adikmt.utils.configure
 import com.adikmt.utils.db.DataBaseFactory
@@ -11,22 +10,20 @@ import com.adikmt.utils.db.dbConfig
 import com.adikmt.utils.jwtConfig
 import com.adikmt.utils.koinModules
 import io.ktor.client.plugins.kotlinx.serializer.KotlinxSerializer
-import io.ktor.serialization.kotlinx.json.*
-import io.ktor.server.application.*
+import io.ktor.serialization.kotlinx.json.json
+import io.ktor.server.application.Application
+import io.ktor.server.application.install
 import io.ktor.server.auth.authentication
-import io.ktor.server.plugins.callloging.*
-import io.ktor.server.plugins.contentnegotiation.*
-import io.ktor.server.plugins.cors.*
-import io.ktor.server.plugins.cors.routing.*
+import io.ktor.server.plugins.callloging.CallLogging
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.cors.routing.CORS
-import io.ktor.server.plugins.defaultheaders.*
+import io.ktor.server.plugins.defaultheaders.DefaultHeaders
 import io.ktor.server.plugins.doublereceive.DoubleReceive
-import io.ktor.server.plugins.statuspages.*
-import io.ktor.server.request.*
+import io.ktor.server.plugins.statuspages.StatusPages
+import io.ktor.server.request.path
 import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
 import org.koin.core.parameter.parametersOf
-import org.koin.core.qualifier.named
 import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.Koin
 import org.slf4j.event.Level
@@ -45,7 +42,6 @@ fun Application.module(koinModules: List<Module> = koinModules()) {
     val jwtService by inject<JwtService> {
         parametersOf(environment.jwtConfig(JwtService.CONFIG_PATH))
     }
-    val currentUserUsecase by inject<CurrentUserUsecase>(named("CurrentUserUserUsecase"))
 
     install(DefaultHeaders) {
         header("X-Engine", "Ktor")
