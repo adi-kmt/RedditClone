@@ -1,5 +1,9 @@
 # RedditClone
 
+
+## Database Schema design
+![DB design](redditDBER.png)
+
 ## Prerequisite
 
 1. Kotlin
