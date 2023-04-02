@@ -2,6 +2,20 @@ package com.adikmt.utils
 
 import org.mindrot.jbcrypt.BCrypt
 
-fun hash(password: String): String = BCrypt.hashpw(password, BCrypt.gensalt())
+private const val SALT = 7
 
-fun checkPassword(candidate: String, hashed: String): Boolean = BCrypt.checkpw(candidate, hashed)
+/**
+ * Generates password Hash for given password
+ *
+ * @param password
+ */
+fun hash(password: String): String = BCrypt.hashpw(password, bcryptSalt())
+private fun bcryptSalt() = BCrypt.gensalt(SALT)
+
+/**
+ * Check hashed password with user password
+ *
+ * @param plaintTextPassword
+ * @param hashed
+ */
+fun checkPassword(plaintTextPassword: String, hashed: String): Boolean = BCrypt.checkpw(plaintTextPassword, hashed)

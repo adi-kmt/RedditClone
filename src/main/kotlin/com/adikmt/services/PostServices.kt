@@ -9,26 +9,87 @@ import com.adikmt.dtos.SubredditName
 import com.adikmt.dtos.UserName
 import com.adikmt.repositories.PostRepository
 
+/**
+ * Post services
+ *
+ */
 interface PostServices {
-    suspend fun addPost(userName: UserName, postRequest: PostRequest): Result<PostResponse>
+    /**
+     * Add post
+     *
+     * @param userName
+     * @param postRequest
+     * @return
+     */
+    suspend fun addPost(userName: UserName, postRequest: PostRequest): Result<PostResponse?>
 
+    /**
+     * Get post
+     *
+     * @param postId
+     * @return
+     */
     suspend fun getPost(postId: PostId): Result<PostResponse?>
 
+    /**
+     * Get post feed
+     *
+     * @param userName
+     * @return
+     */
     suspend fun getPostFeed(userName: UserName): Result<PostResponseList>
 
+    /**
+     * Search post by heading
+     *
+     * @param postHeading
+     * @return
+     */
     suspend fun searchPostByHeading(postHeading: PostHeading): Result<PostResponseList>
 
+    /**
+     * Get post by subreddit
+     *
+     * @param subredditName
+     * @return
+     */
     suspend fun getPostBySubreddit(subredditName: SubredditName): Result<PostResponseList>
 
+    /**
+     * Get post by user
+     *
+     * @param userName
+     * @return
+     */
     suspend fun getPostByUser(userName: UserName): Result<PostResponseList>
 
+    /**
+     * Upvote post
+     *
+     * @param postId
+     * @param userName
+     * @return
+     */
     suspend fun upvotePost(postId: PostId, userName: UserName): Result<PostId>
 
+    /**
+     * Downvote post
+     *
+     * @param postId
+     * @param userName
+     * @return
+     */
     suspend fun downvotePost(postId: PostId, userName: UserName): Result<PostId>
 }
 
+/**
+ * Post services impl
+ *
+ * @constructor Create empty Post services impl
+ * @property postRepository
+ */
 class PostServicesImpl(private val postRepository: PostRepository) : PostServices {
-    override suspend fun addPost(userName: UserName, postRequest: PostRequest): Result<PostResponse> =
+    override suspend fun addPost(userName: UserName, postRequest: PostRequest): Result<PostResponse?> =
         postRepository.addPost(userName, postRequest)
 
     override suspend fun getPost(postId: PostId): Result<PostResponse?> =

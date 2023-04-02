@@ -13,7 +13,7 @@ data class UserRequest(
 
 @Serializable
 data class UserResponse(
-    val userId: Long?,
+    val userId: Long,
     val userName: String,
     val userEmail: String,
     val userBio: String?
@@ -26,6 +26,15 @@ data class LoginUserResponse(
     val userEmail: String,
     val userPassword: String,
     val userBio: String?
+)
+
+@Serializable
+data class UserResponseWithToken(
+    val userId: Long,
+    val userName: String,
+    val userEmail: String,
+    val userBio: String?,
+    val token: String
 )
 
 @Serializable
@@ -52,7 +61,7 @@ data class UserResponseList(
 data class AuthCurrentUser(val userName: String?) : Principal
 
 @Serializable
-data class AuthUserResponse(val userResponse: UserResponse, val token: String)
+data class LoginUser(val userName: String, val password: String)
 
 @JvmInline
 @Serializable

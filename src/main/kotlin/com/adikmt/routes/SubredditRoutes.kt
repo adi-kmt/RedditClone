@@ -1,5 +1,6 @@
 package com.adikmt.routes
 
+import com.adikmt.dtos.AuthCurrentUser
 import com.adikmt.dtos.SerializedException
 import com.adikmt.dtos.SubredditName
 import com.adikmt.dtos.SubredditRequest
@@ -13,6 +14,8 @@ import com.adikmt.usecases.UnFollowSubredditUsecase
 import com.adikmt.utils.deconstructResult
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
+import io.ktor.server.auth.authenticate
+import io.ktor.server.auth.principal
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Routing
@@ -33,98 +36,128 @@ fun Routing.subredditRoutes() {
 
 private fun Routing.unfollowSubreddit() {
     val unFollowSubredditUsecase by inject<UnFollowSubredditUsecase>(named("UnFollowSubredditUsecase"))
-    delete("/subreddit/unFollow/{name}") {
-        try {
-            val name = call.parameters["name"]
-            name?.let {
-                val data = unFollowSubredditUsecase.unFollow(UserName(""), SubredditName(it))
-                deconstructResult(this, data, HttpStatusCode.Gone)
+    authenticate {
+        delete("/subreddit/unFollow/{name}") {
+            try {
+                val name = call.parameters["name"]
+                val user = call.principal<AuthCurrentUser>()?.userName
+                user?.let { userName ->
+                    name?.let {
+                        val data = unFollowSubredditUsecase.unFollow(UserName(userName), SubredditName(it))
+                        deconstructResult(this, data, HttpStatusCode.Gone)
+                    }
+                    call.respond(HttpStatusCode.UnprocessableEntity)
+                }
+                call.respond(HttpStatusCode.Unauthorized)
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.InternalServerError, SerializedException(e.message))
             }
-            call.respond(HttpStatusCode.UnprocessableEntity)
-        } catch (e: Exception) {
-            call.respond(HttpStatusCode.InternalServerError, SerializedException(e.message))
         }
     }
 }
 
 private fun Routing.followSubreddit() {
     val followSubredditUsecase by inject<FollowSubredditUsecase>(named("FollowSubredditUsecase"))
-    post("/subreddit/follow/{name}") {
-        try {
-            val name = call.parameters["name"]
-            name?.let {
-                val data = followSubredditUsecase.follow(UserName(""), SubredditName(name))
-                deconstructResult(this, data, HttpStatusCode.Created)
+    authenticate {
+        post("/subreddit/follow/{name}") {
+            try {
+                val name = call.parameters["name"]
+                val user = call.principal<AuthCurrentUser>()?.userName
+                user?.let { userName ->
+                    name?.let {
+                        val data = followSubredditUsecase.follow(UserName(userName), SubredditName(name))
+                        deconstructResult(this, data, HttpStatusCode.Created)
+                    }
+                    call.respond(HttpStatusCode.UnprocessableEntity)
+                }
+                call.respond(HttpStatusCode.Unauthorized)
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.InternalServerError, SerializedException(e.message))
             }
-            call.respond(HttpStatusCode.UnprocessableEntity)
-        } catch (e: Exception) {
-            call.respond(HttpStatusCode.InternalServerError, SerializedException(e.message))
         }
     }
 }
 
 private fun Routing.searchSubredditByName() {
     val searchSubredditByNameUsecase by inject<SearchSubredditByNameUsecase>(named("SearchSubredditByNameUsecase"))
-    get("/subreddit/{name}") {
-        try {
-            val name = call.parameters["name"]
-            name?.let {
-                val subredditList = searchSubredditByNameUsecase.get(SubredditName(it))
-                deconstructResult(this, subredditList, HttpStatusCode.OK)
+    authenticate(optional = true) {
+        get("/subreddit/{name}") {
+            try {
+                val name = call.parameters["name"]
+                val user = call.principal<AuthCurrentUser>()?.userName
+                user?.let { userName ->
+                    name?.let {
+                        val subredditList = searchSubredditByNameUsecase.get(SubredditName(it))
+                        deconstructResult(this, subredditList, HttpStatusCode.OK)
+                    }
+                    call.respond(HttpStatusCode.UnprocessableEntity)
+                }
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.InternalServerError, SerializedException(e.message))
             }
-            call.respond(HttpStatusCode.UnprocessableEntity)
-        } catch (e: Exception) {
-            call.respond(HttpStatusCode.InternalServerError, SerializedException(e.message))
         }
     }
 }
 
 private fun Routing.getFollowedSubreddit() {
     val getAllSubredditsFollowedUsecase by inject<GetAllSubredditsFollowedUsecase>(named("GetAllSubredditsFollowedUsecase"))
-
-    get("/subreddit/user/{userId}") {
-        try {
-            val userId = call.parameters["userId"]
-            userId?.let {
-                val subredditList = getAllSubredditsFollowedUsecase.get(UserName(it))
-                deconstructResult(this, subredditList, HttpStatusCode.OK)
+    authenticate {
+        get("/subreddit/user/{userId}") {
+            try {
+                val userId = call.parameters["userId"]
+                val user = call.principal<AuthCurrentUser>()?.userName
+                user?.let { userName ->
+                    userId?.let {
+                        val subredditList = getAllSubredditsFollowedUsecase.get(UserName(it))
+                        deconstructResult(this, subredditList, HttpStatusCode.OK)
+                    }
+                    call.respond(HttpStatusCode.UnprocessableEntity)
+                }
+                call.respond(HttpStatusCode.Unauthorized)
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.InternalServerError, SerializedException(e.message))
             }
-            call.respond(HttpStatusCode.UnprocessableEntity)
-        } catch (e: Exception) {
-            call.respond(HttpStatusCode.InternalServerError, SerializedException(e.message))
         }
     }
 }
 
 private fun Routing.getSubredditByName() {
     val getSubredditByNameUsecase by inject<GetSubredditByNameUsecase>(named("GetSubredditByNameUsecase"))
-    get("/subreddit/id/{name}") {
-        try {
-            val name = call.parameters["name"]
-            name?.let {
-                val subreddit = getSubredditByNameUsecase.get(SubredditName(it))
-                deconstructResult(this, subreddit, HttpStatusCode.OK)
+    authenticate(optional = true) {
+        get("/subreddit/id/{name}") {
+            try {
+                val name = call.parameters["name"]
+                name?.let {
+                    val subreddit = getSubredditByNameUsecase.get(SubredditName(it))
+                    deconstructResult(this, subreddit, HttpStatusCode.OK)
+                }
+                call.respond(HttpStatusCode.UnprocessableEntity)
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.InternalServerError, SerializedException(e.message))
             }
-            call.respond(HttpStatusCode.UnprocessableEntity)
-        } catch (e: Exception) {
-            call.respond(HttpStatusCode.InternalServerError, SerializedException(e.message))
         }
     }
 }
 
 private fun Routing.addSubreddit() {
     val addSubredditUsecase by inject<AddSubredditUsecase>(named("AddSubredditUsecase"))
-    post("/subreddit") {
-        try {
-            val subreddit = call.receive<SubredditRequest>()
-            subreddit?.let {
-                val subredditResponse = addSubredditUsecase.add(UserName(""), subreddit)
-                deconstructResult(this, subredditResponse, HttpStatusCode.Created)
-            } ?: run {
-                call.respond(HttpStatusCode.UnprocessableEntity)
+    authenticate {
+        post("/subreddit") {
+            try {
+                val subreddit = call.receive<SubredditRequest>()
+                val user = call.principal<AuthCurrentUser>()?.userName
+                user?.let { userName ->
+                    subreddit?.let {
+                        val subredditResponse = addSubredditUsecase.add(UserName(userName), subreddit)
+                        deconstructResult(this, subredditResponse, HttpStatusCode.Created)
+                    } ?: run {
+                        call.respond(HttpStatusCode.UnprocessableEntity)
+                    }
+                }
+                call.respond(HttpStatusCode.Unauthorized)
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.InternalServerError, SerializedException(e.message))
             }
-        } catch (e: Exception) {
-            call.respond(HttpStatusCode.InternalServerError, SerializedException(e.message))
         }
     }
 }

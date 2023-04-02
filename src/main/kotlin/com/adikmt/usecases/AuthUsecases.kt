@@ -1,6 +1,7 @@
 package com.adikmt.usecases
 
 import com.adikmt.dtos.AuthCurrentUser
+import com.adikmt.dtos.LoginUser
 import com.adikmt.dtos.UserName
 import com.adikmt.dtos.UserRequest
 import com.adikmt.dtos.UserResponse
@@ -9,18 +10,43 @@ import com.adikmt.services.UserService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
+
+/**
+ * Register usecase interface
+ *
+ * @constructor Create empty Register usecase
+ */
 fun interface RegisterUsecase {
-    suspend fun register(userRequest: UserRequest): Result<UserResponse>
+    /**
+     * Register
+     *
+     * @param userRequest
+     * @return
+     */
+    suspend fun register(userRequest: UserRequest): Result<UserResponse?>
 }
 
+/**
+ * Login usecase interface
+ *
+ * @constructor Create empty Login usecase
+ */
 fun interface LoginUsecase {
-    suspend fun login(userRequest: UserRequest): Result<UserResponse>
+    /**
+     * Login
+     *
+     * @param loginUser
+     * @return
+     */
+    suspend fun login(loginUser: LoginUser): Result<UserResponse>
 }
 
-fun interface CurrentUserUserUsecase {
-    suspend fun getCurrentUser(userName: String?): AuthCurrentUser?
-}
-
+/**
+ * Register usecase Impl
+ *
+ * @param dispatcher
+ * @param authService
+ */
 fun registerUsecase(
     dispatcher: CoroutineDispatcher,
     authService: AuthService
@@ -30,24 +56,17 @@ fun registerUsecase(
     }
 }
 
+/**
+ * Login usecase Impl
+ *
+ * @param dispatcher
+ * @param authService
+ */
 fun loginUsecase(
     dispatcher: CoroutineDispatcher,
     authService: AuthService
-) = LoginUsecase { userRequest: UserRequest ->
+) = LoginUsecase { loginUser: LoginUser ->
     withContext(dispatcher) {
-        authService.login(userRequest)
-    }
-}
-
-fun currentUserUserUsecase(
-    dispatcher: CoroutineDispatcher,
-    userService: UserService
-) = CurrentUserUserUsecase { userName: String? ->
-    withContext(dispatcher) {
-        userName?.let { user ->
-            userService.getUserByUserName(UserName(user)).getOrNull()?.let {
-                return@let AuthCurrentUser(it.userName)
-            }
-        }
+        authService.login(loginUser)
     }
 }

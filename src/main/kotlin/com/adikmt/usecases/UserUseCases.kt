@@ -9,26 +9,89 @@ import com.adikmt.services.UserService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
+/**
+ * Get user use case interface
+ *
+ * @constructor Create empty Get user use case
+ */
 fun interface GetUserUseCase {
+    /**
+     * Get user
+     *
+     * @param userName
+     * @return
+     */
     suspend fun getUser(userName: UserName): Result<UserResponse?>
 }
 
+/**
+ * Search user use case interface
+ *
+ * @constructor Create empty Search user use case
+ */
 fun interface SearchUserUseCase {
+    /**
+     * Search user
+     *
+     * @param userName
+     * @return
+     */
     suspend fun searchUser(userName: UserName): Result<UserResponseList>
 }
 
+/**
+ * Get user following use case interface
+ *
+ * @constructor Create empty Get user following use case
+ */
 fun interface GetUserFollowingUseCase {
+    /**
+     * Get user following data
+     *
+     * @param userName
+     * @return
+     */
     suspend fun getUserFollowingData(userName: UserName): Result<UserFollowingData>
 }
 
+/**
+ * Follow user use case interface
+ *
+ * @constructor Create empty Follow user use case
+ */
 fun interface FollowUserUseCase {
+    /**
+     * Follow user
+     *
+     * @param userName
+     * @param userToFollow
+     * @return
+     */
     suspend fun followUser(userName: UserName, userToFollow: UserName): Result<FollowOrUnfollowUser>
 }
 
+/**
+ * Un follow user use case interface
+ *
+ * @constructor Create empty Un follow user use case
+ */
 fun interface UnFollowUserUseCase {
+    /**
+     * Un follow user
+     *
+     * @param userName
+     * @param userToUnFollow
+     * @return
+     */
     suspend fun unFollowUser(userName: UserName, userToUnFollow: UserName): Result<FollowOrUnfollowUser>
 }
 
+/**
+ * Get user use case impl
+ *
+ * @param dispatcher
+ * @param userService
+ */
 fun getUserUseCase(
     dispatcher: CoroutineDispatcher,
     userService: UserService
@@ -38,6 +101,12 @@ fun getUserUseCase(
     }
 }
 
+/**
+ * Search user use case impl
+ *
+ * @param dispatcher
+ * @param userService
+ */
 fun searchUserUseCase(
     dispatcher: CoroutineDispatcher,
     userService: UserService
@@ -47,6 +116,12 @@ fun searchUserUseCase(
     }
 }
 
+/**
+ * Get user following use case impl
+ *
+ * @param dispatcher
+ * @param userService
+ */
 fun getUserFollowingUseCase(
     dispatcher: CoroutineDispatcher,
     userService: UserService
@@ -56,6 +131,12 @@ fun getUserFollowingUseCase(
     }
 }
 
+/**
+ * Follow user use case impl
+ *
+ * @param dispatcher
+ * @param userService
+ */
 fun followUserUseCase(
     dispatcher: CoroutineDispatcher,
     userService: UserService
@@ -65,6 +146,12 @@ fun followUserUseCase(
     }
 }
 
+/**
+ * Un follow user use case impl
+ *
+ * @param dispatcher
+ * @param userService
+ */
 fun unFollowUserUseCase(
     dispatcher: CoroutineDispatcher,
     userService: UserService

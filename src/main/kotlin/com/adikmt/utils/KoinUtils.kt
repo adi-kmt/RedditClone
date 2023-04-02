@@ -21,7 +21,7 @@ import com.adikmt.services.UserServiceImpl
 import com.adikmt.usecases.AddCommentUsecase
 import com.adikmt.usecases.AddPostUsecase
 import com.adikmt.usecases.AddSubredditUsecase
-import com.adikmt.usecases.CurrentUserUserUsecase
+import com.adikmt.usecases.CurrentUserUsecase
 import com.adikmt.usecases.DownvoteCommentUsecase
 import com.adikmt.usecases.DownvotePostUsecase
 import com.adikmt.usecases.FollowSubredditUsecase
@@ -86,11 +86,18 @@ import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
+
+/**
+ * Configure the koin modules as described below
+ *
+ * @param koinModules
+ */
 fun KoinApplication.configure(koinModules: List<Module>) {
     allowOverride(true)
     modules(koinModules)
 }
 
+/** Koin modules as needed */
 fun koinModules() = listOf(mainModule, coroutinesModule, services, usecases, repositories)
 
 private val coroutinesModule = module {
@@ -236,7 +243,7 @@ private val usecases = module {
         loginUsecase(get(named("IODispatcher")), get())
     }
 
-    factory<CurrentUserUserUsecase>(named("CurrentUserUserUsecase")) {
+    factory<CurrentUserUsecase>(named("CurrentUserUserUsecase")) {
         currentUserUserUsecase(get(named("IODispatcher")), get())
     }
 }

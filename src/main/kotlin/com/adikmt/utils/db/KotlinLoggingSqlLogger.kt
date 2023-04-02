@@ -7,6 +7,7 @@ import org.jetbrains.exposed.sql.statements.StatementContext
 import org.jetbrains.exposed.sql.statements.expandArgs
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 
+/** Logging SQL commands as described with ORM commands */
 object KotlinLoggingSqlLogger : SqlLogger {
     private val logger = KotlinLogging.logger("RW-Exposed")
 

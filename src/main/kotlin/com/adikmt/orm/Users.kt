@@ -7,7 +7,7 @@ import org.jetbrains.exposed.sql.Table
 object UserEntity : LongIdTable(name = "users") {
     val email = varchar(name = "user_email", length = 100).uniqueIndex()
     val username = varchar(name = "user_name", length = 30).uniqueIndex()
-    val password = varchar(name = "user_password", length = 50)
+    val password = varchar(name = "user_password", length = 255)
     val bio = text(name = "user_bio")
 }
 

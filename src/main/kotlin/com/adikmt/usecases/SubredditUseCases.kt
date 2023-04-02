@@ -9,30 +9,106 @@ import com.adikmt.services.SubredditService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
+
+/**
+ * Add subreddit usecase interface
+ *
+ * @constructor Create empty Add subreddit usecase
+ */
 fun interface AddSubredditUsecase {
-    suspend fun add(userName: UserName, subredditRequest: SubredditRequest): Result<SubredditResponse>
+    /**
+     * Add
+     *
+     * @param userName
+     * @param subredditRequest
+     * @return
+     */
+    suspend fun add(userName: UserName, subredditRequest: SubredditRequest): Result<SubredditResponse?>
 }
 
+/**
+ * Get subreddit by name usecase interface
+ *
+ * @constructor Create empty Get subreddit by name usecase
+ */
 fun interface GetSubredditByNameUsecase {
+    /**
+     * Get
+     *
+     * @param subredditName
+     * @return
+     */
     suspend fun get(subredditName: SubredditName): Result<SubredditResponse?>
 }
 
+/**
+ * Search subreddit by name usecase interface
+ *
+ * @constructor Create empty Search subreddit by name usecase
+ */
 fun interface SearchSubredditByNameUsecase {
+    /**
+     * Get
+     *
+     * @param subredditName
+     * @return
+     */
     suspend fun get(subredditName: SubredditName): Result<SubredditResponseList>
 }
 
+/**
+ * Follow subreddit usecase interface
+ *
+ * @constructor Create empty Follow subreddit usecase
+ */
 fun interface FollowSubredditUsecase {
+    /**
+     * Follow
+     *
+     * @param userName
+     * @param subredditName
+     * @return
+     */
     suspend fun follow(userName: UserName, subredditName: SubredditName): Result<SubredditName>
 }
 
+/**
+ * Un follow subreddit usecase interface
+ *
+ * @constructor Create empty Un follow subreddit usecase
+ */
 fun interface UnFollowSubredditUsecase {
+    /**
+     * Un follow
+     *
+     * @param userName
+     * @param subredditName
+     * @return
+     */
     suspend fun unFollow(userName: UserName, subredditName: SubredditName): Result<SubredditName>
 }
 
+/**
+ * Get all subreddits followed usecase interface
+ *
+ * @constructor Create empty Get all subreddits followed usecase
+ */
 fun interface GetAllSubredditsFollowedUsecase {
+    /**
+     * Get
+     *
+     * @param userName
+     * @return
+     */
     suspend fun get(userName: UserName): Result<SubredditResponseList>
 }
 
+/**
+ * Add subreddit usecase impl
+ *
+ * @param dispatcher
+ * @param subredditService
+ */
 fun addSubredditUsecase(
     dispatcher: CoroutineDispatcher,
     subredditService: SubredditService
@@ -42,6 +118,12 @@ fun addSubredditUsecase(
     }
 }
 
+/**
+ * Get subreddit by name usecase impl
+ *
+ * @param dispatcher
+ * @param subredditService
+ */
 fun getSubredditByNameUsecase(
     dispatcher: CoroutineDispatcher,
     subredditService: SubredditService
@@ -51,6 +133,12 @@ fun getSubredditByNameUsecase(
     }
 }
 
+/**
+ * Search subreddit by name usecase impl
+ *
+ * @param dispatcher
+ * @param subredditService
+ */
 fun searchSubredditByNameUsecase(
     dispatcher: CoroutineDispatcher,
     subredditService: SubredditService
@@ -60,6 +148,12 @@ fun searchSubredditByNameUsecase(
     }
 }
 
+/**
+ * Follow subreddit usecase impl
+ *
+ * @param dispatcher
+ * @param subredditService
+ */
 fun followSubredditUsecase(
     dispatcher: CoroutineDispatcher,
     subredditService: SubredditService
@@ -69,6 +163,12 @@ fun followSubredditUsecase(
     }
 }
 
+/**
+ * Un follow subreddit usecase impl
+ *
+ * @param dispatcher
+ * @param subredditService
+ */
 fun unFollowSubredditUsecase(
     dispatcher: CoroutineDispatcher,
     subredditService: SubredditService
@@ -78,6 +178,12 @@ fun unFollowSubredditUsecase(
     }
 }
 
+/**
+ * Get all subreddits followed usecase impl
+ *
+ * @param dispatcher
+ * @param subredditService
+ */
 fun getAllSubredditsFollowedUsecase(
     dispatcher: CoroutineDispatcher,
     subredditService: SubredditService

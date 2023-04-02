@@ -19,27 +19,83 @@ import org.jetbrains.exposed.sql.insertIgnore
 import org.jetbrains.exposed.sql.insertIgnoreAndGetId
 import org.jetbrains.exposed.sql.select
 
+/**
+ * Subreddit repository
+ *
+ */
 interface SubredditRepository {
-    suspend fun addSubreddit(userName: UserName, subredditRequest: SubredditRequest): Result<SubredditResponse>
+    /**
+     * Add subreddit
+     *
+     * @param userName
+     * @param subredditRequest
+     * @return
+     */
+    suspend fun addSubreddit(userName: UserName, subredditRequest: SubredditRequest): Result<SubredditResponse?>
 
+    /**
+     * Get subreddit by name
+     *
+     * @param subredditName
+     * @return
+     */
     suspend fun getSubredditByName(subredditName: SubredditName): Result<SubredditResponse?>
 
+    /**
+     * Search subreddit by name
+     *
+     * @param subredditName
+     * @return
+     */
     suspend fun searchSubredditByName(subredditName: SubredditName): Result<SubredditResponseList>
 
+    /**
+     * Follow subreddit
+     *
+     * @param userName
+     * @param subredditName
+     * @return
+     */
     suspend fun followSubreddit(userName: UserName, subredditName: SubredditName): Result<SubredditName>
 
+    /**
+     * Unfollow subreddit
+     *
+     * @param userName
+     * @param subredditName
+     * @return
+     */
     suspend fun unfollowSubreddit(userName: UserName, subredditName: SubredditName): Result<SubredditName>
 
+    /**
+     * Is subreddit followed
+     *
+     * @param subredditName
+     * @param userName
+     * @return
+     */
     suspend fun isSubredditFollowed(subredditName: SubredditName, userName: UserName): Result<Boolean>
 
+    /**
+     * Get all followed subreddits
+     *
+     * @param userName
+     * @return
+     */
     suspend fun getAllFollowedSubreddits(userName: UserName): Result<SubredditResponseList>
 }
 
+/**
+ * Subreddit repo impl
+ *
+ * @constructor Create empty Subreddit repo impl
+ * @property dbTransaction
+ */
 class SubredditRepoImpl(private val dbTransaction: DbTransaction) : SubredditRepository {
     override suspend fun addSubreddit(
         userName: UserName,
         subredditRequest: SubredditRequest
-    ): Result<SubredditResponse> {
+    ): Result<SubredditResponse?> {
         return dbTransaction.dbQuery {
             resultOf {
                 val id = SubredditEntity.insertIgnoreAndGetId {
@@ -47,12 +103,14 @@ class SubredditRepoImpl(private val dbTransaction: DbTransaction) : SubredditRep
                     it[SubredditEntity.desc] = subredditRequest.subredditDesc
                     it[SubredditEntity.createdByUser] = userName.value
                 }
-                SubredditResponse(
-                    id = id?.value,
-                    subredditName = subredditRequest.subredditName,
-                    subredditDesc = subredditRequest.subredditDesc,
-                    createdByUser = userName
-                )
+                id?.let {
+                    SubredditResponse(
+                        id = it.value,
+                        subredditName = subredditRequest.subredditName,
+                        subredditDesc = subredditRequest.subredditDesc,
+                        createdByUser = userName
+                    )
+                }
             }
         }
     }

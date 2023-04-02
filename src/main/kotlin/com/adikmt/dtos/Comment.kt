@@ -4,19 +4,19 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CommentRequest(
-    val postId: String,
+    val postId: Long,
     val commentBody: String,
-    val parentComment: Long
+    val parentComment: Long?
 )
 
 @Serializable
 data class CommentResponse(
-    val commentId: Long?,
+    val commentId: Long,
     val commentBody: String,
     val commentAuthor: UserName,
     val parentComment: Long?,
     val createdAt: String,
-    val upvoteNo: Int
+    val upvoteNo: Long
 )
 
 @Serializable
