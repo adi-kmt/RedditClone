@@ -1,7 +1,6 @@
 # RedditClone
 
 ## Prerequisite
--------------
 
 1. Kotlin
 2. MySQL DB
@@ -9,7 +8,6 @@
 
 
 ## Ktor Frameworks used
-----------
 
 1. [Ktor Server side](https://ktor.io/docs)
 2. [Coroutines](https://kotlinlang.org/docs/coroutines-overview.html)
