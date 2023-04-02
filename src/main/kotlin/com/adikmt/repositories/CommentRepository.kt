@@ -23,20 +23,70 @@ import org.jetbrains.exposed.sql.insertIgnoreAndGetId
 import org.jetbrains.exposed.sql.javatime.CurrentDateTime
 import org.jetbrains.exposed.sql.select
 
+
+/**
+ * Comment repository
+ *
+ */
 interface CommentRepository {
+    /**
+     * Add comment
+     *
+     * @param userName
+     * @param commentRequest
+     * @return
+     */
     suspend fun addComment(userName: UserName, commentRequest: CommentRequest): Result<CommentResponse?>
 
+    /**
+     * Get comment by id
+     *
+     * @param commentId
+     * @return
+     */
     suspend fun getCommentById(commentId: CommentId): Result<CommentResponse?>
 
+    /**
+     * Get comment list by post id
+     *
+     * @param postId
+     * @return
+     */
     suspend fun getCommentListByPostId(postId: PostId): Result<CommentResponseList>
 
+    /**
+     * Get comment list by user name
+     *
+     * @param userName
+     * @return
+     */
     suspend fun getCommentListByUserName(userName: UserName): Result<CommentResponseList>
 
+    /**
+     * Upvote comment
+     *
+     * @param commentId
+     * @param userName
+     * @return
+     */
     suspend fun upvoteComment(commentId: CommentId, userName: UserName): Result<CommentId>
 
+    /**
+     * Downvote comment
+     *
+     * @param commentId
+     * @param userName
+     * @return
+     */
     suspend fun downvoteComment(commentId: CommentId, userName: UserName): Result<CommentId>
 }
 
+/**
+ * Comment repository impl
+ *
+ * @constructor Create empty Comment repository impl
+ * @property dbTransaction
+ */
 class CommentRepositoryImpl(private val dbTransaction: DbTransaction) : CommentRepository {
     override suspend fun addComment(userName: UserName, commentRequest: CommentRequest): Result<CommentResponse?> {
         return dbTransaction.dbQuery {

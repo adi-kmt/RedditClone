@@ -22,24 +22,83 @@ import org.jetbrains.exposed.sql.insertIgnore
 import org.jetbrains.exposed.sql.insertIgnoreAndGetId
 import org.jetbrains.exposed.sql.select
 
+/** User repository */
 interface UserRepository {
+    /**
+     * Create user
+     *
+     * @param userRequest
+     * @param hashedPassword
+     * @return
+     */
     suspend fun createUser(userRequest: UserRequest, hashedPassword: String): Result<UserResponse?>
 
+    /**
+     * Get user
+     *
+     * @param userName
+     * @return
+     */
     suspend fun getUser(userName: UserName): Result<UserResponse?>
 
+    /**
+     * Get user login
+     *
+     * @param userName
+     * @return
+     */
     suspend fun getUserLogin(userName: UserName): Result<LoginUserResponse?>
 
+    /**
+     * Search user with name
+     *
+     * @param userName
+     * @return
+     */
     suspend fun searchUserWithName(userName: UserName): Result<UserResponseList>
 
+    /**
+     * Follow user
+     *
+     * @param userName
+     * @param userToFollow
+     * @return
+     */
     suspend fun followUser(userName: UserName, userToFollow: UserName): Result<FollowOrUnfollowUser>
 
+    /**
+     * Is following
+     *
+     * @param userName
+     * @param userToFollow
+     * @return
+     */
     suspend fun isFollowing(userName: UserName, userToFollow: UserName): Result<Boolean>
 
+    /**
+     * Un follow user
+     *
+     * @param userName
+     * @param userToUnFollow
+     * @return
+     */
     suspend fun unFollowUser(userName: UserName, userToUnFollow: UserName): Result<FollowOrUnfollowUser>
 
+    /**
+     * Get followers data
+     *
+     * @param userName
+     * @return
+     */
     suspend fun getFollowersData(userName: UserName): Result<UserFollowingData>
 }
 
+/**
+ * User repo impl
+ *
+ * @constructor Create empty User repo impl
+ * @property dbTransaction
+ */
 class UserRepoImpl(private val dbTransaction: DbTransaction) : UserRepository {
     override suspend fun createUser(userRequest: UserRequest, hashedPassword: String): Result<UserResponse?> {
         return dbTransaction.dbQuery {

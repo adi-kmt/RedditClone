@@ -11,7 +11,13 @@ import kotlin.time.Duration.Companion.milliseconds
 
 
 private val logger = KotlinLogging.logger {}
-class DatabaseFactoryImpl(private val databaseConfig: DatabaseConfig): DataBaseFactory {
+
+/**
+ * Database factory impl
+ *
+ * @property databaseConfig
+ */
+class DatabaseFactoryImpl(private val databaseConfig: DatabaseConfig) : DataBaseFactory {
     override fun connect() {
         logger.info { "Initializing DB connection" }
         Database.connect(hikari(), databaseConfig = config())
@@ -47,10 +53,17 @@ class DatabaseFactoryImpl(private val databaseConfig: DatabaseConfig): DataBaseF
 
 }
 
+/**
+ * Db config as provided in the application config
+ *
+ * @param path
+ */
 fun ApplicationEnvironment.dbConfig(path: String): DatabaseConfig = with(config.config(path)) {
-    DatabaseConfig(driver = property("driver").getString(),
+    DatabaseConfig(
+        driver = property("driver").getString(),
         url = property("url").getString(),
         username = property("username").getString(),
         password = property("pwd").getString(),
-        maxPoolSize = property("maxPoolSize").getString().toInt())
+        maxPoolSize = property("maxPoolSize").getString().toInt()
+    )
 }

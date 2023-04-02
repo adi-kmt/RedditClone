@@ -28,9 +28,19 @@ import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.Koin
 import org.slf4j.event.Level
 
+
+/**
+ * Main Entry point for the app
+ *
+ * @param args
+ */
 fun main(args: Array<String>): Unit =
     io.ktor.server.netty.EngineMain.main(args)
 
+/**
+ * Common point to add dependencies for the entire app, in Ktor this is
+ * achieved using install()
+ */
 @Suppress("unused") // application.conf references the main function. This annotation prevents the IDE from marking it as unused.
 fun Application.module(koinModules: List<Module> = koinModules()) {
     install(Koin) {
@@ -55,6 +65,10 @@ fun Application.module(koinModules: List<Module> = koinModules()) {
         configure()
     }
 
+    /**
+     * Used to handle double receiving, once with Call logging and other in the
+     * routes
+     */
     install(DoubleReceive)
 
     install(CallLogging) {

@@ -10,18 +10,43 @@ import com.adikmt.services.UserService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
+
+/**
+ * Register usecase interface
+ *
+ * @constructor Create empty Register usecase
+ */
 fun interface RegisterUsecase {
+    /**
+     * Register
+     *
+     * @param userRequest
+     * @return
+     */
     suspend fun register(userRequest: UserRequest): Result<UserResponse?>
 }
 
+/**
+ * Login usecase interface
+ *
+ * @constructor Create empty Login usecase
+ */
 fun interface LoginUsecase {
+    /**
+     * Login
+     *
+     * @param loginUser
+     * @return
+     */
     suspend fun login(loginUser: LoginUser): Result<UserResponse>
 }
 
-fun interface CurrentUserUsecase {
-    suspend fun getCurrentUser(userName: String?): AuthCurrentUser?
-}
-
+/**
+ * Register usecase Impl
+ *
+ * @param dispatcher
+ * @param authService
+ */
 fun registerUsecase(
     dispatcher: CoroutineDispatcher,
     authService: AuthService
@@ -31,24 +56,17 @@ fun registerUsecase(
     }
 }
 
+/**
+ * Login usecase Impl
+ *
+ * @param dispatcher
+ * @param authService
+ */
 fun loginUsecase(
     dispatcher: CoroutineDispatcher,
     authService: AuthService
 ) = LoginUsecase { loginUser: LoginUser ->
     withContext(dispatcher) {
         authService.login(loginUser)
-    }
-}
-
-fun currentUserUserUsecase(
-    dispatcher: CoroutineDispatcher,
-    userService: UserService
-) = CurrentUserUsecase { userName: String? ->
-    withContext(dispatcher) {
-        userName?.let { user ->
-            userService.getUserByUserName(UserName(user)).getOrNull()?.let {
-                return@let AuthCurrentUser(it.userName)
-            }
-        }
     }
 }

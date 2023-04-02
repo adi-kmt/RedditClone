@@ -7,20 +7,69 @@ import com.adikmt.dtos.SubredditResponseList
 import com.adikmt.dtos.UserName
 import com.adikmt.repositories.SubredditRepository
 
+/**
+ * Subreddit service
+ *
+ */
 interface SubredditService {
+    /**
+     * Add subreddit
+     *
+     * @param userName
+     * @param subredditRequest
+     * @return
+     */
     suspend fun addSubreddit(userName: UserName, subredditRequest: SubredditRequest): Result<SubredditResponse?>
 
+    /**
+     * Get subreddit by name
+     *
+     * @param subredditName
+     * @return
+     */
     suspend fun getSubredditByName(subredditName: SubredditName): Result<SubredditResponse?>
 
+    /**
+     * Search subreddit by name
+     *
+     * @param subredditName
+     * @return
+     */
     suspend fun searchSubredditByName(subredditName: SubredditName): Result<SubredditResponseList>
 
+    /**
+     * Follow subreddit
+     *
+     * @param userName
+     * @param subredditName
+     * @return
+     */
     suspend fun followSubreddit(userName: UserName, subredditName: SubredditName): Result<SubredditName>
 
+    /**
+     * Un follow subreddit
+     *
+     * @param userName
+     * @param subredditName
+     * @return
+     */
     suspend fun unFollowSubreddit(userName: UserName, subredditName: SubredditName): Result<SubredditName>
 
+    /**
+     * Get all subreddits followed
+     *
+     * @param userName
+     * @return
+     */
     suspend fun getAllSubredditsFollowed(userName: UserName): Result<SubredditResponseList>
 }
 
+/**
+ * Subreddit service impl
+ *
+ * @constructor Create empty Subreddit service impl
+ * @property subredditRepository
+ */
 class SubredditServiceImpl(private val subredditRepository: SubredditRepository) : SubredditService {
     override suspend fun addSubreddit(
         userName: UserName,

@@ -27,24 +27,85 @@ import org.jetbrains.exposed.sql.javatime.CurrentDateTime
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 
+/**
+ * Post repository
+ *
+ */
 interface PostRepository {
+    /**
+     * Add post
+     *
+     * @param userName
+     * @param postRequest
+     * @return
+     */
     suspend fun addPost(userName: UserName, postRequest: PostRequest): Result<PostResponse?>
 
+    /**
+     * Get post by id
+     *
+     * @param postId
+     * @return
+     */
     suspend fun getPostById(postId: PostId): Result<PostResponse?>
 
+    /**
+     * Get post feed
+     *
+     * @param userName
+     * @return
+     */
     suspend fun getPostFeed(userName: UserName?): Result<PostResponseList>
 
+    /**
+     * Search post by heading
+     *
+     * @param postHeading
+     * @return
+     */
     suspend fun searchPostByHeading(postHeading: PostHeading): Result<PostResponseList>
 
+    /**
+     * Get post list by subreddit name
+     *
+     * @param subredditName
+     * @return
+     */
     suspend fun getPostListBySubredditName(subredditName: SubredditName): Result<PostResponseList>
 
+    /**
+     * Get post list by user
+     *
+     * @param userName
+     * @return
+     */
     suspend fun getPostListByUser(userName: UserName): Result<PostResponseList>
 
+    /**
+     * Upvote post
+     *
+     * @param userName
+     * @param postId
+     * @return
+     */
     suspend fun upvotePost(userName: UserName, postId: PostId): Result<PostId>
 
+    /**
+     * Downvote post
+     *
+     * @param userName
+     * @param postId
+     * @return
+     */
     suspend fun downvotePost(userName: UserName, postId: PostId): Result<PostId>
 }
 
+/**
+ * Post repo impl
+ *
+ * @constructor Create empty Post repo impl
+ * @property dbTransaction
+ */
 class PostRepoImpl(private val dbTransaction: DbTransaction) : PostRepository {
     override suspend fun addPost(userName: UserName, postRequest: PostRequest): Result<PostResponse?> {
         return dbTransaction.dbQuery {

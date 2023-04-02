@@ -13,11 +13,23 @@ import io.ktor.server.auth.jwt.jwt
 import java.time.Duration
 import java.util.*
 
+
+/**
+ * JWT config
+ *
+ * @property secret
+ * @property validity of the config
+ */
 data class JWTConfig(
     val secret: String,
     val validity: Duration,
 )
 
+/**
+ * Jwt service - handles the config verification and token generation
+ *
+ * @property jwtConfig data class from above
+ */
 class JwtService(private val jwtConfig: JWTConfig) {
 
     private val algorithm = Algorithm.HMAC256(jwtConfig.secret)
@@ -25,6 +37,12 @@ class JwtService(private val jwtConfig: JWTConfig) {
     val verifier: JWTVerifier =
         JWT.require(algorithm).build()
 
+    /**
+     * Generate token based on the user
+     *
+     * @param user
+     * @return
+     */
     fun generateToken(user: UserResponse): String = JWT.create()
         .withClaim("username", user.userName)
         .withExpiresAt(expiresAt())
@@ -37,6 +55,13 @@ class JwtService(private val jwtConfig: JWTConfig) {
     }
 }
 
+/**
+ * Jwt config based on the JWT secret and validity as defined in the
+ * application config
+ *
+ * @param path
+ * @return
+ */
 fun ApplicationEnvironment.jwtConfig(path: String): JWTConfig = with(config.config(path)) {
     JWTConfig(
         secret = property("secret").getString(),
@@ -44,6 +69,11 @@ fun ApplicationEnvironment.jwtConfig(path: String): JWTConfig = with(config.conf
     )
 }
 
+/**
+ * Accepts the JWT token, and verifies the username
+ *
+ * @param jwtService
+ */
 fun AuthenticationConfig.configure(jwtService: JwtService) {
     jwt {
         authSchemes()
