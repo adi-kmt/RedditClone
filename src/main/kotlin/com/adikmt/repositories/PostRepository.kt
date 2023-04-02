@@ -9,6 +9,7 @@ import com.adikmt.dtos.SubredditName
 import com.adikmt.dtos.UserName
 import com.adikmt.orm.PostEntity
 import com.adikmt.orm.PostFavouriteEntity
+import com.adikmt.orm.UserFollowersEntity
 import com.adikmt.orm.helperfuncs.fromResultRowPost
 import com.adikmt.orm.helperfuncs.toPostResponseList
 import com.adikmt.utils.db.DbTransaction
@@ -19,10 +20,12 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.alias
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteIgnoreWhere
+import org.jetbrains.exposed.sql.innerJoin
 import org.jetbrains.exposed.sql.insertIgnore
 import org.jetbrains.exposed.sql.insertIgnoreAndGetId
 import org.jetbrains.exposed.sql.javatime.CurrentDateTime
 import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.selectAll
 
 interface PostRepository {
     suspend fun addPost(userName: UserName, postRequest: PostRequest): Result<PostResponse?>
@@ -96,12 +99,48 @@ class PostRepoImpl(private val dbTransaction: DbTransaction) : PostRepository {
         } ?: return getGuestUserFeed()
     }
 
-    private fun getGuestUserFeed(): Result<PostResponseList> {
-        TODO("Not yet implemented")
+    private suspend fun getGuestUserFeed(): Result<PostResponseList> {
+        return dbTransaction.dbQuery {
+            resultOf {
+                (PostEntity.leftJoin(
+                    PostFavouriteEntity
+                ))
+                    .slice(
+                        PostEntity.id, PostEntity.title,
+                        PostEntity.author, PostEntity.desc,
+                        PostEntity.subreddit,
+                        PostEntity.createdAt,
+                        Count(PostFavouriteEntity.postId).alias("likes")
+                    )
+                    .selectAll()
+                    .groupBy(PostEntity.id)
+                    .orderBy(PostFavouriteEntity.postId, SortOrder.DESC).map { row ->
+                        row.fromResultRowPost()
+                    }.toPostResponseList()
+            }
+        }
     }
 
-    private fun getSignedInUserFeed(userName: UserName): Result<PostResponseList> {
-        TODO("Not yet implemented")
+    private suspend fun getSignedInUserFeed(userName: UserName): Result<PostResponseList> {
+        return dbTransaction.dbQuery {
+            resultOf {
+                (PostEntity.leftJoin(
+                    PostFavouriteEntity
+                )).innerJoin(UserFollowersEntity, { PostEntity.author }, { UserFollowersEntity.followeeId })
+                    .slice(
+                        PostEntity.id, PostEntity.title,
+                        PostEntity.author, PostEntity.desc,
+                        PostEntity.subreddit,
+                        PostEntity.createdAt,
+                        Count(PostFavouriteEntity.postId).alias("likes")
+                    )
+                    .selectAll()
+                    .groupBy(PostEntity.id)
+                    .orderBy(PostFavouriteEntity.postId, SortOrder.DESC).map { row ->
+                        row.fromResultRowPost()
+                    }.toPostResponseList()
+            }
+        }
     }
 
     override suspend fun searchPostByHeading(postHeading: PostHeading): Result<PostResponseList> {
