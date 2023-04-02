@@ -17,7 +17,7 @@ data class PostResponse(
     val postBody: String,
     val postAuthor: UserName,
     val postCreatedAt: String,
-    val noOfUpvotes: Int
+    val noOfUpvotes: Long
 )
 
 @Serializable

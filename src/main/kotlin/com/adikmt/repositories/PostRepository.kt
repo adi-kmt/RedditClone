@@ -13,7 +13,10 @@ import com.adikmt.orm.helperfuncs.fromResultRowPost
 import com.adikmt.orm.helperfuncs.toPostResponseList
 import com.adikmt.utils.db.DbTransaction
 import com.adikmt.utils.resultOf
+import org.jetbrains.exposed.sql.Count
+import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.alias
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteIgnoreWhere
 import org.jetbrains.exposed.sql.insertIgnore
@@ -68,27 +71,57 @@ class PostRepoImpl(private val dbTransaction: DbTransaction) : PostRepository {
     override suspend fun getPostById(postId: PostId): Result<PostResponse?> {
         return dbTransaction.dbQuery {
             resultOf {
-                PostEntity.select {
-                    PostEntity.id eq postId.value.toLong()
-                }.map {
-                    it.fromResultRowPost(0) //Temporary
-                }.firstOrNull()
+                (PostEntity.leftJoin(
+                    PostFavouriteEntity
+                ))
+                    .slice(
+                        PostEntity.id, PostEntity.title,
+                        PostEntity.author, PostEntity.desc,
+                        PostEntity.subreddit,
+                        PostEntity.createdAt,
+                        Count(PostFavouriteEntity.postId).alias("likes")
+                    )
+                    .select { PostEntity.id eq postId.value.toLong() }
+                    .groupBy(PostEntity.id)
+                    .orderBy(PostFavouriteEntity.postId, SortOrder.DESC).map { row ->
+                        row.fromResultRowPost()
+                    }.firstOrNull()
             }
         }
     }
 
     override suspend fun getPostFeed(userName: UserName?): Result<PostResponseList> {
+        userName?.let {
+            return getSignedInUserFeed(it)
+        } ?: return getGuestUserFeed()
+    }
+
+    private fun getGuestUserFeed(): Result<PostResponseList> {
+        TODO("Not yet implemented")
+    }
+
+    private fun getSignedInUserFeed(userName: UserName): Result<PostResponseList> {
         TODO("Not yet implemented")
     }
 
     override suspend fun searchPostByHeading(postHeading: PostHeading): Result<PostResponseList> {
         return dbTransaction.dbQuery {
             resultOf {
-                PostEntity.select {
-                    PostEntity.title like postHeading.value
-                }.map {
-                    it.fromResultRowPost(0) //Temporary
-                }.toPostResponseList()
+                (PostEntity.leftJoin(
+                    PostFavouriteEntity
+                ))
+                    .slice(
+                        PostEntity.id, PostEntity.title,
+                        PostEntity.author, PostEntity.desc,
+                        PostEntity.subreddit,
+                        PostEntity.createdAt,
+                        Count(PostFavouriteEntity.postId).alias("likes")
+                    )
+                    .select { PostEntity.title like postHeading.value }
+                    .groupBy(PostEntity.id)
+                    .orderBy(PostFavouriteEntity.postId, SortOrder.DESC).map { row ->
+                        row.fromResultRowPost()
+                    }.toPostResponseList()
             }
         }
     }
@@ -96,11 +129,21 @@ class PostRepoImpl(private val dbTransaction: DbTransaction) : PostRepository {
     override suspend fun getPostListBySubredditName(subredditName: SubredditName): Result<PostResponseList> {
         return dbTransaction.dbQuery {
             resultOf {
-                PostEntity.select {
-                    PostEntity.subreddit eq subredditName.value
-                }.map {
-                    it.fromResultRowPost(0) //Temporary
-                }.toPostResponseList()
+                (PostEntity.leftJoin(
+                    PostFavouriteEntity
+                ))
+                    .slice(
+                        PostEntity.id, PostEntity.title,
+                        PostEntity.author, PostEntity.desc,
+                        PostEntity.subreddit,
+                        PostEntity.createdAt,
+                        Count(PostFavouriteEntity.postId).alias("likes")
+                    )
+                    .select { PostEntity.subreddit eq subredditName.value }
+                    .groupBy(PostEntity.id)
+                    .orderBy(PostFavouriteEntity.postId, SortOrder.DESC).map { row ->
+                        row.fromResultRowPost()
+                    }.toPostResponseList()
             }
         }
     }
@@ -108,11 +151,21 @@ class PostRepoImpl(private val dbTransaction: DbTransaction) : PostRepository {
     override suspend fun getPostListByUser(userName: UserName): Result<PostResponseList> {
         return dbTransaction.dbQuery {
             resultOf {
-                PostEntity.select {
-                    PostEntity.author eq userName.value
-                }.map {
-                    it.fromResultRowPost(0) //Temporary
-                }.toPostResponseList()
+                (PostEntity.leftJoin(
+                    PostFavouriteEntity
+                ))
+                    .slice(
+                        PostEntity.id, PostEntity.title,
+                        PostEntity.author, PostEntity.desc,
+                        PostEntity.subreddit,
+                        PostEntity.createdAt,
+                        Count(PostFavouriteEntity.postId).alias("likes")
+                    )
+                    .select { PostEntity.author eq userName.value }
+                    .groupBy(PostEntity.id)
+                    .orderBy(PostFavouriteEntity.postId, SortOrder.DESC).map { row ->
+                        row.fromResultRowPost()
+                    }.toPostResponseList()
             }
         }
     }

@@ -82,10 +82,10 @@ private fun Routing.upvoteComment() {
 private fun Routing.getCommentByUserId() {
     val getAllCommentByUserUsecase by inject<GetAllCommentByUserUsecase>(named("GetAllCommentByUserUsecase"))
     authenticate(optional = true) {
-        get("/comments/userId/{userId}") {
+        get("/comments/userId") {
             try {
-                val userId = call.parameters["userId"]
-                userId?.let {
+                val user = call.principal<AuthCurrentUser>()?.userName
+                user?.let {
                     val data = getAllCommentByUserUsecase.get(UserName(it))
                     deconstructResult(this, data, HttpStatusCode.OK)
                 }
@@ -140,9 +140,9 @@ private fun Routing.addComment() {
             try {
                 val comment = call.receive<CommentRequest>()
                 val user = call.principal<AuthCurrentUser>()?.userName
-                user?.let {
+                user?.let { userName ->
                     comment?.let {
-                        val commentResponse = addCommentUsecase.add(UserName(""), it)
+                        val commentResponse = addCommentUsecase.add(UserName(userName), it)
                         deconstructResult(this, commentResponse, HttpStatusCode.Gone)
                     }
                     call.respond(HttpStatusCode.UnprocessableEntity)

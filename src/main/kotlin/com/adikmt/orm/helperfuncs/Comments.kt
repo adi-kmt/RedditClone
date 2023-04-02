@@ -5,15 +5,17 @@ import com.adikmt.dtos.CommentResponse
 import com.adikmt.dtos.CommentResponseList
 import com.adikmt.dtos.UserName
 import com.adikmt.orm.CommentEntity
+import com.adikmt.orm.CommentFavouriteEntity
 import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.count
 
-fun ResultRow.FromResultRowComment(upvoteNo: Long) = CommentResponse(
+fun ResultRow.FromResultRowCommentWithUpvote() = CommentResponse(
     commentId = this[CommentEntity.id].value,
     commentBody = this[CommentEntity.text],
     commentAuthor = UserName(this[CommentEntity.author]),
     parentComment = this[CommentEntity.parentComment]?.value,
     createdAt = this[CommentEntity.createdAt].toString(),
-    upvoteNo = upvoteNo.toInt(),
+    upvoteNo = this[CommentFavouriteEntity.commentId.count()],
 )
 
 fun ResultRow.toCommentIds() = CommentId(
