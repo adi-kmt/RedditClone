@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.jvmPlugin)
     alias(libs.plugins.ktorPlugin)
     alias(libs.plugins.serializationPlugin)
-    alias(libs.plugins.domPlugin)
 }
 
 group = "com.adikmt"
@@ -32,13 +31,7 @@ dependencies {
 
     implementation(libs.bundles.db)
 
-    implementation(libs.scientist)
-
     testImplementation(libs.bundles.testing)
-}
-
-testSets {
-    val integrationTest by creating
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
@@ -47,10 +40,8 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
         freeCompilerArgs = freeCompilerArgs + listOf(
             "-Xopt-in=kotlin.RequiresOptIn",
             "-Xopt-in=kotlinx.serialization.ExperimentalSerializationApi",
-            "-Xopt-in=io.ktor.locations.KtorExperimentalLocationsAPI",
             "-Xopt-in=kotlin.time.ExperimentalTime",
-            "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-            "-Xcontext-receivers"
+            "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
         )
     }
 }

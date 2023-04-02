@@ -10,11 +10,9 @@ jbcrypt = "0.4"
 koin = "3.3.1"
 serializationJson = "1.4.1"
 kotlinLogging = "2.1.21"
-scientist = "1.0.2"
 kotest = "5.5.5"
 h2 = "2.1.214"
 ktorAuth = "1.6.8"
-domTest = "4.0.0"
 validator = "1.7"
 jwt = "3.18.2"
 
@@ -25,7 +23,6 @@ mysqlConnector = { module = "mysql:mysql-connector-java", version.ref = "mysqlCo
 hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "hikaricp" }
 jbcrypt = { module = "org.mindrot:jbcrypt", version.ref = "jbcrypt" }
 serializationJson = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serializationJson" }
-scientist = { module = "com.github.spoptchev:scientist", version.ref = "scientist" }
 
 coroutinesSlf4j = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-slf4j", version.ref = "coroutines" }
 coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -77,7 +74,6 @@ h2 = { module = "com.h2database:h2", version.ref = "h2" }
 jvmPlugin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 ktorPlugin = { id = "io.ktor.plugin", version.ref = "ktor" }
 serializationPlugin = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-domPlugin = { id = "org.unbroken-dome.test-sets", version.ref = "domTest" }
 
 [bundles]
 coroutines = ["coroutinesSlf4j", "coroutines"]
