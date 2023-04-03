@@ -2,7 +2,7 @@
 
 
 ## Database Schema design
-![DB design](redditDBER.png)
+![DB design](RedditDbSchema.png)
 
 ## Prerequisite
 
