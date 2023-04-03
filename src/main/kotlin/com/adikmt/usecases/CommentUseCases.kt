@@ -10,11 +10,7 @@ import com.adikmt.services.CommentService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
-/**
- * Add comment usecase interface
- *
- * @constructor Create empty Add comment usecase
- */
+/** Add comment usecase interface */
 fun interface AddCommentUsecase {
     /**
      * Add

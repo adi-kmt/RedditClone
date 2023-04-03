@@ -13,7 +13,9 @@ fun ResultRow.fromResultRowSubreddit() = SubredditResponse(
     createdByUser = UserName(value = this[SubredditEntity.createdByUser])
 )
 
-fun List<SubredditResponse>.toSubredditResponseList() = SubredditResponseList(
+fun List<SubredditResponse>.toSubredditResponseList(limit: Int, offset: Long) = SubredditResponseList(
     subredditList = this,
-    subredditNo = this.size
+    subredditNo = this.size,
+    limit = limit,
+    offset = offset
 )

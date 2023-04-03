@@ -35,8 +35,10 @@ private fun Routing.searchUser() {
         get("/profiles/{username}") {
             try {
                 val userName = call.parameters["username"]
+                val limit = call.request.queryParameters["limit"]?.toInt() ?: 20
+                val offset = call.request.queryParameters["offset"]?.toLong() ?: 0L
                 userName?.let {
-                    val users = searchUserUseCase.searchUser(UserName(it))
+                    val users = searchUserUseCase.searchUser(UserName(it), limit, offset)
                     deconstructResult(this, users, HttpStatusCode.OK)
                 }
                 call.respond(HttpStatusCode.UnprocessableEntity)

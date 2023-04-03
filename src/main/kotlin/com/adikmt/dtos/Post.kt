@@ -28,7 +28,9 @@ data class PostUpvoteOrDownvote(
 @Serializable
 data class PostResponseList(
     val postList: List<PostResponse>,
-    val postNo: Int
+    val postNo: Int,
+    val limit: Int,
+    val offset: Long
 )
 
 @JvmInline

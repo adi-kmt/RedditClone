@@ -41,14 +41,23 @@ fun Routing.postRoutes() {
 }
 
 private fun Routing.getPostFeed() {
-    //TODO check auth -> Then share by list as followed
     val getPostFeedByUserUsecase by inject<GetPostFeedByUserUsecase>(named("GetPostFeedByUserUsecase"))
-    get("/posts") {
-        try {
-            //TODO get user through auth
-            getPostFeedByUserUsecase.get(UserName(""))
-        } catch (e: Exception) {
-            call.respond(HttpStatusCode.InternalServerError, SerializedException(e.message))
+    authenticate(optional = true) {
+        get("/posts") {
+            try {
+                val user = call.principal<AuthCurrentUser>()?.userName
+                val limit = call.request.queryParameters["limit"]?.toInt() ?: 20
+                val offset = call.request.queryParameters["offset"]?.toLong() ?: 0L
+                user?.let { userName ->
+                    val feed = getPostFeedByUserUsecase.get(UserName(userName), limit, offset)
+                    deconstructResult(this, feed, HttpStatusCode.OK)
+                } ?: run {
+                    val feed = getPostFeedByUserUsecase.get(null, limit, offset)
+                    deconstructResult(this, feed, HttpStatusCode.OK)
+                }
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.InternalServerError, SerializedException(e.message))
+            }
         }
     }
 }
@@ -99,14 +108,16 @@ private fun Routing.upvotePostById() {
 
 private fun Routing.getPostListByUserId() {
     val getPostByUserUsecase by inject<GetPostByUserUsecase>(named("GetPostByUserUsecase"))
-    authenticate(optional = true) {
+    authenticate {
         get("posts/userId/{userId}") {
             try {
                 val userId = call.parameters["userId"]
                 val user = call.principal<AuthCurrentUser>()?.userName
+                val limit = call.request.queryParameters["limit"]?.toInt() ?: 20
+                val offset = call.request.queryParameters["offset"]?.toLong() ?: 0L
                 user?.let { userName ->
                     userId?.let {
-                        val data = getPostByUserUsecase.get(UserName(it))
+                        val data = getPostByUserUsecase.get(UserName(it), limit, offset)
                         deconstructResult(this, data, HttpStatusCode.OK)
                     }
                     call.respond(HttpStatusCode.UnprocessableEntity)
@@ -121,14 +132,16 @@ private fun Routing.getPostListByUserId() {
 
 private fun Routing.getPostListBySubredditName() {
     val getPostBySubredditUsecase by inject<GetPostBySubredditUsecase>(named("GetPostBySubredditUsecase"))
-    authenticate(optional = true) {
+    authenticate {
         get("posts/subredditName/{subredditName}") {
             try {
                 val subredditName = call.parameters["subredditName"]
                 val user = call.principal<AuthCurrentUser>()?.userName
+                val limit = call.request.queryParameters["limit"]?.toInt() ?: 20
+                val offset = call.request.queryParameters["offset"]?.toLong() ?: 0L
                 user?.let { userName ->
                     subredditName?.let {
-                        val data = getPostBySubredditUsecase.get(SubredditName(it))
+                        val data = getPostBySubredditUsecase.get(SubredditName(it), limit, offset)
                         deconstructResult(this, data, HttpStatusCode.OK)
                     }
                     call.respond(HttpStatusCode.UnprocessableEntity)
@@ -148,9 +161,11 @@ private fun Routing.getPostListByHeading() {
             try {
                 val heading = call.parameters["heading"]
                 val user = call.principal<AuthCurrentUser>()?.userName
+                val limit = call.request.queryParameters["limit"]?.toInt() ?: 20
+                val offset = call.request.queryParameters["offset"]?.toLong() ?: 0L
                 user?.let { userName ->
                     heading?.let {
-                        val data = searchPostByHeadingUsecase.search(PostHeading(it))
+                        val data = searchPostByHeadingUsecase.search(PostHeading(it), limit, offset)
                         deconstructResult(this, data, HttpStatusCode.OK)
                     }
                     call.respond(HttpStatusCode.UnprocessableEntity)
@@ -164,7 +179,7 @@ private fun Routing.getPostListByHeading() {
 
 private fun Routing.getPostById() {
     val getPostUseCase by inject<GetPostUsecase>(named("GetPostUsecase"))
-    authenticate(optional = true) {
+    authenticate {
         get("posts/id/{postId}") {
             try {
                 val postId = call.parameters["postId"]

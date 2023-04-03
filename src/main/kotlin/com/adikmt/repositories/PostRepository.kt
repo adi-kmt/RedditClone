@@ -27,10 +27,7 @@ import org.jetbrains.exposed.sql.javatime.CurrentDateTime
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 
-/**
- * Post repository
- *
- */
+/** Post repository */
 interface PostRepository {
     /**
      * Add post
@@ -53,33 +50,45 @@ interface PostRepository {
      * Get post feed
      *
      * @param userName
+     * @param limit
+     * @param offset
      * @return
      */
-    suspend fun getPostFeed(userName: UserName?): Result<PostResponseList>
+    suspend fun getPostFeed(userName: UserName?, limit: Int, offset: Long): Result<PostResponseList>
 
     /**
      * Search post by heading
      *
      * @param postHeading
+     * @param limit
+     * @param offset
      * @return
      */
-    suspend fun searchPostByHeading(postHeading: PostHeading): Result<PostResponseList>
+    suspend fun searchPostByHeading(postHeading: PostHeading, limit: Int, offset: Long): Result<PostResponseList>
 
     /**
      * Get post list by subreddit name
      *
      * @param subredditName
+     * @param limit
+     * @param offset
      * @return
      */
-    suspend fun getPostListBySubredditName(subredditName: SubredditName): Result<PostResponseList>
+    suspend fun getPostListBySubredditName(
+        subredditName: SubredditName,
+        limit: Int,
+        offset: Long
+    ): Result<PostResponseList>
 
     /**
      * Get post list by user
      *
      * @param userName
+     * @param limit
+     * @param offset
      * @return
      */
-    suspend fun getPostListByUser(userName: UserName): Result<PostResponseList>
+    suspend fun getPostListByUser(userName: UserName, limit: Int, offset: Long): Result<PostResponseList>
 
     /**
      * Upvote post
@@ -154,13 +163,13 @@ class PostRepoImpl(private val dbTransaction: DbTransaction) : PostRepository {
         }
     }
 
-    override suspend fun getPostFeed(userName: UserName?): Result<PostResponseList> {
+    override suspend fun getPostFeed(userName: UserName?, limit: Int, offset: Long): Result<PostResponseList> {
         userName?.let {
-            return getSignedInUserFeed(it)
-        } ?: return getGuestUserFeed()
+            return getSignedInUserFeed(it, limit, offset)
+        } ?: return getGuestUserFeed(limit, offset)
     }
 
-    private suspend fun getGuestUserFeed(): Result<PostResponseList> {
+    private suspend fun getGuestUserFeed(limit: Int, offset: Long): Result<PostResponseList> {
         return dbTransaction.dbQuery {
             resultOf {
                 (PostEntity.leftJoin(
@@ -175,14 +184,16 @@ class PostRepoImpl(private val dbTransaction: DbTransaction) : PostRepository {
                     )
                     .selectAll()
                     .groupBy(PostEntity.id)
-                    .orderBy(PostFavouriteEntity.postId, SortOrder.DESC).map { row ->
+                    .orderBy(PostFavouriteEntity.postId, SortOrder.DESC)
+                    .limit(n = limit, offset = offset)
+                    .map { row ->
                         row.fromResultRowPost()
-                    }.toPostResponseList()
+                    }.toPostResponseList(limit, offset)
             }
         }
     }
 
-    private suspend fun getSignedInUserFeed(userName: UserName): Result<PostResponseList> {
+    private suspend fun getSignedInUserFeed(userName: UserName, limit: Int, offset: Long): Result<PostResponseList> {
         return dbTransaction.dbQuery {
             resultOf {
                 (PostEntity.leftJoin(
@@ -197,14 +208,20 @@ class PostRepoImpl(private val dbTransaction: DbTransaction) : PostRepository {
                     )
                     .selectAll()
                     .groupBy(PostEntity.id)
-                    .orderBy(PostFavouriteEntity.postId, SortOrder.DESC).map { row ->
+                    .orderBy(PostFavouriteEntity.postId, SortOrder.DESC)
+                    .limit(n = limit, offset = offset)
+                    .map { row ->
                         row.fromResultRowPost()
-                    }.toPostResponseList()
+                    }.toPostResponseList(limit, offset)
             }
         }
     }
 
-    override suspend fun searchPostByHeading(postHeading: PostHeading): Result<PostResponseList> {
+    override suspend fun searchPostByHeading(
+        postHeading: PostHeading,
+        limit: Int,
+        offset: Long
+    ): Result<PostResponseList> {
         return dbTransaction.dbQuery {
             resultOf {
                 (PostEntity.leftJoin(
@@ -219,14 +236,20 @@ class PostRepoImpl(private val dbTransaction: DbTransaction) : PostRepository {
                     )
                     .select { PostEntity.title like postHeading.value }
                     .groupBy(PostEntity.id)
-                    .orderBy(PostFavouriteEntity.postId, SortOrder.DESC).map { row ->
+                    .orderBy(PostFavouriteEntity.postId, SortOrder.DESC)
+                    .limit(n = limit, offset = offset)
+                    .map { row ->
                         row.fromResultRowPost()
-                    }.toPostResponseList()
+                    }.toPostResponseList(limit, offset)
             }
         }
     }
 
-    override suspend fun getPostListBySubredditName(subredditName: SubredditName): Result<PostResponseList> {
+    override suspend fun getPostListBySubredditName(
+        subredditName: SubredditName,
+        limit: Int,
+        offset: Long
+    ): Result<PostResponseList> {
         return dbTransaction.dbQuery {
             resultOf {
                 (PostEntity.leftJoin(
@@ -241,14 +264,16 @@ class PostRepoImpl(private val dbTransaction: DbTransaction) : PostRepository {
                     )
                     .select { PostEntity.subreddit eq subredditName.value }
                     .groupBy(PostEntity.id)
-                    .orderBy(PostFavouriteEntity.postId, SortOrder.DESC).map { row ->
+                    .orderBy(PostFavouriteEntity.postId, SortOrder.DESC)
+                    .limit(n = limit, offset = offset)
+                    .map { row ->
                         row.fromResultRowPost()
-                    }.toPostResponseList()
+                    }.toPostResponseList(limit, offset)
             }
         }
     }
 
-    override suspend fun getPostListByUser(userName: UserName): Result<PostResponseList> {
+    override suspend fun getPostListByUser(userName: UserName, limit: Int, offset: Long): Result<PostResponseList> {
         return dbTransaction.dbQuery {
             resultOf {
                 (PostEntity.leftJoin(
@@ -263,9 +288,11 @@ class PostRepoImpl(private val dbTransaction: DbTransaction) : PostRepository {
                     )
                     .select { PostEntity.author eq userName.value }
                     .groupBy(PostEntity.id)
-                    .orderBy(PostFavouriteEntity.postId, SortOrder.DESC).map { row ->
+                    .orderBy(PostFavouriteEntity.postId, SortOrder.DESC)
+                    .limit(n = limit, offset = offset)
+                    .map { row ->
                         row.fromResultRowPost()
-                    }.toPostResponseList()
+                    }.toPostResponseList(limit, offset)
             }
         }
     }

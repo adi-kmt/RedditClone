@@ -21,9 +21,11 @@ interface UserService {
      * Search by user name
      *
      * @param userName
+     * @param limit
+     * @param offset
      * @return
      */
-    suspend fun searchByUserName(userName: UserName): Result<UserResponseList>
+    suspend fun searchByUserName(userName: UserName, limit: Int, offset: Long): Result<UserResponseList>
 
     /**
      * Get user following data
@@ -62,8 +64,8 @@ class UserServiceImpl(private val userRepository: UserRepository) : UserService 
     override suspend fun getUserByUserName(userName: UserName): Result<UserResponse?> =
         userRepository.getUser(userName)
 
-    override suspend fun searchByUserName(userName: UserName): Result<UserResponseList> =
-        userRepository.searchUserWithName(userName)
+    override suspend fun searchByUserName(userName: UserName, limit: Int, offset: Long): Result<UserResponseList> =
+        userRepository.searchUserWithName(userName, limit, offset)
 
     override suspend fun getUserFollowingData(userName: UserName): Result<UserFollowingData> =
         userRepository.getFollowersData(userName)

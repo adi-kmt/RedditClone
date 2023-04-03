@@ -9,10 +9,7 @@ import com.adikmt.dtos.SubredditName
 import com.adikmt.dtos.UserName
 import com.adikmt.repositories.PostRepository
 
-/**
- * Post services
- *
- */
+/** Post services */
 interface PostServices {
     /**
      * Add post
@@ -35,33 +32,41 @@ interface PostServices {
      * Get post feed
      *
      * @param userName
+     * @param limit
+     * @param offset
      * @return
      */
-    suspend fun getPostFeed(userName: UserName): Result<PostResponseList>
+    suspend fun getPostFeed(userName: UserName?, limit: Int, offset: Long): Result<PostResponseList>
 
     /**
      * Search post by heading
      *
      * @param postHeading
+     * @param limit
+     * @param offset
      * @return
      */
-    suspend fun searchPostByHeading(postHeading: PostHeading): Result<PostResponseList>
+    suspend fun searchPostByHeading(postHeading: PostHeading, limit: Int, offset: Long): Result<PostResponseList>
 
     /**
      * Get post by subreddit
      *
      * @param subredditName
+     * @param limit
+     * @param offset
      * @return
      */
-    suspend fun getPostBySubreddit(subredditName: SubredditName): Result<PostResponseList>
+    suspend fun getPostBySubreddit(subredditName: SubredditName, limit: Int, offset: Long): Result<PostResponseList>
 
     /**
      * Get post by user
      *
      * @param userName
+     * @param limit
+     * @param offset
      * @return
      */
-    suspend fun getPostByUser(userName: UserName): Result<PostResponseList>
+    suspend fun getPostByUser(userName: UserName, limit: Int, offset: Long): Result<PostResponseList>
 
     /**
      * Upvote post
@@ -95,17 +100,25 @@ class PostServicesImpl(private val postRepository: PostRepository) : PostService
     override suspend fun getPost(postId: PostId): Result<PostResponse?> =
         postRepository.getPostById(postId)
 
-    override suspend fun getPostFeed(userName: UserName): Result<PostResponseList> =
-        postRepository.getPostFeed(userName)
+    override suspend fun getPostFeed(userName: UserName?, limit: Int, offset: Long): Result<PostResponseList> =
+        postRepository.getPostFeed(userName, limit, offset)
 
-    override suspend fun searchPostByHeading(postHeading: PostHeading): Result<PostResponseList> =
-        postRepository.searchPostByHeading(postHeading)
+    override suspend fun searchPostByHeading(
+        postHeading: PostHeading,
+        limit: Int,
+        offset: Long
+    ): Result<PostResponseList> =
+        postRepository.searchPostByHeading(postHeading, limit, offset)
 
-    override suspend fun getPostBySubreddit(subredditName: SubredditName): Result<PostResponseList> =
-        postRepository.getPostListBySubredditName(subredditName)
+    override suspend fun getPostBySubreddit(
+        subredditName: SubredditName,
+        limit: Int,
+        offset: Long
+    ): Result<PostResponseList> =
+        postRepository.getPostListBySubredditName(subredditName, limit, offset)
 
-    override suspend fun getPostByUser(userName: UserName): Result<PostResponseList> =
-        postRepository.getPostListByUser(userName)
+    override suspend fun getPostByUser(userName: UserName, limit: Int, offset: Long): Result<PostResponseList> =
+        postRepository.getPostListByUser(userName, limit, offset)
 
     override suspend fun upvotePost(postId: PostId, userName: UserName): Result<PostId> =
         postRepository.upvotePost(userName, postId)

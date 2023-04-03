@@ -11,11 +11,7 @@ import com.adikmt.services.PostServices
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
-/**
- * Add post usecase interface
- *
- * @constructor Create empty Add post usecase
- */
+/** Add post usecase */
 fun interface AddPostUsecase {
     /**
      * Add
@@ -28,7 +24,7 @@ fun interface AddPostUsecase {
 }
 
 /**
- * Get post usecase interface
+ * Get post usecase
  *
  * @constructor Create empty Get post usecase
  */
@@ -43,7 +39,7 @@ fun interface GetPostUsecase {
 }
 
 /**
- * Get post feed by user usecase interface
+ * Get post feed by user usecase
  *
  * @constructor Create empty Get post feed by user usecase
  */
@@ -52,13 +48,15 @@ fun interface GetPostFeedByUserUsecase {
      * Get
      *
      * @param userName
+     * @param limit
+     * @param offset
      * @return
      */
-    suspend fun get(userName: UserName): Result<PostResponseList>
+    suspend fun get(userName: UserName?, limit: Int, offset: Long): Result<PostResponseList>
 }
 
 /**
- * Search post by heading usecase interface
+ * Search post by heading usecase
  *
  * @constructor Create empty Search post by heading usecase
  */
@@ -67,13 +65,15 @@ fun interface SearchPostByHeadingUsecase {
      * Search
      *
      * @param postHeading
+     * @param limit
+     * @param offset
      * @return
      */
-    suspend fun search(postHeading: PostHeading): Result<PostResponseList>
+    suspend fun search(postHeading: PostHeading, limit: Int, offset: Long): Result<PostResponseList>
 }
 
 /**
- * Get post by subreddit usecase interface
+ * Get post by subreddit usecase
  *
  * @constructor Create empty Get post by subreddit usecase
  */
@@ -82,13 +82,15 @@ fun interface GetPostBySubredditUsecase {
      * Get
      *
      * @param subredditName
+     * @param limit
+     * @param offset
      * @return
      */
-    suspend fun get(subredditName: SubredditName): Result<PostResponseList>
+    suspend fun get(subredditName: SubredditName, limit: Int, offset: Long): Result<PostResponseList>
 }
 
 /**
- * Get post by user usecase interface
+ * Get post by user usecase
  *
  * @constructor Create empty Get post by user usecase
  */
@@ -97,13 +99,15 @@ fun interface GetPostByUserUsecase {
      * Get
      *
      * @param userName
+     * @param limit
+     * @param offset
      * @return
      */
-    suspend fun get(userName: UserName): Result<PostResponseList>
+    suspend fun get(userName: UserName, limit: Int, offset: Long): Result<PostResponseList>
 }
 
 /**
- * Upvote post usecase interface
+ * Upvote post usecase
  *
  * @constructor Create empty Upvote post usecase
  */
@@ -119,7 +123,7 @@ fun interface UpvotePostUsecase {
 }
 
 /**
- * Downvote post usecase interface
+ * Downvote post usecase
  *
  * @constructor Create empty Downvote post usecase
  */
@@ -135,7 +139,7 @@ fun interface DownvotePostUsecase {
 }
 
 /**
- * Add post usecase impl
+ * Add post usecase
  *
  * @param dispatcher
  * @param postServices
@@ -150,7 +154,7 @@ fun addPostUsecase(
 }
 
 /**
- * Get post feed usecase impl
+ * Get post feed usecase
  *
  * @param dispatcher
  * @param postServices
@@ -158,14 +162,14 @@ fun addPostUsecase(
 fun getPostFeedUsecase(
     dispatcher: CoroutineDispatcher,
     postServices: PostServices
-) = GetPostFeedByUserUsecase { userName: UserName ->
+) = GetPostFeedByUserUsecase { userName: UserName?, limit: Int, offset: Long ->
     withContext(dispatcher) {
-        postServices.getPostFeed(userName)
+        postServices.getPostFeed(userName, limit, offset)
     }
 }
 
 /**
- * Get post usecase impl
+ * Get post usecase
  *
  * @param dispatcher
  * @param postServices
@@ -180,7 +184,7 @@ fun getPostUsecase(
 }
 
 /**
- * Search post by heading usecase impl
+ * Search post by heading usecase
  *
  * @param dispatcher
  * @param postServices
@@ -188,14 +192,14 @@ fun getPostUsecase(
 fun searchPostByHeadingUsecase(
     dispatcher: CoroutineDispatcher,
     postServices: PostServices
-) = SearchPostByHeadingUsecase { postHeading: PostHeading ->
+) = SearchPostByHeadingUsecase { postHeading: PostHeading, limit: Int, offset: Long ->
     withContext(dispatcher) {
-        postServices.searchPostByHeading(postHeading)
+        postServices.searchPostByHeading(postHeading, limit, offset)
     }
 }
 
 /**
- * Get post by subreddit usecase impl
+ * Get post by subreddit usecase
  *
  * @param dispatcher
  * @param postServices
@@ -203,14 +207,14 @@ fun searchPostByHeadingUsecase(
 fun getPostBySubredditUsecase(
     dispatcher: CoroutineDispatcher,
     postServices: PostServices
-) = GetPostBySubredditUsecase { subredditName: SubredditName ->
+) = GetPostBySubredditUsecase { subredditName: SubredditName, limit: Int, offset: Long ->
     withContext(dispatcher) {
-        postServices.getPostBySubreddit(subredditName)
+        postServices.getPostBySubreddit(subredditName, limit, offset)
     }
 }
 
 /**
- * Get post by user usecase impl
+ * Get post by user usecase
  *
  * @param dispatcher
  * @param postServices
@@ -218,14 +222,14 @@ fun getPostBySubredditUsecase(
 fun getPostByUserUsecase(
     dispatcher: CoroutineDispatcher,
     postServices: PostServices
-) = GetPostByUserUsecase { userName: UserName ->
+) = GetPostByUserUsecase { userName: UserName, limit: Int, offset: Long ->
     withContext(dispatcher) {
-        postServices.getPostByUser(userName)
+        postServices.getPostByUser(userName, limit, offset)
     }
 }
 
 /**
- * Upvote post usecase impl
+ * Upvote post usecase
  *
  * @param dispatcher
  * @param postServices
@@ -240,7 +244,7 @@ fun upvotePostUsecase(
 }
 
 /**
- * Downvote post usecase impl
+ * Downvote post usecase
  *
  * @param dispatcher
  * @param postServices

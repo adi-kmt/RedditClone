@@ -53,9 +53,11 @@ interface UserRepository {
      * Search user with name
      *
      * @param userName
+     * @param limit
+     * @param offset
      * @return
      */
-    suspend fun searchUserWithName(userName: UserName): Result<UserResponseList>
+    suspend fun searchUserWithName(userName: UserName, limit: Int, offset: Long): Result<UserResponseList>
 
     /**
      * Follow user
@@ -145,14 +147,16 @@ class UserRepoImpl(private val dbTransaction: DbTransaction) : UserRepository {
         }
     }
 
-    override suspend fun searchUserWithName(userName: UserName): Result<UserResponseList> {
+    override suspend fun searchUserWithName(userName: UserName, limit: Int, offset: Long): Result<UserResponseList> {
         return dbTransaction.dbQuery {
             resultOf {
                 UserEntity.select {
                     UserEntity.username like userName.value
-                }.map {
-                    it.fromResultRowUser()
-                }.toUserRepsponseList()
+                }
+                    .limit(n = limit, offset = offset)
+                    .map {
+                        it.fromResultRowUser()
+                    }.toUserRepsponseList(limit, offset)
             }
         }
     }

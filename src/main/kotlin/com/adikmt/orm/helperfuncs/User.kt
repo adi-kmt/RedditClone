@@ -37,7 +37,9 @@ fun toFollowerData(
 )
 
 
-fun List<UserResponse>.toUserRepsponseList() = UserResponseList(
+fun List<UserResponse>.toUserRepsponseList(limit: Int, offset: Long) = UserResponseList(
     userList = this,
-    userNo = this.size
+    userNo = this.size,
+    limit = limit,
+    offset = offset
 )

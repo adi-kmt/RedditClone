@@ -54,7 +54,9 @@ data class FollowOrUnfollowUser(
 @Serializable
 data class UserResponseList(
     val userList: List<UserResponse>,
-    val userNo: Int
+    val userNo: Int,
+    val limit: Int,
+    val offset: Long
 )
 
 @Serializable

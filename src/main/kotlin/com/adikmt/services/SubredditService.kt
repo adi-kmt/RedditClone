@@ -7,10 +7,7 @@ import com.adikmt.dtos.SubredditResponseList
 import com.adikmt.dtos.UserName
 import com.adikmt.repositories.SubredditRepository
 
-/**
- * Subreddit service
- *
- */
+/** Subreddit service */
 interface SubredditService {
     /**
      * Add subreddit
@@ -33,9 +30,15 @@ interface SubredditService {
      * Search subreddit by name
      *
      * @param subredditName
+     * @param limit
+     * @param offset
      * @return
      */
-    suspend fun searchSubredditByName(subredditName: SubredditName): Result<SubredditResponseList>
+    suspend fun searchSubredditByName(
+        subredditName: SubredditName,
+        limit: Int,
+        offset: Long
+    ): Result<SubredditResponseList>
 
     /**
      * Follow subreddit
@@ -59,9 +62,11 @@ interface SubredditService {
      * Get all subreddits followed
      *
      * @param userName
+     * @param limit
+     * @param offset
      * @return
      */
-    suspend fun getAllSubredditsFollowed(userName: UserName): Result<SubredditResponseList>
+    suspend fun getAllSubredditsFollowed(userName: UserName, limit: Int, offset: Long): Result<SubredditResponseList>
 }
 
 /**
@@ -80,8 +85,12 @@ class SubredditServiceImpl(private val subredditRepository: SubredditRepository)
     override suspend fun getSubredditByName(subredditName: SubredditName): Result<SubredditResponse?> =
         subredditRepository.getSubredditByName(subredditName)
 
-    override suspend fun searchSubredditByName(subredditName: SubredditName): Result<SubredditResponseList> =
-        subredditRepository.searchSubredditByName(subredditName)
+    override suspend fun searchSubredditByName(
+        subredditName: SubredditName,
+        limit: Int,
+        offset: Long
+    ): Result<SubredditResponseList> =
+        subredditRepository.searchSubredditByName(subredditName, limit, offset)
 
     override suspend fun followSubreddit(
         userName: UserName,
@@ -95,6 +104,10 @@ class SubredditServiceImpl(private val subredditRepository: SubredditRepository)
     ): Result<SubredditName> =
         subredditRepository.unfollowSubreddit(userName, subredditName)
 
-    override suspend fun getAllSubredditsFollowed(userName: UserName): Result<SubredditResponseList> =
-        subredditRepository.getAllFollowedSubreddits(userName)
+    override suspend fun getAllSubredditsFollowed(
+        userName: UserName,
+        limit: Int,
+        offset: Long
+    ): Result<SubredditResponseList> =
+        subredditRepository.getAllFollowedSubreddits(userName, limit, offset)
 }

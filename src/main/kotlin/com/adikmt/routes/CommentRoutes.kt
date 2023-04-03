@@ -81,7 +81,7 @@ private fun Routing.upvoteComment() {
 
 private fun Routing.getCommentByUserId() {
     val getAllCommentByUserUsecase by inject<GetAllCommentByUserUsecase>(named("GetAllCommentByUserUsecase"))
-    authenticate(optional = true) {
+    authenticate {
         get("/comments/userId") {
             try {
                 val user = call.principal<AuthCurrentUser>()?.userName
@@ -99,7 +99,7 @@ private fun Routing.getCommentByUserId() {
 
 private fun Routing.getCommentById() {
     val getCommentUsecase by inject<GetCommentUsecase>(named("GetCommentUsecase"))
-    authenticate(optional = true) {
+    authenticate {
         get("/comments/id/{commentId}") {
             try {
                 val commentId = call.parameters["commentId"]
@@ -117,7 +117,7 @@ private fun Routing.getCommentById() {
 
 private fun Routing.getCommentsByPost() {
     val getAllCommentsByPostUsecase by inject<GetAllCommentsByPostUsecase>(named("GetAllCommentsByPostUsecase"))
-    authenticate(optional = true) {
+    authenticate {
         get("/comments/postId/{postId}") {
             try {
                 val postId = call.parameters["postId"]

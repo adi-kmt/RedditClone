@@ -19,7 +19,9 @@ data class SubredditResponse(
 @Serializable
 data class SubredditResponseList(
     val subredditList: List<SubredditResponse>,
-    val subredditNo: Int
+    val subredditNo: Int,
+    val limit: Int,
+    val offset: Long
 )
 
 @JvmInline

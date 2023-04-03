@@ -1,21 +1,14 @@
 package com.adikmt.usecases
 
-import com.adikmt.dtos.AuthCurrentUser
 import com.adikmt.dtos.LoginUser
-import com.adikmt.dtos.UserName
 import com.adikmt.dtos.UserRequest
 import com.adikmt.dtos.UserResponse
 import com.adikmt.services.AuthService
-import com.adikmt.services.UserService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 
-/**
- * Register usecase interface
- *
- * @constructor Create empty Register usecase
- */
+/** Register usecase interface */
 fun interface RegisterUsecase {
     /**
      * Register

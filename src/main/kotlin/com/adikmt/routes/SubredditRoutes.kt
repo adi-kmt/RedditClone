@@ -80,14 +80,16 @@ private fun Routing.followSubreddit() {
 
 private fun Routing.searchSubredditByName() {
     val searchSubredditByNameUsecase by inject<SearchSubredditByNameUsecase>(named("SearchSubredditByNameUsecase"))
-    authenticate(optional = true) {
+    authenticate {
         get("/subreddit/{name}") {
             try {
                 val name = call.parameters["name"]
                 val user = call.principal<AuthCurrentUser>()?.userName
+                val limit = call.request.queryParameters["limit"]?.toInt() ?: 20
+                val offset = call.request.queryParameters["offset"]?.toLong() ?: 0L
                 user?.let { userName ->
                     name?.let {
-                        val subredditList = searchSubredditByNameUsecase.get(SubredditName(it))
+                        val subredditList = searchSubredditByNameUsecase.get(SubredditName(it), limit, offset)
                         deconstructResult(this, subredditList, HttpStatusCode.OK)
                     }
                     call.respond(HttpStatusCode.UnprocessableEntity)
@@ -106,9 +108,11 @@ private fun Routing.getFollowedSubreddit() {
             try {
                 val userId = call.parameters["userId"]
                 val user = call.principal<AuthCurrentUser>()?.userName
+                val limit = call.request.queryParameters["limit"]?.toInt() ?: 20
+                val offset = call.request.queryParameters["offset"]?.toLong() ?: 0L
                 user?.let { userName ->
                     userId?.let {
-                        val subredditList = getAllSubredditsFollowedUsecase.get(UserName(it))
+                        val subredditList = getAllSubredditsFollowedUsecase.get(UserName(it), limit, offset)
                         deconstructResult(this, subredditList, HttpStatusCode.OK)
                     }
                     call.respond(HttpStatusCode.UnprocessableEntity)
@@ -123,7 +127,7 @@ private fun Routing.getFollowedSubreddit() {
 
 private fun Routing.getSubredditByName() {
     val getSubredditByNameUsecase by inject<GetSubredditByNameUsecase>(named("GetSubredditByNameUsecase"))
-    authenticate(optional = true) {
+    authenticate {
         get("/subreddit/id/{name}") {
             try {
                 val name = call.parameters["name"]

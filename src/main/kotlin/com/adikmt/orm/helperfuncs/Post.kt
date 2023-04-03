@@ -18,7 +18,9 @@ fun ResultRow.fromResultRowPost() = PostResponse(
     noOfUpvotes = this[PostFavouriteEntity.postId.count()]
 )
 
-fun List<PostResponse>.toPostResponseList() = PostResponseList(
+fun List<PostResponse>.toPostResponseList(limit: Int, offset: Long) = PostResponseList(
     postList = this,
-    postNo = this.size
+    postNo = this.size,
+    limit = limit,
+    offset = offset
 )

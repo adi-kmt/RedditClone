@@ -19,10 +19,7 @@ import org.jetbrains.exposed.sql.insertIgnore
 import org.jetbrains.exposed.sql.insertIgnoreAndGetId
 import org.jetbrains.exposed.sql.select
 
-/**
- * Subreddit repository
- *
- */
+/** Subreddit repository */
 interface SubredditRepository {
     /**
      * Add subreddit
@@ -45,9 +42,15 @@ interface SubredditRepository {
      * Search subreddit by name
      *
      * @param subredditName
+     * @param limit
+     * @param offset
      * @return
      */
-    suspend fun searchSubredditByName(subredditName: SubredditName): Result<SubredditResponseList>
+    suspend fun searchSubredditByName(
+        subredditName: SubredditName,
+        limit: Int,
+        offset: Long
+    ): Result<SubredditResponseList>
 
     /**
      * Follow subreddit
@@ -80,9 +83,11 @@ interface SubredditRepository {
      * Get all followed subreddits
      *
      * @param userName
+     * @param limit
+     * @param offset
      * @return
      */
-    suspend fun getAllFollowedSubreddits(userName: UserName): Result<SubredditResponseList>
+    suspend fun getAllFollowedSubreddits(userName: UserName, limit: Int, offset: Long): Result<SubredditResponseList>
 }
 
 /**
@@ -127,14 +132,20 @@ class SubredditRepoImpl(private val dbTransaction: DbTransaction) : SubredditRep
         }
     }
 
-    override suspend fun searchSubredditByName(subredditName: SubredditName): Result<SubredditResponseList> {
+    override suspend fun searchSubredditByName(
+        subredditName: SubredditName,
+        limit: Int,
+        offset: Long
+    ): Result<SubredditResponseList> {
         return dbTransaction.dbQuery {
             resultOf {
                 SubredditEntity.select {
                     SubredditEntity.title like subredditName.value
-                }.map {
-                    it.fromResultRowSubreddit()
-                }.toSubredditResponseList()
+                }
+                    .limit(n = limit, offset = offset)
+                    .map {
+                        it.fromResultRowSubreddit()
+                    }.toSubredditResponseList(limit, offset)
             }
         }
     }
@@ -172,7 +183,11 @@ class SubredditRepoImpl(private val dbTransaction: DbTransaction) : SubredditRep
         }
     }
 
-    override suspend fun getAllFollowedSubreddits(userName: UserName): Result<SubredditResponseList> {
+    override suspend fun getAllFollowedSubreddits(
+        userName: UserName,
+        limit: Int,
+        offset: Long
+    ): Result<SubredditResponseList> {
         return dbTransaction.dbQuery {
             resultOf {
                 SubredditFollowerEntity
@@ -182,7 +197,7 @@ class SubredditRepoImpl(private val dbTransaction: DbTransaction) : SubredditRep
                         SubredditFollowerEntity.userId eq userName.value
                     }.map {
                         it.fromResultRowSubreddit()
-                    }.toSubredditResponseList()
+                    }.toSubredditResponseList(limit, offset)
             }
         }
     }

@@ -9,11 +9,7 @@ import com.adikmt.services.UserService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
-/**
- * Get user use case interface
- *
- * @constructor Create empty Get user use case
- */
+/** Get user use case */
 fun interface GetUserUseCase {
     /**
      * Get user
@@ -25,7 +21,7 @@ fun interface GetUserUseCase {
 }
 
 /**
- * Search user use case interface
+ * Search user use case
  *
  * @constructor Create empty Search user use case
  */
@@ -34,13 +30,15 @@ fun interface SearchUserUseCase {
      * Search user
      *
      * @param userName
+     * @param limit
+     * @param offset
      * @return
      */
-    suspend fun searchUser(userName: UserName): Result<UserResponseList>
+    suspend fun searchUser(userName: UserName, limit: Int, offset: Long): Result<UserResponseList>
 }
 
 /**
- * Get user following use case interface
+ * Get user following use case
  *
  * @constructor Create empty Get user following use case
  */
@@ -55,7 +53,7 @@ fun interface GetUserFollowingUseCase {
 }
 
 /**
- * Follow user use case interface
+ * Follow user use case
  *
  * @constructor Create empty Follow user use case
  */
@@ -71,7 +69,7 @@ fun interface FollowUserUseCase {
 }
 
 /**
- * Un follow user use case interface
+ * Un follow user use case
  *
  * @constructor Create empty Un follow user use case
  */
@@ -87,7 +85,7 @@ fun interface UnFollowUserUseCase {
 }
 
 /**
- * Get user use case impl
+ * Get user use case
  *
  * @param dispatcher
  * @param userService
@@ -102,7 +100,7 @@ fun getUserUseCase(
 }
 
 /**
- * Search user use case impl
+ * Search user use case
  *
  * @param dispatcher
  * @param userService
@@ -110,14 +108,14 @@ fun getUserUseCase(
 fun searchUserUseCase(
     dispatcher: CoroutineDispatcher,
     userService: UserService
-) = SearchUserUseCase { userName: UserName ->
+) = SearchUserUseCase { userName: UserName, limit: Int, offset: Long ->
     withContext(dispatcher) {
-        userService.searchByUserName(userName)
+        userService.searchByUserName(userName, limit, offset)
     }
 }
 
 /**
- * Get user following use case impl
+ * Get user following use case
  *
  * @param dispatcher
  * @param userService
@@ -132,7 +130,7 @@ fun getUserFollowingUseCase(
 }
 
 /**
- * Follow user use case impl
+ * Follow user use case
  *
  * @param dispatcher
  * @param userService
@@ -147,7 +145,7 @@ fun followUserUseCase(
 }
 
 /**
- * Un follow user use case impl
+ * Un follow user use case
  *
  * @param dispatcher
  * @param userService

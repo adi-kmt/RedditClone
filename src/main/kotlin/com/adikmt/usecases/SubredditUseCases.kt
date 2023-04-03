@@ -10,11 +10,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 
-/**
- * Add subreddit usecase interface
- *
- * @constructor Create empty Add subreddit usecase
- */
+/** Add subreddit usecase */
 fun interface AddSubredditUsecase {
     /**
      * Add
@@ -27,7 +23,7 @@ fun interface AddSubredditUsecase {
 }
 
 /**
- * Get subreddit by name usecase interface
+ * Get subreddit by name usecase
  *
  * @constructor Create empty Get subreddit by name usecase
  */
@@ -42,7 +38,7 @@ fun interface GetSubredditByNameUsecase {
 }
 
 /**
- * Search subreddit by name usecase interface
+ * Search subreddit by name usecase
  *
  * @constructor Create empty Search subreddit by name usecase
  */
@@ -51,13 +47,15 @@ fun interface SearchSubredditByNameUsecase {
      * Get
      *
      * @param subredditName
+     * @param limit
+     * @param offset
      * @return
      */
-    suspend fun get(subredditName: SubredditName): Result<SubredditResponseList>
+    suspend fun get(subredditName: SubredditName, limit: Int, offset: Long): Result<SubredditResponseList>
 }
 
 /**
- * Follow subreddit usecase interface
+ * Follow subreddit usecase
  *
  * @constructor Create empty Follow subreddit usecase
  */
@@ -73,7 +71,7 @@ fun interface FollowSubredditUsecase {
 }
 
 /**
- * Un follow subreddit usecase interface
+ * Un follow subreddit usecase
  *
  * @constructor Create empty Un follow subreddit usecase
  */
@@ -89,7 +87,7 @@ fun interface UnFollowSubredditUsecase {
 }
 
 /**
- * Get all subreddits followed usecase interface
+ * Get all subreddits followed usecase
  *
  * @constructor Create empty Get all subreddits followed usecase
  */
@@ -98,13 +96,15 @@ fun interface GetAllSubredditsFollowedUsecase {
      * Get
      *
      * @param userName
+     * @param limit
+     * @param offset
      * @return
      */
-    suspend fun get(userName: UserName): Result<SubredditResponseList>
+    suspend fun get(userName: UserName, limit: Int, offset: Long): Result<SubredditResponseList>
 }
 
 /**
- * Add subreddit usecase impl
+ * Add subreddit usecase
  *
  * @param dispatcher
  * @param subredditService
@@ -119,7 +119,7 @@ fun addSubredditUsecase(
 }
 
 /**
- * Get subreddit by name usecase impl
+ * Get subreddit by name usecase
  *
  * @param dispatcher
  * @param subredditService
@@ -134,7 +134,7 @@ fun getSubredditByNameUsecase(
 }
 
 /**
- * Search subreddit by name usecase impl
+ * Search subreddit by name usecase
  *
  * @param dispatcher
  * @param subredditService
@@ -142,14 +142,14 @@ fun getSubredditByNameUsecase(
 fun searchSubredditByNameUsecase(
     dispatcher: CoroutineDispatcher,
     subredditService: SubredditService
-) = SearchSubredditByNameUsecase { subredditName: SubredditName ->
+) = SearchSubredditByNameUsecase { subredditName: SubredditName, limit: Int, offset: Long ->
     withContext(dispatcher) {
-        subredditService.searchSubredditByName(subredditName)
+        subredditService.searchSubredditByName(subredditName, limit, offset)
     }
 }
 
 /**
- * Follow subreddit usecase impl
+ * Follow subreddit usecase
  *
  * @param dispatcher
  * @param subredditService
@@ -164,7 +164,7 @@ fun followSubredditUsecase(
 }
 
 /**
- * Un follow subreddit usecase impl
+ * Un follow subreddit usecase
  *
  * @param dispatcher
  * @param subredditService
@@ -179,7 +179,7 @@ fun unFollowSubredditUsecase(
 }
 
 /**
- * Get all subreddits followed usecase impl
+ * Get all subreddits followed usecase
  *
  * @param dispatcher
  * @param subredditService
@@ -187,8 +187,8 @@ fun unFollowSubredditUsecase(
 fun getAllSubredditsFollowedUsecase(
     dispatcher: CoroutineDispatcher,
     subredditService: SubredditService
-) = GetAllSubredditsFollowedUsecase { userName: UserName ->
+) = GetAllSubredditsFollowedUsecase { userName: UserName, limit: Int, offset: Long ->
     withContext(dispatcher) {
-        subredditService.getAllSubredditsFollowed(userName)
+        subredditService.getAllSubredditsFollowed(userName, limit, offset)
     }
 }
