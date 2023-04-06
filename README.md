@@ -12,7 +12,7 @@ A simple P0 Reddit clone implemented with Ktor Server side client, JWT Auth, Exp
 2. MySQL DB
 3. Gradle
 
-## Ktor Frameworks used
+## Frameworks used
 
 1. [Ktor Server side](https://ktor.io/docs)
 2. [Coroutines](https://kotlinlang.org/docs/coroutines-overview.html)
@@ -35,8 +35,7 @@ A simple P0 Reddit clone implemented with Ktor Server side client, JWT Auth, Exp
 ## Why Exposed over other ORMs?
 
 - Good control over creating [auto-incremented tables](https://github.com/JetBrains/Exposed/wiki/DSL#overview)
--
-Simple [basic functions with well-supported conditional expressions](https://github.com/JetBrains/Exposed/wiki/DSL#basic-crud-operations)
+- Simple [basic functions with well-supported conditional expressions](https://github.com/JetBrains/Exposed/wiki/DSL#basic-crud-operations)
 - Intuitive way to interact between tables using [joins](https://github.com/JetBrains/Exposed/wiki/DSL#join)
 - Easy to combine multiple requirements over a single (SQL query Sample from
   the [project](https://github.com/kamathis4/RedditClone/blob/main/src/main/kotlin/com/adikmt/repositories/PostRepository.kt))
