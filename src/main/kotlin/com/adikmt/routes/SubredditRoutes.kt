@@ -37,6 +37,12 @@ fun Routing.subredditRoutes() {
 private fun Routing.unfollowSubreddit() {
     val unFollowSubredditUsecase by inject<UnFollowSubredditUsecase>(named("UnFollowSubredditUsecase"))
     authenticate {
+        /**
+         * DELETE /subreddit/unFollow/{name} Unfollows a subreddit with the given
+         * name.
+         *
+         * Headers: Authorization: Bearer <token>
+         */
         delete("/subreddit/unFollow/{name}") {
             try {
                 val name = call.parameters["name"]
@@ -59,6 +65,11 @@ private fun Routing.unfollowSubreddit() {
 private fun Routing.followSubreddit() {
     val followSubredditUsecase by inject<FollowSubredditUsecase>(named("FollowSubredditUsecase"))
     authenticate {
+        /**
+         * POST /subreddit/follow/{name} Follows a subreddit with the given name.
+         *
+         * Headers: Authorization: Bearer <token>
+         */
         post("/subreddit/follow/{name}") {
             try {
                 val name = call.parameters["name"]
@@ -81,7 +92,12 @@ private fun Routing.followSubreddit() {
 private fun Routing.searchSubredditByName() {
     val searchSubredditByNameUsecase by inject<SearchSubredditByNameUsecase>(named("SearchSubredditByNameUsecase"))
     authenticate {
-        get("/subreddit/{name}") {
+        /**
+         * GET /subreddit/search/{name} Search a subreddit with the given name.
+         *
+         * Headers: Authorization: Bearer <token>
+         */
+        get("/subreddit/search/{name}") {
             try {
                 val name = call.parameters["name"]
                 val user = call.principal<AuthCurrentUser>()?.userName
@@ -104,6 +120,12 @@ private fun Routing.searchSubredditByName() {
 private fun Routing.getFollowedSubreddit() {
     val getAllSubredditsFollowedUsecase by inject<GetAllSubredditsFollowedUsecase>(named("GetAllSubredditsFollowedUsecase"))
     authenticate {
+        /**
+         * GET /subreddit/user/{userId} Retrieves a list of subreddits followed by
+         * a user with the given userId.
+         *
+         * Headers: Authorization: Bearer <token>
+         */
         get("/subreddit/user/{userId}") {
             try {
                 val userId = call.parameters["userId"]
@@ -128,6 +150,11 @@ private fun Routing.getFollowedSubreddit() {
 private fun Routing.getSubredditByName() {
     val getSubredditByNameUsecase by inject<GetSubredditByNameUsecase>(named("GetSubredditByNameUsecase"))
     authenticate {
+        /**
+         * GET /subreddit/id/{name} Retrieves the subreddit with the given name.
+         *
+         * Headers: Authorization: Bearer <token>
+         */
         get("/subreddit/id/{name}") {
             try {
                 val name = call.parameters["name"]
@@ -146,6 +173,11 @@ private fun Routing.getSubredditByName() {
 private fun Routing.addSubreddit() {
     val addSubredditUsecase by inject<AddSubredditUsecase>(named("AddSubredditUsecase"))
     authenticate {
+        /**
+         * POST /subreddit Creates a new subreddit.
+         *
+         * Headers: Authorization: Bearer <token>
+         */
         post("/subreddit") {
             try {
                 val subreddit = call.receive<SubredditRequest>()

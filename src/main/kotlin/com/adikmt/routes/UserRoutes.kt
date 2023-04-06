@@ -32,6 +32,13 @@ fun Routing.userRoutes() {
 private fun Routing.searchUser() {
     val searchUserUseCase by inject<SearchUserUseCase>(named("SearchUserUseCase"))
     authenticate {
+        /**
+         * GET /profiles/{username} Get the profile information for a specific
+         * user.
+         *
+         * Headers: Authorization: Bearer <token>
+         */
+
         get("/profiles/{username}") {
             try {
                 val userName = call.parameters["username"]
@@ -52,6 +59,13 @@ private fun Routing.searchUser() {
 private fun Routing.getProfileFollowingData() {
     val getUserFollowingUseCase by inject<GetUserFollowingUseCase>(named("GetUserFollowingUseCase"))
     authenticate {
+        /**
+         * GET /profiles/{username}/followingData Get information about who a
+         * specific user is following.
+         *
+         * Headers: Authorization: Bearer <token>
+         */
+
         get("/profiles/{username}/followingData") {
             try {
                 val userName = call.parameters["username"]
@@ -70,6 +84,11 @@ private fun Routing.getProfileFollowingData() {
 private fun Routing.followUser() {
     val followUserUsecase by inject<FollowUserUseCase>(named("FollowUserUseCase"))
     authenticate {
+        /**
+         * POST /profiles/{username}/follow Follow a specific user.
+         *
+         * Headers: Authorization: Bearer <token>
+         */
         post("/profiles/{username}/follow") {
             try {
                 val name = call.parameters["username"]
@@ -92,6 +111,11 @@ private fun Routing.followUser() {
 private fun Routing.unFollowUser() {
     val unFollowUserUseCase by inject<UnFollowUserUseCase>(named("UnFollowUserUseCase"))
     authenticate {
+        /**
+         * DELETE /profiles/{username}/follow Unfollow a specific user.
+         *
+         * Headers: Authorization: Bearer <token>
+         */
         delete("/profiles/{username}/follow") {
             try {
                 val name = call.parameters["username"]
@@ -114,6 +138,11 @@ private fun Routing.unFollowUser() {
 private fun Routing.getProfile() {
     val getUserUseCase: GetUserUseCase by inject<GetUserUseCase>(named("GetUserUseCase"))
     authenticate {
+        /**
+         * GET /profiles/id/{username} Get the user id for a specific user.
+         *
+         * Headers: Authorization: Bearer <token>
+         */
         get("/profiles/id/{username}") {
             try {
                 val userName = call.parameters["username"]

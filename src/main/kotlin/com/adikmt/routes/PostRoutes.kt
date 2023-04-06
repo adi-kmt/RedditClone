@@ -43,6 +43,11 @@ fun Routing.postRoutes() {
 private fun Routing.getPostFeed() {
     val getPostFeedByUserUsecase by inject<GetPostFeedByUserUsecase>(named("GetPostFeedByUserUsecase"))
     authenticate(optional = true) {
+        /**
+         * GET /posts Retrieves a list of all posts.
+         *
+         * Headers: Authorization: Bearer <token>
+         */
         get("/posts") {
             try {
                 val user = call.principal<AuthCurrentUser>()?.userName
@@ -65,7 +70,13 @@ private fun Routing.getPostFeed() {
 private fun Routing.downvotePostById() {
     val downvotePostUsecase by inject<DownvotePostUsecase>(named("DownvotePostUsecase"))
     authenticate {
-        delete("posts/unFavourite/{postId}") {
+        /**
+         * DELETE /posts/unFavourite/{postId} Unfavourites the post with the given
+         * postId.
+         *
+         * Headers: Authorization: Bearer <token>
+         */
+        delete("/posts/unFavourite/{postId}") {
             try {
                 val postId = call.parameters["postId"]
                 val user = call.principal<AuthCurrentUser>()?.userName
@@ -87,7 +98,13 @@ private fun Routing.downvotePostById() {
 private fun Routing.upvotePostById() {
     val upvotePostUsecase by inject<UpvotePostUsecase>(named("UpvotePostUsecase"))
     authenticate {
-        post("posts/favourite/{postId}") {
+        /**
+         * POST /posts/favourite/{postId} Favourites the post with the given
+         * postId.
+         *
+         * Headers: Authorization: Bearer <token>
+         */
+        post("/posts/favourite/{postId}") {
             try {
                 val postId = call.parameters["postId"]
                 val user = call.principal<AuthCurrentUser>()?.userName
@@ -109,7 +126,13 @@ private fun Routing.upvotePostById() {
 private fun Routing.getPostListByUserId() {
     val getPostByUserUsecase by inject<GetPostByUserUsecase>(named("GetPostByUserUsecase"))
     authenticate {
-        get("posts/userId/{userId}") {
+        /**
+         * GET /posts/userId/{userId} Retrieves a list of posts created by the user
+         * with the given userId.
+         *
+         * Headers: Authorization: Bearer <token>
+         */
+        get("/posts/userId/{userId}") {
             try {
                 val userId = call.parameters["userId"]
                 val user = call.principal<AuthCurrentUser>()?.userName
@@ -133,7 +156,13 @@ private fun Routing.getPostListByUserId() {
 private fun Routing.getPostListBySubredditName() {
     val getPostBySubredditUsecase by inject<GetPostBySubredditUsecase>(named("GetPostBySubredditUsecase"))
     authenticate {
-        get("posts/subredditName/{subredditName}") {
+        /**
+         * GET /posts/subredditName/{subredditName} Retrieves a list of posts in
+         * the subreddit with the given subredditName.
+         *
+         * Headers: Authorization: Bearer <token>
+         */
+        get("/posts/subredditName/{subredditName}") {
             try {
                 val subredditName = call.parameters["subredditName"]
                 val user = call.principal<AuthCurrentUser>()?.userName
@@ -157,7 +186,13 @@ private fun Routing.getPostListBySubredditName() {
 private fun Routing.getPostListByHeading() {
     val searchPostByHeadingUsecase by inject<SearchPostByHeadingUsecase>(named("SearchPostByHeadingUsecase"))
     authenticate {
-        get("posts/search/{heading}") {
+        /**
+         * GET /posts/search/{heading} Retrieves a list of posts that match the
+         * search query in the heading.
+         *
+         * Headers: Authorization: Bearer <token>
+         */
+        get("/posts/search/{heading}") {
             try {
                 val heading = call.parameters["heading"]
                 val user = call.principal<AuthCurrentUser>()?.userName
@@ -180,7 +215,13 @@ private fun Routing.getPostListByHeading() {
 private fun Routing.getPostById() {
     val getPostUseCase by inject<GetPostUsecase>(named("GetPostUsecase"))
     authenticate {
-        get("posts/id/{postId}") {
+        /**
+         * GET /posts/id/{postId} Retrieves information about the post with the
+         * given postId.
+         *
+         * Headers: Authorization: Bearer <token>
+         */
+        get("/posts/id/{postId}") {
             try {
                 val postId = call.parameters["postId"]
                 val user = call.principal<AuthCurrentUser>()?.userName
@@ -201,7 +242,12 @@ private fun Routing.getPostById() {
 private fun Routing.addPost() {
     val addPostUsecase by inject<AddPostUsecase>(named("AddPostUsecase"))
     authenticate {
-        post("posts") {
+        /**
+         * POST /posts Creates a new post
+         *
+         * Headers: Authorization: Bearer <token>
+         */
+        post("/posts") {
             try {
                 val post = call.receive<PostRequest>()
                 val user = call.principal<AuthCurrentUser>()?.userName

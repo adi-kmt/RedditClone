@@ -38,6 +38,12 @@ fun Routing.commentRoutes() {
 private fun Routing.downvoteComment() {
     val downvoteCommentUsecase by inject<DownvoteCommentUsecase>(named("DownvoteCommentUsecase"))
     authenticate {
+        /**
+         * DELETE /comments/downvote/{commentId} Downvotes the comment with the
+         * given commentId.
+         *
+         * Headers: Authorization: Bearer <token>
+         */
         delete("/comments/downvote/{commentId}") {
             try {
                 val commentId = call.parameters["commentId"]
@@ -60,6 +66,12 @@ private fun Routing.downvoteComment() {
 private fun Routing.upvoteComment() {
     val upvoteCommentUsecase by inject<UpvoteCommentUsecase>(named("UpvoteCommentUsecase"))
     authenticate {
+        /**
+         * POST /comments/upvote/{commentId} Upvotes the comment with the given
+         * commentId.
+         *
+         * Headers: Authorization: Bearer <token>
+         */
         post("/comments/upvote/{commentId}") {
             try {
                 val commentId = call.parameters["commentId"]
@@ -82,6 +94,11 @@ private fun Routing.upvoteComment() {
 private fun Routing.getCommentByUserId() {
     val getAllCommentByUserUsecase by inject<GetAllCommentByUserUsecase>(named("GetAllCommentByUserUsecase"))
     authenticate {
+        /**
+         * GET /comments/userId Gets all comments made by the authenticated user.
+         *
+         * Headers: Authorization: Bearer <token>
+         */
         get("/comments/userId") {
             try {
                 val user = call.principal<AuthCurrentUser>()?.userName
@@ -100,6 +117,11 @@ private fun Routing.getCommentByUserId() {
 private fun Routing.getCommentById() {
     val getCommentUsecase by inject<GetCommentUsecase>(named("GetCommentUsecase"))
     authenticate {
+        /**
+         * GET /comments/id/{commentId} Gets the comment with the given commentId.
+         *
+         * Headers: Authorization: Bearer <token>
+         */
         get("/comments/id/{commentId}") {
             try {
                 val commentId = call.parameters["commentId"]
@@ -118,6 +140,12 @@ private fun Routing.getCommentById() {
 private fun Routing.getCommentsByPost() {
     val getAllCommentsByPostUsecase by inject<GetAllCommentsByPostUsecase>(named("GetAllCommentsByPostUsecase"))
     authenticate {
+        /**
+         * GET /comments/postId/{postId} Gets all comments for the post with the
+         * given postId.
+         *
+         * Headers: Authorization: Bearer <token>
+         */
         get("/comments/postId/{postId}") {
             try {
                 val postId = call.parameters["postId"]
@@ -136,6 +164,11 @@ private fun Routing.getCommentsByPost() {
 private fun Routing.addComment() {
     val addCommentUsecase by inject<AddCommentUsecase>(named("AddCommentUsecase"))
     authenticate {
+        /**
+         * POST /comments Creates a new comment.
+         *
+         * Headers: Authorization: Bearer <token>
+         */
         post("/comments") {
             try {
                 val comment = call.receive<CommentRequest>()

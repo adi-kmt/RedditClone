@@ -31,6 +31,12 @@ fun Routing.authRoutes() {
 
 private fun Routing.getCurrentUser() {
     authenticate {
+        /**
+         * GET /users Get the current user based on JWT bearer token
+         *
+         * Headers: Authorization: Bearer <token>
+         */
+
         get("/users") {
             try {
                 val user = call.principal<AuthCurrentUser>()?.userName
@@ -48,6 +54,9 @@ private fun Routing.getCurrentUser() {
 private fun Routing.loginUser() {
     val loginUsecase by inject<LoginUsecase>(named("LoginUsecase"))
     val jwtService by inject<JwtService> { parametersOf(application.environment.jwtConfig(JwtService.CONFIG_PATH)) }
+
+    /** POST /login Login a user to the system. */
+
     post("/login") {
         try {
             val user = call.receive<LoginUser>()
@@ -77,6 +86,7 @@ private fun Routing.registerUser() {
     val jwtService by inject<JwtService> { parametersOf(application.environment.jwtConfig(JwtService.CONFIG_PATH)) }
     val registerUsecase by inject<RegisterUsecase>(named("RegisterUsecase"))
 
+    /** POST /register Register a new user to the system. */
     post("/register") {
         try {
             val user = call.receive<UserRequest>()
